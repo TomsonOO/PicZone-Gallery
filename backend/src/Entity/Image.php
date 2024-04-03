@@ -20,7 +20,7 @@ class Image
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $descriptio = null;
+    private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
@@ -57,14 +57,14 @@ class Image
         return $this;
     }
 
-    public function getDescriptio(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descriptio;
+        return $this->description;
     }
 
-    public function setDescriptio(?string $descriptio): static
+    public function setDescription(?string $description): static
     {
-        $this->descriptio = $descriptio;
+        $this->description = $description;
 
         return $this;
     }
