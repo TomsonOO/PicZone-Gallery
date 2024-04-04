@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db:
     container_name: db_postgres
@@ -12,8 +12,10 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    networks:
+      - webnet
 
-  app:
+  backend:
     container_name: backend
     build:
       context: backend/
@@ -24,9 +26,10 @@ services:
       - db
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
-
     volumes:
       - ./backend:/var/www
+    networks:
+      - webnet
 
   frontend:
     container_name: frontend
@@ -40,8 +43,24 @@ services:
       - "3000:3000"
     environment:
       - HOST=0.0.0.0
+    networks:
+      - webnet
 
+  nginx:
+    build:
+      context:  .
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - webnet
 
 volumes:
   postgres-data:
   node_modules:
+
+networks:
+  webnet:
