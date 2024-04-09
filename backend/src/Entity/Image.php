@@ -28,6 +28,9 @@ class Image
     #[ORM\Column]
     private ?bool $showOnHomepage = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $objectKey = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,18 @@ class Image
     public function setShowOnHomepage(bool $showOnHomepage): static
     {
         $this->showOnHomepage = $showOnHomepage;
+
+        return $this;
+    }
+
+    public function getObjectKey(): ?string
+    {
+        return $this->objectKey;
+    }
+
+    public function setObjectKey(string $objectKey): static
+    {
+        $this->objectKey = $objectKey;
 
         return $this;
     }
