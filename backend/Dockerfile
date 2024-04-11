@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install pdo pdo_pgsql pgsql mysqli pdo_mysql zip;
 
-RUN wget https://getcomposer.org/download/2.0.9/composer.phar \
+RUN wget https://getcomposer.org/download/2.2.6/composer.phar \
     && mv composer.phar /usr/bin/composer && chmod +x /usr/bin/composer
 
 WORKDIR /var/www

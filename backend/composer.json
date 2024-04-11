@@ -15,12 +15,10 @@
         "doctrine/orm": "^3.1",
         "nelmio/cors-bundle": "^2.4",
         "symfony/console": "6.4.*",
-        "symfony/dotenv": "6.4.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.4.*",
         "symfony/runtime": "6.4.*",
-        "symfony/yaml": "6.4.*",
-      "ext-http": "*"
+        "symfony/yaml": "6.4.*"
     },
     "config": {
         "allow-plugins": {
@@ -71,6 +69,7 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.56"
+        "symfony/maker-bundle": "^1.56",
+        "symfony/dotenv": "6.4.*"
     }
 }

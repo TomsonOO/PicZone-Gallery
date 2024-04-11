@@ -31,6 +31,7 @@ class AddImageCommand extends Command
             ->setHelp('This command lets you add images to the database (reference to S3).')
             ->addArgument('filename', InputArgument::REQUIRED, 'The filename of the image')
             ->addArgument('url', InputArgument::REQUIRED, 'The url of an image')
+            ->addArgument('objectKey', InputArgument::REQUIRED, 'ObjectKey - path to the image on S3')
             ->addArgument('description', InputArgument::OPTIONAL, 'The description on the image')
             ->addArgument('showOnHomepage', InputArgument::OPTIONAL, 'Will the image be displayed on the homepage?')
         ;
@@ -44,6 +45,7 @@ class AddImageCommand extends Command
         $image->setFilename($input->getArgument('filename'));
         $image->setDescription($input->getArgument('description'));
         $image->setShowOnHomepage($input->getArgument('showOnHomepage'));
+        $image->setObjectKey($input->getArgument('objectKey'));
         $image->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($image);

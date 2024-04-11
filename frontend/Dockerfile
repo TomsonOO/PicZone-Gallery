@@ -1,9 +1,15 @@
-FROM node:alpine as build
+FROM node:alpine
+
 WORKDIR /app
+
 COPY package*.json ./
+
 RUN npm install
+
 COPY . .
-ENV NODE_OPTIONS=--openssl-legacy-provider
+
+COPY .env.prod .env
+
 RUN npm run build
 
-
+CMD npx serve -s build
