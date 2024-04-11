@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
-const HomePage = () => {
+const useFetchImages = (backendUrl) => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -34,25 +33,10 @@ const HomePage = () => {
             }
         };
 
-        fetchImages();
+            fetchImages();
+        }, [backendUrl]);
 
-    }, [backendUrl]);
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
-
-
-
-    return (
-        <div className="image-gallery">
-            {images.map(image => (
-                <div key={image.id} className="image-item">
-                    <img src={image.url} alt={image.filename} /> {}
-                </div>
-            ))}
-        </div>
-    );
+    return { images, loading, error };
 };
 
-export default HomePage;
+export default useFetchImages;
