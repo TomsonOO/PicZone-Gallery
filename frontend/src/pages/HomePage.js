@@ -1,4 +1,5 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 import ImageSlider from '../components/ImageSlider';
 import useFetchImages from '../hooks/useFetchImages';
 
@@ -10,8 +11,11 @@ const HomePage = () => {
     if (error) return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
 
     return (
-        <div className="pt-16 pb-24">
-            <ImageSlider images={images} />
+        <div>
+            <Navbar />
+            <div className="bg-blue-200 pt-16 pb-24">
+                <ImageSlider images={images} />
+            </div>
         </div>
     );
 };
