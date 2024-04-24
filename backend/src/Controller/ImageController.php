@@ -15,7 +15,7 @@ use OpenApi\Attributes as OA;
 class ImageController extends AbstractController
 {
 
-    #[Route('/images/presigned-url/{objectKey}', name: 'image_presigned_url')]
+    #[Route('/images/presigned-url/{objectKey}', name: 'image_presigned_url', requirements: ['objectKey' => '.+'])]
     #[OA\Get(
         path: "/images/presigned-url/{objectKey}",
         operationId: "getPresignedUrl",
