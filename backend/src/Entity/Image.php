@@ -31,6 +31,22 @@ class Image
     #[ORM\Column(length: 255)]
     private ?string $objectKey = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
+
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): string
+    {
+        $this->type = $type;
+
+        return $this->type;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
