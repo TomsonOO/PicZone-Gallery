@@ -11,7 +11,21 @@ security:
         class: App\Entity\User
         property: username
 
+  enable_authenticator_manager: true
+
   firewalls:
+    login:
+      pattern: ^/api/login
+      stateless: true
+      custom_authenticator: App\Security\LoginAuthenticator
+
+    #      json_login:
+#        check_path: /api/login
+#        username_path: username
+#        password_path: password
+#        success_handler: lexik_jwt_authentication.handler.authentication_success
+#        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
