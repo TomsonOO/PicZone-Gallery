@@ -17,8 +17,8 @@ const RegisterModal = ({ isOpen, onRequestClose }) => {
         };
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user`, {
-                method: 'POST',
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/update`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -27,7 +27,7 @@ const RegisterModal = ({ isOpen, onRequestClose }) => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Registration successful', data);
+                console.log('FASDASDASD successful', data);
                 onRequestClose();
             } else {
                 throw new Error('Failed to register');

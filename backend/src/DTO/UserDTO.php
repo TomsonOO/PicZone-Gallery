@@ -18,4 +18,6 @@ class UserDTO
     #[Assert\Length(min: 6, minMessage: "Password must be at least 6 characters long.")]
     public string $password;
 
+
+
 }
