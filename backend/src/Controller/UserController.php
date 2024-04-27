@@ -6,7 +6,7 @@ use App\DTO\UserDTO;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Security;
+use Nelmio\ApiDocBundle\Annotation\Security as ApiSecurity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +15,30 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use OpenApi\Attributes as OA;
 
 
 #[Route('/api/user')]
 class UserController extends AbstractController
 {
+    private Security $security;
+    private EntityManagerInterface $entityManager;
+    private SerializerInterface $serializer;
+    private ValidatorInterface $validator;
+
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer,
+        ValidatorInterface $validator
+    ) {
+        $this->security = $security;
+        $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
+        $this->validator = $validator;
+    }
+
     /**
      * @OA\SecurityScheme(
      *     securityScheme="bearerAuth",
@@ -76,17 +94,12 @@ class UserController extends AbstractController
         ]
     ),
         Route('', name: "add_user", methods: ["POST"]),
-        Security(name: "bearerAuth")]
-    public function createUser(
-        Request $request,
-        SerializerInterface $serializer,
-        ValidatorInterface $validator,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
+        ApiSecurity(name: "bearerAuth")]
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher
     ): JsonResponse {
-        $userDTO = $serializer->deserialize($request->getContent(), UserDTO::class, 'json');
+        $userDTO = $this->serializer->deserialize($request->getContent(), UserDTO::class, 'json');
 
-        $errors = $validator->validate($userDTO);
+        $errors = $this->validator->validate($userDTO);
         if (count($errors) > 0) {
             $errorMessages = [];
             foreach ($errors as $error) {
@@ -101,8 +114,8 @@ class UserController extends AbstractController
         $user->setEmail($userDTO->email);
         $user->setPassword($passwordHasher->hashPassword($user, $userDTO->password));
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return $this->json(['message' => 'User successfully created', 'userId' => $user->getId()],
             Response::HTTP_CREATED);
@@ -160,10 +173,7 @@ class UserController extends AbstractController
         ]
     )]
     #[Route('/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function deleteUser(
-        int $id,
-        UserRepository $userRepository,
-        EntityManagerInterface $entityManager
+    public function deleteUser(int $id, UserRepository $userRepository,
     ): JsonResponse {
         $user = $userRepository->find($id);
 
@@ -171,11 +181,49 @@ class UserController extends AbstractController
             return $this->json(['message' => 'User was not found.'], Response::HTTP_BAD_REQUEST);
         }
 
-        $entityManager->remove($user);
-        $entityManager->flush();
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
 
         return $this->json(['message' => 'User successfully deleted'], Response::HTTP_OK);
     }
+
+
+    #[Route('/update', name: 'update_user', methods: ['PATCH'])]
+    public function updateUser(Request $request): JsonResponse {
+        $user = $this->security->getToken();
+//        $authorizationHeader = $request->headers->get('Authorization');
+        var_dump($user);
+        if(!$user){
+            return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
+        }
+
+//        $data = json_decode($request->getContent(), true);
+//
+//        $errors = $this->validator->validate($data);
+//
+//        if(count($errors) > 0) {
+//            return $this->json(['message' => 'Validation failed', 'errors' => (string) $errors], Response::HTTP_BAD_REQUEST);
+//        }
+
+//        $user->setUsername($data['username'] ?? $user->getUsername());
+//        $user->setEmail($data['email'] ?? $user->getEmail());
+//        $user->setBiography($data['biography'] ?? $user->getBiography());
+
+//        $this->entityManager->persist($user);
+//        $this->entityManager->flush();
+
+        return $this->json([
+            'message' => 'Profile update successfully',
+//            'data' => $this->serializer->serialize($user, 'json')
+        ], Response::HTTP_OK);
+
+
+
+    }
+
+
+
+
 
 
 }
