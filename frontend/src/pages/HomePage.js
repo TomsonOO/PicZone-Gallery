@@ -1,24 +1,26 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-
-import ImageSlider from '../components/ImageSlider';
-import useFetchImages from '../hooks/useFetchImages';
+import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
+import GalleryGrid from '../components/GalleryGrid';
 
 const HomePage = () => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    const { images, loading, error } = useFetchImages(backendUrl);
-
-    if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-    if (error) return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
-
     return (
-        <div>
-            <Navbar />
-            <div className="bg-blue-200 pt-16 pb-24">
-                <ImageSlider images={images} />
+        <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-800">
+            <div className="flex flex-grow">
+                <Sidebar />
+                <main className="flex flex-col flex-grow p-0 bg-white dark:bg-gray-600">
+                    <header className="bg-blue-200  p-6 text-center shadow-sm">
+                        <h1 className="text-3xl font-bold text-gray-900">Welcome to Web Gallery</h1>
+                        <p className="text-gray-600">Explore a world of AI art</p>
+                    </header>
+                    <GalleryGrid />
+                </main>
             </div>
+            <Footer />
         </div>
     );
 };
+
+
 
 export default HomePage;

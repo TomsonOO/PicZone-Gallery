@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+
 const useFetchImages = (backendUrl) => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -13,10 +13,15 @@ const useFetchImages = (backendUrl) => {
                     throw new Error('Network response was not ok');
                 }
                 const imageData = await response.json();
-                const imagesWithPresignedUrls = await Promise.all(imageData.map(async (image) => {
+
+                const replicatedImageData = imageData.flatMap(image =>
+                    Array(10).fill().map((_, index) => ({ ...image, id: image.id + index * 1000 }))
+                );
+
+                const imagesWithPresignedUrls = await Promise.all(replicatedImageData.map(async (image) => {
                     if (!image.objectKey) {
                         console.error('objectKey is undefined for image', image);
-                        // Handle the missing objectKey scenario, e.g., skip this image or use a fallback URL
+                        return image;
                     }
                     const presignedUrlResponse = await fetch(`${backendUrl}/images/presigned-url/${image.objectKey}`);
                     if (!presignedUrlResponse.ok) {
@@ -25,6 +30,7 @@ const useFetchImages = (backendUrl) => {
                     const presignedUrl = await presignedUrlResponse.text();
                     return { ...image, url: presignedUrl };
                 }));
+
                 setImages(imagesWithPresignedUrls);
             } catch (error) {
                 setError(error.message);
@@ -33,8 +39,8 @@ const useFetchImages = (backendUrl) => {
             }
         };
 
-            fetchImages();
-        }, [backendUrl]);
+        fetchImages();
+    }, [backendUrl]);
 
     return { images, loading, error };
 };
