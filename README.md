@@ -1,8 +1,9 @@
 # Web Gallery
 
-DEMO: https://web-gallery-frontend-f288ab32f87b.herokuapp.com
+**Demo**: [Web Gallery Live Demo](https://web-gallery-frontend-f288ab32f87b.herokuapp.com)
 
-Web Gallery is a dynamic, full-stack web application that offers a platform for displaying AI-generated images. It allows users to explore a wide array of artistic creations, providing an interactive experience through features like liking, saving, and downloading images, available exclusively to registered users.
+Web Gallery is a full-stack web application that showcases AI-generated images.
+
 ## Technology Stack
 
 - **Frontend**: React
@@ -11,3 +12,8 @@ Web Gallery is a dynamic, full-stack web application that offers a platform for 
 - **Storage**: AWS S3
 - **Containerization**: Docker
 - **Deployment**: Heroku
+
+## Please Note
+
+- **Under Development**: Web Gallery is actively being developed. Features and functionalities are continuously being added and improved.
+- **Demo Optimization**: The current demo is not yet optimized and may take longer to load. Thank you for your understanding and patience as we work on enhancing your user experience.
