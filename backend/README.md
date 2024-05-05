@@ -1,19 +1,8 @@
-# Web Gallery
+# Backend API Documentation
 
-**Demo**: [Web Gallery Live Demo](https://web-gallery-frontend-f288ab32f87b.herokuapp.com)
+## Generating API Documentation
 
-Web Gallery is a full-stack web application that showcases AI-generated images.
+To generate the OpenAPI specification for the backend API, run the following command within the Docker container:
 
-## Technology Stack
-
-- **Frontend**: React
-- **Backend**: Symfony
-- **Database**: PostgreSQL
-- **Storage**: AWS S3
-- **Containerization**: Docker
-- **Deployment**: Heroku
-
-## Please Note
-
-- **Under Development**: Web Gallery is actively being developed. Features and functionalities are continuously being added and improved.
-- **Demo Optimization**: The current demo is not yet optimized and may take longer to load. Thank you for your understanding and patience as we work on enhancing your user experience.
+```bash
+docker-compose exec backend ./vendor/bin/openapi src -o openapi.yaml

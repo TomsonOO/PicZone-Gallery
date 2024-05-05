@@ -46,6 +46,63 @@ paths:
                 type: array
                 items:
                   $ref: { type: App\Entity\Image, groups: null, options: null, serializationContext: [] }
+  /images/upload:
+    post:
+      tags:
+        - Image
+      summary: 'Upload Image'
+      description: 'Uploads an image to AWS S3 and stores its metadata in the database.'
+      operationId: uploadImage
+      requestBody:
+        description: 'Image file and metadata to upload'
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - image
+                - description
+                - type
+                - showOnHomePage
+              properties:
+                image:
+                  description: 'The image file to upload'
+                  type: string
+                  format: binary
+                description:
+                  description: 'Description of the image'
+                  type: string
+                type:
+                  description: 'Type of the image (gallery or profile)'
+                  type: string
+                showOnHomePage:
+                  description: 'Flag to indicate if the image should be shown on the homepage'
+                  type: boolean
+              type: object
+      responses:
+        '201':
+          description: 'Image uploaded successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Image uploaded successfully' }
+                  data: { properties: { id: { type: integer, example: 123 }, filename: { type: string, example: example.jpg }, url: { type: string, example: 'https://examplebucket.s3.amazonaws.com/example.jpg' }, description: { type: string, example: 'A description of the image' }, type: { type: string, example: gallery }, showOnHomepage: { type: boolean, example: true } }, type: object }
+                type: object
+        '400':
+          description: 'Invalid file upload'
+          content:
+            application/json:
+              schema:
+                type: string
+              example: 'Invalid file upload'
+        '500':
+          description: 'Error processing the image'
+          content:
+            application/json:
+              schema:
+                type: string
+              example: 'Error processing the image'
   /api/user:
     post:
       tags:

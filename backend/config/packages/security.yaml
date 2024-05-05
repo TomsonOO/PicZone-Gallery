@@ -11,6 +11,7 @@ security:
         class: App\Entity\User
         property: username
 
+
   enable_authenticator_manager: true
 
   firewalls:
@@ -30,17 +31,21 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
-    main:
-      # this firewall does not have a 'pattern' option because it applies to all URLs
-      lazy: true
-      provider: database_users
 
     api:
       pattern: ^/api
       stateless: true
       jwt: ~
 
+
+    main:
+      # this firewall does not have a 'pattern' option because it applies to all URLs
+      lazy: true
+      provider: database_users
+
+
+
+
   access_control:
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
-    - { path: ^/admin, roles: ROLE_ADMIN }
-    - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/api,       roles: PUBLIC_ACCESS }
