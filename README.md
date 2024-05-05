@@ -2,6 +2,8 @@
 
 Web Gallery is a full-stack web application that showcases AI-generated images.
 
+**Demo**: [Web Gallery Live Demo](https://web-gallery-frontend-f288ab32f87b.herokuapp.com)
+
 ## Technology Stack
 
 - **Frontend**: React
