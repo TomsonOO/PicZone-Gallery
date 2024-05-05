@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -190,40 +191,35 @@ class UserController extends AbstractController
 
     #[Route('/update', name: 'update_user', methods: ['PATCH'])]
     public function updateUser(Request $request): JsonResponse {
-        $user = $this->security->getToken();
-//        $authorizationHeader = $request->headers->get('Authorization');
-        var_dump($user);
-        if(!$user){
+        $token = $this->security->getToken();
+        $user = $token?->getUser();
+
+        if (!$user || !is_a($user, UserInterface::class)) {
             return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
         }
 
-//        $data = json_decode($request->getContent(), true);
-//
-//        $errors = $this->validator->validate($data);
-//
-//        if(count($errors) > 0) {
-//            return $this->json(['message' => 'Validation failed', 'errors' => (string) $errors], Response::HTTP_BAD_REQUEST);
-//        }
+        $data = json_decode($request->getContent(), true);
 
-//        $user->setUsername($data['username'] ?? $user->getUsername());
-//        $user->setEmail($data['email'] ?? $user->getEmail());
-//        $user->setBiography($data['biography'] ?? $user->getBiography());
+        $errors = $this->validator->validate($data);
 
-//        $this->entityManager->persist($user);
-//        $this->entityManager->flush();
+        if(count($errors) > 0) {
+            return $this->json(['message' => 'Validation failed', 'errors' => (string) $errors], Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->setUsername($data['username'] ?? $user->getUsername());
+        $user->setEmail($data['email'] ?? $user->getEmail());
+        $user->setBiography($data['biography'] ?? $user->getBiography());
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return $this->json([
             'message' => 'Profile update successfully',
-//            'data' => $this->serializer->serialize($user, 'json')
+            'data' => $this->serializer->serialize($user, 'json')
         ], Response::HTTP_OK);
 
 
 
     }
-
-
-
-
-
 
 }
