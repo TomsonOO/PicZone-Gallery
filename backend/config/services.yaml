@@ -20,5 +20,18 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    Aws\S3\S3Client:
+        arguments:
+            - version: 'latest'
+              region: '%env(AWS_S3_REGION)%'
+              credentials:
+                  key: '%env(AWS_ACCESS_KEY_ID)%'
+                  secret: '%env(AWS_SECRET_ACCESS_KEY)%'
+
+    App\Service\ImageService:
+        arguments:
+            $s3Client: '@Aws\S3\S3Client'
+            $bucketName: '%env(AWS_S3_BUCKET_NAME)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

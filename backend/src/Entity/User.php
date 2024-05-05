@@ -32,9 +32,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    #[ORM\OneToOne(targetEntity: Image::class)]
+    #[ORM\JoinColumn(name: "profile_image_id", referencedColumnName: "id")]
+    private ?Image $profileImage = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $biography = null;
+
+    #[ORM\Column(type: 'boolean', options: ["default" => true])]
+    private ?bool $isProfilePublic = true;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $settings = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getProfileImage(): ?Image
+    {
+        return $this->profileImage;
+    }
+
+    public function setProfileImage(?Image $profileImage): void
+    {
+        $this->profileImage = $profileImage;
+    }
+
+    public function getBiography(): ?string
+    {
+        return $this->biography;
+    }
+
+    public function setBiography(?string $biography): void
+    {
+        $this->biography = $biography;
+    }
+
+    public function getIsProfilePublic(): ?bool
+    {
+        return $this->isProfilePublic;
+    }
+
+    public function setIsProfilePublic(?bool $isProfilePublic): void
+    {
+        $this->isProfilePublic = $isProfilePublic;
+    }
+
+    public function getSettings(): ?array
+    {
+        return $this->settings;
+    }
+
+    public function setSettings(?array $settings): void
+    {
+        $this->settings = $settings;
     }
 
     public function getEmail(): ?string
