@@ -1,0 +1,45 @@
+getPresignedUrl:
+  get:
+    summary: "Get AWS S3 presigned URL"
+    description: "Generates a presigned URL for directly accessing an image from AWS S3 without needing AWS credentials."
+    operationId: "getPresignedUrl"
+    tags:
+      - "Image"
+    parameters:
+      - name: "objectKey"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+    responses:
+      '200':
+        description: "Presigned URL returned successfully"
+        content:
+          application/json:
+            schema:
+              type: "string"
+              example: "https://examplebucket.s3.amazonaws.com/example.jpg?AWSAccessKeyId=..."
+      '500':
+        description: "Error generating presigned URL"
+        content:
+          application/json:
+            schema:
+              type: "string"
+              example: "Error generating presigned URL"
+
+listImages:
+  get:
+    summary: "List images"
+    description: "Retrieves a list of images that are marked to be shown on the homepage."
+    operationId: "listImages"
+    tags:
+      - "Image"
+    responses:
+      '200':
+        description: "List of images"
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: '../components/schemas.yaml#/schemas/Image'

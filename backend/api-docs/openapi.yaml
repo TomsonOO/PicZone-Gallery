@@ -1,0 +1,23 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+paths:
+  /api/user:
+    $ref: './paths/users.yaml#/user'
+  /api/user/{id}:
+    $ref: './paths/users.yaml#/userById'
+  /api/user/update:
+    $ref: './paths/users.yaml#/userUpdate'
+  /images/presigned-url/{objectKey}:
+    $ref: './paths/images.yaml#/getPresignedUrl'
+  /api/images:
+    $ref: './paths/images.yaml#/listImages'
+components:
+  schemas:
+    $ref: './components/schemas.yaml#/schemas'
+  securitySchemes:
+    $ref: './components/schemas.yaml#/securitySchemes'
