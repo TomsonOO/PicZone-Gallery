@@ -21,7 +21,7 @@ Web Gallery is a full-stack web application that showcases AI-generated images.
 ## Implemented Features
 
 - **User Registration**: Users can register for an account.
-- **User Login**: Account holders can log in. (Frontend unfinished)
+- **User Login**: Account holders can log in. (Frontend un)
 - **Updating User Profile Settings**: Users can update their profile settings. (Backend implemented only)
 - **Image Upload API**: Enables users to upload images to the gallery. (Backend implemented only)
 - **Image Removal API**: Allows users to delete images from the gallery. (Backend implemented only)

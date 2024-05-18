@@ -23,7 +23,7 @@ const useFetchImages = (backendUrl) => {
                         console.error('objectKey is undefined for image', image);
                         return image;
                     }
-                    const presignedUrlResponse = await fetch(`${backendUrl}/images/presigned-url/${image.objectKey}`);
+                    const presignedUrlResponse = await fetch(`${backendUrl}/api/images/presigned-url/${image.objectKey}`);
                     if (!presignedUrlResponse.ok) {
                         throw new Error(`Failed to fetch presigned URL for ${image.objectKey}`);
                     }

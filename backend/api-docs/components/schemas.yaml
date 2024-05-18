@@ -1,0 +1,27 @@
+schemas:
+  Image:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      filename:
+        type: "string"
+      url:
+        type: "string"
+      description:
+        type: "string"
+      createdAt:
+        type: "string"
+        format: "date-time"
+      showOnHomepage:
+        type: "boolean"
+      objectKey:
+        type: "string"
+      type:
+        type: "string"
+
+securitySchemes:
+  bearerAuth:
+    type: "http"
+    scheme: "bearer"
+    bearerFormat: "JWT"
