@@ -1,0 +1,85 @@
+version: '3.8'
+services:
+  db:
+    container_name: db_postgres_test
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_TEST}
+    volumes:
+      - postgres-data-test:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - webnet
+
+  backend:
+    container_name: backend_test
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5433/${POSTGRES_DB_TEST}"
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - webnet
+
+  php-fpm:
+    container_name: php-fpm_test
+    image: php:fpm
+    volumes:
+      - ./backend:/var/www:rw
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5433/${POSTGRES_DB_TEST}"
+    networks:
+      - webnet
+
+  backend-nginx:
+    container_name: backend-nginx_test
+    image: nginx:alpine
+    ports:
+      - "8082:80"
+    volumes:
+      - ./backend:/var/www:ro
+    depends_on:
+      - php-fpm
+    networks:
+      - webnet
+
+  frontend:
+    container_name: frontend_test
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - './frontend:/app'
+      - 'node_modules:/app/node_modules'
+    ports:
+      - "3001:3000"
+    environment:
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_BACKEND_URL=http://localhost:8082
+    networks:
+      - webnet
+
+  frontend-nginx:
+    container_name: frontend-nginx_test
+    image: nginx:alpine
+    ports:
+      - "8083:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - webnet
+
+volumes:
+  postgres-data-test:
+  node_modules:
+
+networks:
+  webnet:
+    driver: bridge
