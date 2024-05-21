@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     container_name: db_postgres_test
@@ -6,39 +5,44 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_TEST}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres-data-test:/var/lib/postgresql/data
     ports:
       - "5434:5432"
+    restart: always
     networks:
-      - webnet
+      - test_net
 
   backend:
     container_name: backend_test
     build:
       context: ./backend
       dockerfile: Dockerfile
+    ports:
+      - "8002:80"
+    depends_on:
+      - db
     environment:
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5433/${POSTGRES_DB_TEST}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
       - ./backend:/var/www
     networks:
-      - webnet
+      - test_net
 
   php-fpm:
     container_name: php-fpm_test
-    image: php:fpm
+    build: ./backend/php
     volumes:
       - ./backend:/var/www:rw
     environment:
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5433/${POSTGRES_DB_TEST}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     networks:
-      - webnet
+      - test_net
 
   backend-nginx:
     container_name: backend-nginx_test
-    image: nginx:alpine
+    build: ./backend/nginx
     ports:
       - "8082:80"
     volumes:
@@ -46,7 +50,7 @@ services:
     depends_on:
       - php-fpm
     networks:
-      - webnet
+      - test_net
 
   frontend:
     container_name: frontend_test
@@ -57,29 +61,31 @@ services:
       - './frontend:/app'
       - 'node_modules:/app/node_modules'
     ports:
-      - "3001:3000"
+      - "3002:3000"
     environment:
       - HOST=0.0.0.0
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_BACKEND_URL=http://localhost:8082
     networks:
-      - webnet
+      - test_net
 
   frontend-nginx:
     container_name: frontend-nginx_test
-    image: nginx:alpine
+    build:
+      context:  frontend/
+      dockerfile: nginx/Dockerfile
     ports:
       - "8083:80"
     depends_on:
       - frontend
       - backend
     networks:
-      - webnet
+      - test_net
 
 volumes:
   postgres-data-test:
   node_modules:
 
 networks:
-  webnet:
+  test_net:
     driver: bridge

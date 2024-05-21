@@ -13,7 +13,7 @@ services:
       - "5432:5432"
     restart: always
     networks:
-      - webnet
+      - dev-net
 
   backend:
     container_name: backend
@@ -29,7 +29,7 @@ services:
     volumes:
       - ./backend:/var/www
     networks:
-      - webnet
+      - dev-net
 
   php-fpm:
     container_name: php-fpm
@@ -39,7 +39,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     networks:
-      - webnet
+      - dev-net
 
   backend-nginx:
     container_name: backend-nginx
@@ -51,7 +51,7 @@ services:
     depends_on:
       - php-fpm
     networks:
-      - webnet
+      - dev-net
 
   frontend:
     container_name: frontend
@@ -67,7 +67,7 @@ services:
       - HOST=0.0.0.0
       - CHOKIDAR_USEPOLLING=true
     networks:
-      - webnet
+      - dev-net
 
   frontend-nginx:
     container_name: frontend-nginx
@@ -80,12 +80,12 @@ services:
       - frontend
       - backend
     networks:
-      - webnet
+      - dev-net
 
 volumes:
   postgres-data:
   node_modules:
 
 networks:
-  webnet:
+  dev-net:
     driver: bridge
