@@ -33,7 +33,9 @@ services:
 
   php-fpm:
     container_name: php-fpm
-    build: ./backend/php
+    build:
+      context: backend/
+      dockerfile: php/Dockerfile
     volumes:
       - ./backend:/var/www/html:rw
     networks:
