@@ -16,7 +16,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     final public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
+    #[ORM\SequenceGenerator(sequenceName: "users_id_seq", allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 
@@ -48,6 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getProfileImage(): ?Image

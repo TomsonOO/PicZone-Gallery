@@ -46,13 +46,12 @@ class ImageController extends AbstractController
         } catch (\Exception $e) {
             return new Response('Error generating presigned URL', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-}
+    }
 
     #[Route('', name: 'api_images', methods: ['GET'])]
     public function listImages(ImageRepository $imageRepository): JsonResponse
     {
         $images = $imageRepository->findBy(['showOnHomepage' => true]);
-
         $data = array_map(function ($image) {
             return [
                 'id' => $image->getId(),

@@ -6,7 +6,7 @@ load_env() {
 
 start_env() {
     load_env
-    docker compose -f compose.test.yaml up -d > /dev/null 2>&1
+    docker compose -f compose.test.yaml up -d --build > /dev/null 2>&1
     echo "Test environment started."
 }
 
