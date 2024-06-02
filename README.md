@@ -1,8 +1,8 @@
-# Web Gallery
+# PicZone Gallery
 
-Web Gallery is a full-stack web application that showcases AI-generated images.
+PicZone Gallery is a full-stack web application that showcases AI-generated images.
 
-**Demo**: [Web Gallery Live Demo](https://web-gallery-frontend-f288ab32f87b.herokuapp.com)
+**Demo**: [PicZone Gallery Live Demo](http://www.piczone.pics)
 
 ## Technology Stack
 
@@ -15,13 +15,13 @@ Web Gallery is a full-stack web application that showcases AI-generated images.
 
 ## Please Note
 
-- **Under Development**: Web Gallery is actively being developed. Features and functionalities are continuously being added and improved.
+- **Under Development**: PicZone is actively being developed. Features and functionalities are continuously being added and improved.
 - **Demo Optimization**: The current demo is not yet optimized and may take longer to load.
 
 ## Implemented Features
 
 - **User Registration**: Users can register for an account.
-- **User Login**: Account holders can log in. (Frontend un)
+- **User Login**: Account holders can log in. (Frontend unfinished)
 - **Updating User Profile Settings**: Users can update their profile settings. (Backend implemented only)
 - **Image Upload API**: Enables users to upload images to the gallery. (Backend implemented only)
 - **Image Removal API**: Allows users to delete images from the gallery. (Backend implemented only)
