@@ -56,6 +56,7 @@ class ImageController extends AbstractController
             return [
                 'id' => $image->getId(),
                 'filename' => $image->getFilename(),
+                'description' => $image->getDescription(),
                 'url' => $image->getUrl(),
                 'objectKey' => $image->getObjectKey(),
             ];
@@ -67,7 +68,8 @@ class ImageController extends AbstractController
     public function uploadImage(Request $request): JsonResponse
     {
         $file = $request->files->get('image');
-        $description = $request->request->get('description', '');
+        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $description = $request->request->get('description', $originalFilename);
         $imageType = $request->request->get('type', 'gallery');
         $showOnHomepage = ($imageType === 'profile') ? false :
             filter_var($request->request->get('showOnHomePage', 'true'), FILTER_VALIDATE_BOOLEAN);

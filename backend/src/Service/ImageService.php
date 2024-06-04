@@ -49,7 +49,7 @@ class ImageService
         $image->setDescription($description);
         $image->setCreatedAt(new \DateTimeImmutable());
         $image->setShowOnHomepage($showOnHomepage);
-        $image->setObjectKey($filename);
+        $image->setObjectKey($s3Key);
         $image->setType($imageType);
 
         $this->entityManager->persist($image);

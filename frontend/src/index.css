@@ -20,3 +20,14 @@ code {
 }
 
 
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-animated {
+  background: linear-gradient(-45deg, #1a327e, #2c3e50, #111f4a, #0a1a33, #192a56, #273c75, #0c1639);
+  background-size: 300% 300%;
+  animation: gradient 8s ease infinite;
+}

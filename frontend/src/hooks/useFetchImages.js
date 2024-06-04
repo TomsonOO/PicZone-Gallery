@@ -15,7 +15,7 @@ const useFetchImages = (backendUrl) => {
                 const imageData = await response.json();
 
                 const replicatedImageData = imageData.flatMap(image =>
-                    Array(10).fill().map((_, index) => ({ ...image, id: image.id + index * 1000 }))
+                    Array(1).fill().map((_, index) => ({ ...image, id: image.id + index * 1000 }))
                 );
 
                 const imagesWithPresignedUrls = await Promise.all(replicatedImageData.map(async (image) => {
