@@ -27,7 +27,6 @@ const RegisterModal = ({ isOpen, onRequestClose }) => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Registration successful', data);
                 onRequestClose();
             } else {
                 throw new Error('Failed to register');

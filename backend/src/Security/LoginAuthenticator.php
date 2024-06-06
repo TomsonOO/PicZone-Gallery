@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +25,6 @@ class LoginAuthenticator extends AbstractAuthenticator
         $this->jwtManager = $jwtManager;
     }
 
-
     public function supports(Request $request): ?bool
     {
         return $request->getPathInfo() == '/api/login' && $request->isMethod('POST');
@@ -40,17 +38,24 @@ class LoginAuthenticator extends AbstractAuthenticator
         return new Passport(
             new UserBadge($username, function ($username) {
                 return $this->userProvider->loadUserByIdentifier($username);
-        }),
-        new PasswordCredentials($credentials['password'])
+            }),
+            new PasswordCredentials($credentials['password'])
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $jwtToken = $this->jwtManager->create($token->getUser());
+        $user = $token->getUser();
+
         return new JsonResponse([
             'message' => 'Authentication successful',
-            'token' => $jwtToken
+            'token' => $jwtToken,
+            'user' => [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail()
+            ]
         ]);
     }
 
@@ -59,6 +64,6 @@ class LoginAuthenticator extends AbstractAuthenticator
         return new JsonResponse([
             'error' => 'Authentication failed',
             'message' => $exception->getMessage()
-            ],Response::HTTP_UNAUTHORIZED);
+        ], Response::HTTP_UNAUTHORIZED);
     }
 }

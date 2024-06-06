@@ -19,6 +19,15 @@ code {
     monospace;
 }
 
+.sidebar {
+  position: relative;
+  overflow: visible;
+}
+
+.user-dropdown {
+  transition: opacity 0.3s ease-in-out;
+}
+
 
 @keyframes gradient {
   0% { background-position: 0% 50%; }
