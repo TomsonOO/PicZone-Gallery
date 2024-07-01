@@ -51,9 +51,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(?int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     public function getProfileImage(): ?Image
@@ -61,9 +63,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->profileImage;
     }
 
-    public function setProfileImage(?Image $profileImage): void
+    public function setProfileImage(?Image $profileImage): static
     {
         $this->profileImage = $profileImage;
+
+        return $this;
     }
 
     public function getBiography(): ?string
@@ -71,9 +75,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->biography;
     }
 
-    public function setBiography(?string $biography): void
+    public function setBiography(?string $biography): static
     {
         $this->biography = $biography;
+
+        return $this;
     }
 
     public function getIsProfilePublic(): ?bool
@@ -81,9 +87,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isProfilePublic;
     }
 
-    public function setIsProfilePublic(?bool $isProfilePublic): void
+    public function setIsProfilePublic(?bool $isProfilePublic): static
     {
         $this->isProfilePublic = $isProfilePublic;
+
+        return $this;
     }
 
     public function getSettings(): ?array
@@ -91,9 +99,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->settings;
     }
 
-    public function setSettings(?array $settings): void
+    public function setSettings(?array $settings): static
     {
         $this->settings = $settings;
+
+        return $this;
     }
 
     public function getEmail(): ?string

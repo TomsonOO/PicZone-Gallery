@@ -5,19 +5,19 @@ import { useUser } from '../../context/UserContext';
 
 Modal.setAppElement('#root');
 
-const LoginModal = ({ isOpen, onRequestClose }) => {
+const LoginModal = ({ isLoginOpen, onRequestClose }) => {
     const [opacity, setOpacity] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useUser();
 
     useEffect(() => {
-        if (isOpen) {
+        if (isLoginOpen) {
             setTimeout(() => setOpacity(true), 10);
         } else {
             setOpacity(false);
         }
-    }, [isOpen]);
+    }, [isLoginOpen]);
 
     const handleAfterOpen = () => {
         setOpacity(true);
@@ -52,7 +52,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
 
     return (
         <Modal
-            isOpen={isOpen}
+            isOpen={isLoginOpen}
             onRequestClose={() => {
                 onRequestClose();
                 setOpacity(false);
@@ -80,6 +80,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                         />
                         <input
                             type="password"
+                            minLength="6"
                             placeholder="Password"
                             className="block w-full mt-1 p-3 border rounded text-lg"
                             value={password}

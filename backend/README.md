@@ -23,7 +23,7 @@ The script supports the following commands to manage tests:
 - **Start the test environment**: This command sets up and starts all services required for testing but does not execute tests automatically.
 
   ```bash
-  ./script_name.sh
+  ./start_test_compose.sh
 ### Script Command Arguments
 
 - `start`: Initializes and starts all necessary services for testing, without automatically executing any tests.

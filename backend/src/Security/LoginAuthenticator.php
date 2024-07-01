@@ -47,6 +47,7 @@ class LoginAuthenticator extends AbstractAuthenticator
     {
         $jwtToken = $this->jwtManager->create($token->getUser());
         $user = $token->getUser();
+        $profileImageId = $user->getProfileImage() ? $user->getProfileImage()->getId() : 1;
 
         return new JsonResponse([
             'message' => 'Authentication successful',
@@ -54,7 +55,8 @@ class LoginAuthenticator extends AbstractAuthenticator
             'user' => [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
-                'email' => $user->getEmail()
+                'email' => $user->getEmail(),
+                'profileImageId' => $profileImageId,
             ]
         ]);
     }

@@ -3,8 +3,7 @@ import useFetchImages from '../hooks/useFetchImages';
 import { FaSpinner } from 'react-icons/fa';
 
 const GalleryGrid = () => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    const { images, loading, error } = useFetchImages(backendUrl);
+    const { images, loading, error } = useFetchImages();
 
     if (loading) {
         return (

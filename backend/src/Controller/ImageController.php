@@ -64,13 +64,28 @@ class ImageController extends AbstractController
 
         return $this->json($data);
     }
+
+    #[Route('/profile/{profileId}', name: 'profile_image', methods: ['GET'])]
+    public function getProfileImage(ImageRepository $imageRepository, int $profileId): JsonResponse
+    {
+        $profileImage = $imageRepository->findOneBy(['id' => $profileId]);
+        $data = [
+            'id' => $profileImage->getId(),
+            'filename' => $profileImage->getFilename(),
+            'url' => $profileImage->getUrl(),
+            'objectKey' => $profileImage->getObjectKey(),
+        ];
+
+        return $this->json($data);
+    }
+
     #[Route('/upload', name: 'image_upload', methods: ['POST'])]
     public function uploadImage(Request $request): JsonResponse
     {
         $file = $request->files->get('image');
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $description = $request->request->get('description', $originalFilename);
         $imageType = $request->request->get('type', 'gallery');
+        $description = $request->request->get('description', $originalFilename);
         $showOnHomepage = ($imageType === 'profile') ? false :
             filter_var($request->request->get('showOnHomePage', 'true'), FILTER_VALIDATE_BOOLEAN);
 
@@ -81,15 +96,15 @@ class ImageController extends AbstractController
 
 
         try {
-            $image = $this->imageService->uploadImage($file, $description, $imageType, $showOnHomepage);
+            $image = $this->imageService->uploadImage($file, $imageType, $description, $showOnHomepage);
             return new JsonResponse([
                 'message' => 'Image uploaded successfully',
                 'data' => [
                     'id' => $image->getId(),
                     'filename' => $image->getFilename(),
                     'url' => $image->getUrl(),
-                    'description' => $image->getDescription(),
                     'type' => $image->getType(),
+                    'description' => $image->getDescription(),
                     'showOnHomepage' => $image->getShowOnHomepage()
                 ]
             ], Response::HTTP_CREATED);

@@ -26,12 +26,7 @@ class Image
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    public function getShowOnHomepage(): ?bool
-    {
-        return $this->showOnHomepage;
-    }
-
-    #[ORM\Column]
+    #[ORM\Column (options: ["default" => false])]
     private ?bool $showOnHomepage = null;
 
     #[ORM\Column(length: 255)]
@@ -106,7 +101,7 @@ class Image
         return $this;
     }
 
-    public function isShowOnHomepage(): ?bool
+    public function getShowOnHomepage(): ?bool
     {
         return $this->showOnHomepage;
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const useFetchImages = (backendUrl) => {
+const useFetchImages = () => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,11 +15,7 @@ const useFetchImages = (backendUrl) => {
                 }
                 const imageData = await response.json();
 
-                const replicatedImageData = imageData.flatMap(image =>
-                    Array(1).fill().map((_, index) => ({ ...image, id: image.id + index * 1000 }))
-                );
-
-                const imagesWithPresignedUrls = await Promise.all(replicatedImageData.map(async (image) => {
+                const imagesWithPresignedUrls = await Promise.all(imageData.map(async (image) => {
                     if (!image.objectKey) {
                         console.error('objectKey is undefined for image', image);
                         return image;
