@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\DTO\UserDTO;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\ImageService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,17 +27,20 @@ class UserController extends AbstractController
     private EntityManagerInterface $entityManager;
     private SerializerInterface $serializer;
     private ValidatorInterface $validator;
+    private ImageService $imageService;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        ImageService $imageService
     ) {
         $this->security = $security;
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->validator = $validator;
+        $this->imageService = $imageService;
     }
 
     #[Route('', name: "add_user", methods: ["POST"])]
@@ -98,10 +103,24 @@ class UserController extends AbstractController
         if(count($errors) > 0) {
             return $this->json(['message' => 'Validation failed', 'errors' => (string) $errors], Response::HTTP_BAD_REQUEST);
         }
+        if ($request->files->has('image')) {
+            $file = $request->files->get('image');
+            $imageType = "profile";
+            if (!$file || !$file->isValid()) {
+                throw new HttpException(Response::HTTP_BAD_REQUEST, "Invalid file upload.");
+            }
+            try {
+                $image = $this->imageService->uploadImage($file, $imageType);
+            } catch (\Exception $e) {
+                throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, "Error processing the image.");
+            }
+        }
 
         $user->setUsername($data['username'] ?? $user->getUsername());
         $user->setEmail($data['email'] ?? $user->getEmail());
         $user->setBiography($data['biography'] ?? $user->getBiography());
+        $user->setIsProfilePublic($data['isProfilePublic'] ?? $user->getIsProfilePublic());
+        $user->setProfileImage($image->getId() ?? $user->getProfileImage());
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -110,7 +129,6 @@ class UserController extends AbstractController
             'message' => 'Profile update successfully',
             'data' => $this->serializer->serialize($user, 'json')
         ], Response::HTTP_OK);
-
     }
 
 }

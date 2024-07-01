@@ -4,7 +4,7 @@ import { IoMdClose } from 'react-icons/io';
 
 Modal.setAppElement('#root');
 
-const RegisterModal = ({ isOpen, onRequestClose }) => {
+const RegisterModal = ({ isRegisterOpen, onRequestClose }) => {
     const [opacity, setOpacity] = React.useState(false);
 
     const handleRegister = async (event) => {
@@ -27,7 +27,6 @@ const RegisterModal = ({ isOpen, onRequestClose }) => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Registration successful', data);
                 onRequestClose();
             } else {
                 throw new Error('Failed to register');
@@ -40,12 +39,12 @@ const RegisterModal = ({ isOpen, onRequestClose }) => {
 
 
     React.useEffect(() => {
-        if (isOpen) {
+        if (isRegisterOpen) {
             setTimeout(() => setOpacity(true), 10);
         } else {
             setOpacity(false);
         }
-    }, [isOpen]);
+    }, [isRegisterOpen]);
 
     const handleAfterOpen = () => {
         setOpacity(true);
@@ -57,7 +56,7 @@ const RegisterModal = ({ isOpen, onRequestClose }) => {
 
     return (
         <Modal
-            isOpen={isOpen}
+            isOpen={isRegisterOpen}
             onRequestClose={() => {
                 onRequestClose();
                 setOpacity(false);
