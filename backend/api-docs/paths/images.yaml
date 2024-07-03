@@ -43,3 +43,31 @@ listImages:
               type: "array"
               items:
                 $ref: '../components/schemas.yaml#/schemas/Image'
+
+getProfileImage:
+  get:
+    summary: "Get profile image"
+    description: "Retrieve profile image information of the user"
+    operationId: "getProfileImage"
+    tags:
+      - "Image"
+    parameters:
+      - name: "profileId"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+    responses:
+      '200':
+        description: "Profile image information"
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yaml#/schemas/Image'
+      '404':
+        description: "Profile image not found"
+        content:
+          application/json:
+            schema:
+              type: "string"
+              example: "Profile image not found"

@@ -10,12 +10,16 @@ paths:
     $ref: './paths/users.yaml#/user'
   /api/user/{id}:
     $ref: './paths/users.yaml#/userById'
-  /api/user/update:
-    $ref: './paths/users.yaml#/userUpdate'
+  /api/user/update/info:
+    $ref: './paths/users.yaml#/userUpdateInformation'
+  /api/user/update/avatar:
+    $ref: './paths/users.yaml#/userUpdateAvatar'
   /images/presigned-url/{objectKey}:
     $ref: './paths/images.yaml#/getPresignedUrl'
   /api/images:
     $ref: './paths/images.yaml#/listImages'
+  /api/images/profile/{profileId}:
+    $ref: './paths/images.yaml#/getProfileImage'
 components:
   schemas:
     $ref: './components/schemas.yaml#/schemas'

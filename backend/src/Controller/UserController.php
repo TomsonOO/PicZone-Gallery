@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\UserDTO;
+use App\Entity\Image;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\ImageService;
@@ -87,8 +88,8 @@ class UserController extends AbstractController
     }
 
 
-    #[Route('/update', name: 'update_user', methods: ['PATCH'])]
-    public function updateUser(Request $request): JsonResponse {
+    #[Route('/update/info', name: 'update_user_info', methods: ['PATCH'])]
+    public function updateUserInformation(Request $request): JsonResponse {
         $token = $this->security->getToken();
         $user = $token?->getUser();
 
@@ -97,38 +98,61 @@ class UserController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-
         $errors = $this->validator->validate($data);
 
         if(count($errors) > 0) {
             return $this->json(['message' => 'Validation failed', 'errors' => (string) $errors], Response::HTTP_BAD_REQUEST);
-        }
-        if ($request->files->has('image')) {
-            $file = $request->files->get('image');
-            $imageType = "profile";
-            if (!$file || !$file->isValid()) {
-                throw new HttpException(Response::HTTP_BAD_REQUEST, "Invalid file upload.");
-            }
-            try {
-                $image = $this->imageService->uploadImage($file, $imageType);
-            } catch (\Exception $e) {
-                throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, "Error processing the image.");
-            }
         }
 
         $user->setUsername($data['username'] ?? $user->getUsername());
         $user->setEmail($data['email'] ?? $user->getEmail());
         $user->setBiography($data['biography'] ?? $user->getBiography());
         $user->setIsProfilePublic($data['isProfilePublic'] ?? $user->getIsProfilePublic());
-        $user->setProfileImage($image->getId() ?? $user->getProfileImage());
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return $this->json([
-            'message' => 'Profile update successfully',
-            'data' => $this->serializer->serialize($user, 'json')
-        ], Response::HTTP_OK);
+        return $this->json(['message' => 'User information updated successfully'], Response::HTTP_OK);
+    }
+
+    #[Route('/update/avatar', name: 'update_user_avatar', methods: ['POST'])]
+    public function updateUserAvatar(Request $request): JsonResponse {
+        $token = $this->security->getToken();
+        $user = $token?->getUser();
+
+        if (!$user || !is_a($user, UserInterface::class)) {
+            return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!$request->files->has('image')) {
+            return $this->json(['message' => 'No image file provided'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $file = $request->files->get('image');
+        $imageType = "profile";
+        if (!$file || !$file->isValid()) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, "Invalid file upload.");
+        }
+
+        try {
+            $image = $this->imageService->uploadImage($file, $imageType);
+            $imageEntity = $this->entityManager->getRepository(Image::class)->find($image->getId());
+
+            if (!$imageEntity) {
+                throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, "Image entity not found.");
+            }
+
+            $user->setProfileImage($imageEntity);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            return $this->json([
+                'message' => 'Profile image updated successfully',
+                'imageId' => $user->getProfileImage()
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, "Error processing the image.");
+        }
     }
 
 }
