@@ -6,6 +6,7 @@ use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
+#[ORM\Index(name: 'show_on_homepage_idx', columns: ['show_on_homepage'])]
 class Image
 {
     #[ORM\Id]
