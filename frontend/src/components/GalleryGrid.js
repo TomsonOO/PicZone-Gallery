@@ -3,7 +3,8 @@ import useFetchImages from '../hooks/useFetchImages';
 import { FaSpinner } from 'react-icons/fa';
 
 const GalleryGrid = () => {
-    const { images, loading, error } = useFetchImages();
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const { images, loading, error } = useFetchImages(backendUrl);
 
     if (loading) {
         return (
@@ -30,6 +31,7 @@ const GalleryGrid = () => {
                             <>
                                 <img
                                     src={image.url}
+                                    loading={"lazy"}
                                     alt={image.description || 'Image'}
                                     className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
                                 />
