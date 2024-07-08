@@ -79,7 +79,7 @@ userById:
 userUpdate:
   patch:
     summary: "Update user profile"
-    description: "Updates user profile details such as username, email, and biography."
+    description: "Updates user profile details such as username, email, biography and profile visibility."
     operationId: "updateUser"
     tags:
       - "User"
@@ -89,7 +89,7 @@ userUpdate:
       description: "Profile update data"
       required: true
       content:
-        application/json:
+        multipart/form-data:
           schema:
             type: "object"
             properties:
@@ -99,6 +99,8 @@ userUpdate:
                 type: "string"
               biography:
                 type: "string"
+              isProfilePublic:
+                type: "boolean"
     responses:
       '200':
         description: "Profile updated successfully"
@@ -121,6 +123,51 @@ userUpdate:
                 message:
                   type: "string"
                 errors:
+                  type: "string"
+      '401':
+        description: "Unauthorized"
+
+userUpdateAvatar:
+  post:
+    summary: "Update user's avatar"
+    description: "Allows a user to update their profile avatar image."
+    operationId: "updateUserAvatar"
+    tags:
+      - "User"
+    security:
+      - bearerAuth: []
+    requestBody:
+      description: "Avatar image data"
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: "object"
+            properties:
+              image:
+                type: "string"
+                format: "binary"
+                description: "The new avatar image file."
+    responses:
+      '200':
+        description: "Avatar updated successfully"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                imageId:
+                  type: "integer"
+      '400':
+        description: "Invalid input data or file upload failed"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                message:
                   type: "string"
       '401':
         description: "Unauthorized"

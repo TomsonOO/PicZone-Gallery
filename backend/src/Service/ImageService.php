@@ -23,7 +23,7 @@ class ImageService
         $this->bucketName = $bucketName;
     }
 
-    public function uploadImage(UploadedFile $file, string $description, string $imageType, bool $showOnHomepage): Image
+    public function uploadImage(UploadedFile $file, string $imageType, string $description = "", bool $showOnHomepage=false): Image
     {
         if ($file->getSize() > 2048000) {
             throw new \Exception("File size exceeds the maximum limit of 2MB.");
@@ -46,11 +46,11 @@ class ImageService
         $image = new Image();
         $image->setFilename($filename);
         $image->setUrl($result['ObjectURL']);
-        $image->setDescription($description);
         $image->setCreatedAt(new \DateTimeImmutable());
-        $image->setShowOnHomepage($showOnHomepage);
         $image->setObjectKey($s3Key);
         $image->setType($imageType);
+        $image->setDescription($description);
+        $image->setShowOnHomepage($showOnHomepage);
 
         $this->entityManager->persist($image);
         $this->entityManager->flush();
