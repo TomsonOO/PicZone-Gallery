@@ -40,3 +40,32 @@ code {
   background-size: 300% 300%;
   animation: gradient 8s ease infinite;
 }
+
+/* Toast notification */
+.custom-toast {
+  background: linear-gradient(to bottom, #a5d6a7, #66bb6a) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  font-size: 1.2em !important;
+  font-style: italic !important;
+  display: flex;
+  align-items: center;
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(to bottom, #a5d6a7, #66bb6a) !important;
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.6) !important;
+  height: 4px !important;
+}
+
+.dark .custom-toast {
+  background: linear-gradient(to bottom, #2e7d32, #1b5e20) !important;
+}
+
+.dark .Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
