@@ -5,8 +5,8 @@ use App\Controller\UserController;
 use App\DTO\UserDTO;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\ImageService;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +23,8 @@ class UserControllerTest extends WebTestCase
     private $serializerMock;
     private $validatorMock;
     private $passwordHasherMock;
+    private $userRepositoryMock;
+    private $imageServiceMock;
     private $userController;
 
     protected function setUp(): void
@@ -34,12 +36,16 @@ class UserControllerTest extends WebTestCase
         $this->serializerMock = $this->createMock(SerializerInterface::class);
         $this->validatorMock = $this->createMock(ValidatorInterface::class);
         $this->passwordHasherMock = $this->createMock(UserPasswordHasherInterface::class);
+        $this->userRepositoryMock = $this->createMock(UserRepository::class);
+        $this->imageServiceMock = $this->createMock(ImageService::class);
 
         $this->userController = new UserController(
             $this->securityMock,
             $this->entityManagerMock,
             $this->serializerMock,
-            $this->validatorMock
+            $this->validatorMock,
+            $this->imageServiceMock,
+            $this->userRepositoryMock
         );
 
         self::bootKernel();
@@ -63,6 +69,11 @@ class UserControllerTest extends WebTestCase
             ->method('validate')
             ->with($userDTO)
             ->willReturn(new ConstraintViolationList());
+
+        $this->userRepositoryMock->expects($this->once())
+            ->method('findOneBy')
+            ->with(['username' => 'WillyWonka'])
+            ->willReturn(null);
 
         $this->passwordHasherMock->expects($this->once())
             ->method('hashPassword')
@@ -99,8 +110,7 @@ class UserControllerTest extends WebTestCase
         $user->setUsername('WillyWonka');
         $user->setEmail('WillyWonka@gmail.com');
 
-        $userRepositoryMock = $this->createMock(UserRepository::class);
-        $userRepositoryMock->expects($this->once())
+        $this->userRepositoryMock->expects($this->once())
             ->method('find')
             ->with($userId)
             ->willReturn($user);
@@ -113,7 +123,7 @@ class UserControllerTest extends WebTestCase
 
         $request = new Request();
 
-        $response = $this->userController->deleteUser($userId, $userRepositoryMock);
+        $response = $this->userController->deleteUser($userId);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $responseData = json_decode($response->getContent(), true);
@@ -125,8 +135,7 @@ class UserControllerTest extends WebTestCase
     {
         $userId = 1;
 
-        $userRepositoryMock = $this->createMock(UserRepository::class);
-        $userRepositoryMock->expects($this->once())
+        $this->userRepositoryMock->expects($this->once())
             ->method('find')
             ->with($userId)
             ->willReturn(null);
@@ -138,7 +147,7 @@ class UserControllerTest extends WebTestCase
 
         $request = new Request();
 
-        $response = $this->userController->deleteUser($userId, $userRepositoryMock);
+        $response = $this->userController->deleteUser($userId);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $responseData = json_decode($response->getContent(), true);
