@@ -29,19 +29,22 @@ class UserController extends AbstractController
     private SerializerInterface $serializer;
     private ValidatorInterface $validator;
     private ImageService $imageService;
+    private UserRepository $userRepository;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        ImageService $imageService
+        ImageService $imageService,
+        UserRepository $userRepository
     ) {
         $this->security = $security;
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->validator = $validator;
         $this->imageService = $imageService;
+        $this->userRepository = $userRepository;
     }
 
     #[Route('', name: "add_user", methods: ["POST"])]
@@ -59,6 +62,11 @@ class UserController extends AbstractController
             return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
+        $existingUser = $this->userRepository->findOneBy(['username' => $userDTO->username]);
+        if($existingUser) {
+            return $this->json(['errors' => ['username' => 'Username already exists']], Response::HTTP_BAD_REQUEST);
+        }
+
         $user = new User();
         $user->setUsername($userDTO->username);
         $user->setEmail($userDTO->email);
@@ -73,9 +81,8 @@ class UserController extends AbstractController
 
 
     #[Route('/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function deleteUser(int $id, UserRepository $userRepository,
-    ): JsonResponse {
-        $user = $userRepository->find($id);
+    public function deleteUser(int $id): JsonResponse {
+        $user = $this->userRepository->find($id);
 
         if (!$user) {
             return $this->json(['message' => 'User was not found.'], Response::HTTP_BAD_REQUEST);
