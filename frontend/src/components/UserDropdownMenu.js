@@ -1,11 +1,23 @@
+import React, { useState } from 'react';
 import { FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
+import SettingsModal from './modals/SettingsModal';
 
-const UserDropdownMenu = ( {isUserDropdownMenuOpen} ) => {
-    const { logout } = useUser();
+const UserDropdownMenu = ({ isUserDropdownMenuOpen }) => {
+    const { logout, user, updateUser } = useUser();
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
+    };
+
+    const openSettingsModal = () => {
+        console.log(user);
+        setIsSettingsModalOpen(true);
+    };
+
+    const closeSettingsModal = () => {
+        setIsSettingsModalOpen(false);
     };
 
     return (
@@ -15,7 +27,7 @@ const UserDropdownMenu = ( {isUserDropdownMenuOpen} ) => {
                     <div className="p-4">
                         <button
                             className="w-full flex items-center p-2 hover:bg-blue-800 rounded"
-                            onClick={() => console.log('Settings clicked')}
+                            onClick={openSettingsModal}
                         >
                             <FaCog className="mr-2" /> Settings
                         </button>
@@ -29,6 +41,12 @@ const UserDropdownMenu = ( {isUserDropdownMenuOpen} ) => {
                     </div>
                 </div>
             )}
+            <SettingsModal
+                isOpen={isSettingsModalOpen}
+                onRequestClose={closeSettingsModal}
+                user={user}
+                updateUser={updateUser}
+            />
         </div>
     );
 };
