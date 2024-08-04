@@ -2,7 +2,7 @@
 
 PicZone Gallery is a full-stack web application that showcases AI-generated images.
 
-**Demo**: [PicZone Gallery Live Demo](http://www.piczone.pics)
+**Demo**: [PicZone Gallery Live Demo](https://piczone-frontend-1ae9d9713646.herokuapp.com/)
 
 ## Technology Stack
 
