@@ -1,0 +1,37 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
+fos_elastica:
+    clients:
+        default:
+            host: 'es01'
+            port: 9200
+            username: '%env(ELASTIC_USERNAME)%'
+            password: '%env(ELASTIC_PASSWORD)%'
+    indexes:
+        images:
+            index_name: images
+            settings:
+                index:
+                    number_of_shards: 1
+                    number_of_replicas: 0
+            persistence:
+                driver: orm
+                model: App\Entity\Image
+                provider: ~
+                finder: ~
+            properties:
+                id:
+                    type: integer
+                filename:
+                    type: text
+                url:
+                    type: text
+                description:
+                    type: text
+                createdAt:
+                    type: date
+                showOnHomepage:
+                    type: boolean
+                objectKey:
+                    type: text
+                type:
+                    type: text

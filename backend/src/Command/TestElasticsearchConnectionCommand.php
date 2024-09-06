@@ -17,14 +17,28 @@ class TestElasticsearchConnectionCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $client = ClientBuilder::create()->setHosts(['http://es01:9200'])->build();
-        $response = $client->ping();
+        $username = getenv('ELASTIC_USERNAME');
+        $password = getenv('ELASTIC_PASSWORD');
+        $hosts = [
+            'https://' . $username . ':' . $password . '@es01:9200'
+        ];
+        echo $hosts[0];
+        $client = ClientBuilder::create()
+            ->setHosts($hosts)
+            ->setSSLVerification('/usr/share/elasticsearch/config/certs/ca/ca.crt')
+            ->build();
 
-        if ($response) {
-            $output->writeln('Connection to Elasticsearch successful!');
-            return Command::SUCCESS;
-        } else {
-            $output->writeln('Failed to connect to Elasticsearch.');
+        try {
+            $response = $client->ping();
+            if ($response) {
+                $output->writeln('Connection to Elasticsearch successful!');
+                return Command::SUCCESS;
+            } else {
+                $output->writeln('Failed to connect to Elasticsearch.');
+                return Command::FAILURE;
+            }
+        } catch (\Exception $e) {
+            $output->writeln('Error: ' . $e->getMessage());
             return Command::FAILURE;
         }
     }
