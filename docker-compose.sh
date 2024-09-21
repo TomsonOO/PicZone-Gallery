@@ -23,7 +23,10 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 if [[ "$COMMAND" == "up" ]]; then
-    docker compose -f compose.yaml -f compose.elasticsearch.yaml up $BUILD $REMOVE_ORPHANS $NO_CACHE $DETACHED
+    if [[ -n "$NO_CACHE" ]]; then
+        docker compose -f compose.yaml -f compose.elasticsearch.yaml build $NO_CACHE
+    fi
+    docker compose -f compose.yaml -f compose.elasticsearch.yaml up $BUILD $REMOVE_ORPHANS $DETACHED
 elif [[ "$COMMAND" == "down" ]]; then
     docker compose -f compose.yaml -f compose.elasticsearch.yaml down $REMOVE_ORPHANS
 else
