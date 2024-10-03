@@ -4,6 +4,14 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+image_adapter:
+    resource: ../src/Image/Infrastructure/Adapter
+    type: attribute
+
+user_adapter:
+    resource: ../src/User/Infrastructure/Adapter
+    type: attribute
+
 api_login:
     path: /api/login
     methods: [POST]

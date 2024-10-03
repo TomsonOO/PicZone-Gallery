@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\DTO\UserDTO;
 use App\Entity\Image;
-use App\Entity\User;
+use App\User\Domain\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\ImageService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,37 +47,37 @@ class UserController extends AbstractController
         $this->userRepository = $userRepository;
     }
 
-    #[Route('', name: "add_user", methods: ["POST"])]
-    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher
-    ): JsonResponse {
-        $userDTO = $this->serializer->deserialize($request->getContent(), UserDTO::class, 'json');
-
-        $errors = $this->validator->validate($userDTO);
-        if (count($errors) > 0) {
-            $errorMessages = [];
-            foreach ($errors as $error) {
-                $errorMessages[$error->getPropertyPath()] = $error->getMessage();
-            }
-
-            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
-        }
-
-        $existingUser = $this->userRepository->findOneBy(['username' => $userDTO->username]);
-        if($existingUser) {
-            return $this->json(['errors' => ['username' => 'Username already exists']], Response::HTTP_BAD_REQUEST);
-        }
-
-        $user = new User();
-        $user->setUsername($userDTO->username);
-        $user->setEmail($userDTO->email);
-        $user->setPassword($passwordHasher->hashPassword($user, $userDTO->password));
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        return $this->json(['message' => 'User successfully created', 'userId' => $user->getId()],
-            Response::HTTP_CREATED);
-    }
+//    #[Route('', name: "add_user", methods: ["POST"])]
+//    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher
+//    ): JsonResponse {
+//        $userDTO = $this->serializer->deserialize($request->getContent(), UserDTO::class, 'json');
+//
+//        $errors = $this->validator->validate($userDTO);
+//        if (count($errors) > 0) {
+//            $errorMessages = [];
+//            foreach ($errors as $error) {
+//                $errorMessages[$error->getPropertyPath()] = $error->getMessage();
+//            }
+//
+//            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+//        }
+//
+//        $existingUser = $this->userRepository->findOneBy(['username' => $userDTO->username]);
+//        if($existingUser) {
+//            return $this->json(['errors' => ['username' => 'Username already exists']], Response::HTTP_BAD_REQUEST);
+//        }
+//
+//        $user = new User();
+//        $user->setUsername($userDTO->username);
+//        $user->setEmail($userDTO->email);
+//        $user->setPassword($passwordHasher->hashPassword($user, $userDTO->password));
+//
+//        $this->entityManager->persist($user);
+//        $this->entityManager->flush();
+//
+//        return $this->json(['message' => 'User successfully created', 'userId' => $user->getId()],
+//            Response::HTTP_CREATED);
+//    }
 
 
     #[Route('/{id}', name: 'delete_user', methods: ['DELETE'])]
