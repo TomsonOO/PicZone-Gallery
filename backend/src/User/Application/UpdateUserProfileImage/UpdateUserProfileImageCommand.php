@@ -1,26 +1,26 @@
 <?php
 
-namespace App\User\Application\UpdateUserAvatar;
+namespace App\User\Application\UpdateUserProfileImage;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UpdateUserAvatarCommand
+class UpdateUserProfileImageCommand
 {
     private int $userId;
-    private UploadedFile $avatarImage;
+    private UploadedFile $profileImage;
 
-    public function __construct(int $userId, UploadedFile $avatarImage)
+    public function __construct(int $userId, UploadedFile $profileImage)
     {
         $this->userId = $userId;
-        $this->avatarImage = $avatarImage;
+        $this->profileImage = $profileImage;
     }
 
     public function getUserId(): int
     {
         return $this->userId;
     }
-    public function getAvatarImage(): UploadedFile
+    public function getProfileImage(): UploadedFile
     {
-        return $this->avatarImage;
+        return $this->profileImage;
     }
 }

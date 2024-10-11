@@ -44,7 +44,7 @@ class UpdateUserCommand
         return $this->biography;
     }
 
-    public function isProfilePublic(): ?bool
+    public function getIsProfilePublic(): ?bool
     {
         return $this->isProfilePublic;
     }

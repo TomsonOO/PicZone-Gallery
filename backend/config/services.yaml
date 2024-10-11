@@ -35,7 +35,7 @@ services:
 
     App\Image\Infrastructure\Service\S3ImageStorage:
         arguments:
-            $bucketName: '%env(AWS_S3_BUCKET)%'
+            $bucketName: '%env(AWS_S3_BUCKET_NAME)%'
 
     App\EventListener\ExceptionListener:
         tags:

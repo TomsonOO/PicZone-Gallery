@@ -22,21 +22,10 @@ class UpdateUserCommandHandler
             throw new \DomainException('User not found');
         }
 
-        if ($command->getUsername() !== null) {
-            $user->setUsername($command->getUsername());
-        }
-
-        if ($command->getEmail() !== null) {
-            $user->setEmail($command->getEmail());
-        }
-
-        if ($command->getBiography() !== null) {
-            $user->setBiography($command->getBiography());
-        }
-
-        if ($command->isProfilePublic() !== null) {
-            $user->setIsProfilePublic($command->isProfilePublic());
-        }
+        $user->setEmail($command->getEmail());
+        $user->setUsername($command->getUsername());
+        $user->setBiography($command->getBiography());
+        $user->setIsProfilePublic($command->getIsProfilePublic());
 
         $this->userRepository->save($user);
     }

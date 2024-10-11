@@ -48,7 +48,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct(string $username, string $email, string $password)
     {
-        $this->id = 213;
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;

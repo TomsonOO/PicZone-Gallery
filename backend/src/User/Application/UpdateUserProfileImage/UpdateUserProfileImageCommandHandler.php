@@ -1,13 +1,13 @@
 <?php
 
-namespace App\User\Application\UpdateUserAvatar;
+namespace App\User\Application\UpdateUserProfileImage;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Domain\Entity\Image;
 use App\User\Application\Port\UserRepositoryPort;
 
-class UpdateUserAvatarCommandHandler
+class UpdateUserProfileImageCommandHandler
 {
     private const PROFILE_DIRECTORY = 'ProfileImages';
     private ImageRepositoryPort $imageRepository;
@@ -21,18 +21,20 @@ class UpdateUserAvatarCommandHandler
         $this->userRepository = $userRepository;
     }
 
-    public function handle(UpdateUserAvatarCommand $command): void
+    public function handle(UpdateUserProfileImageCommand $command): void
     {
-        $uploadedImage = $this->imageStorage->upload($command->getAvatarImage(), self::PROFILE_DIRECTORY);
+        $uploadedImage = $this->imageStorage->upload($command->getProfileImage(), self::PROFILE_DIRECTORY);
 
-        $image = new Image(
+        $profileImage = new Image(
             $uploadedImage['image_filename'],
             $uploadedImage['url'],
             $uploadedImage['objectKey'],
             Image::TYPE_GALLERY,
         );
+        $this->imageRepository->save($profileImage);
 
-
+        $user = $this->userRepository->findById($command->getUserId());
+        $user->setProfileImage($profileImage);
+        $this->imageRepository->save($profileImage);
     }
-
 }

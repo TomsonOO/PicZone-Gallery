@@ -22,9 +22,10 @@ class CreateUserCommandHandler
         $user = new User(
             $command->getUsername(),
             $command->getEmail(),
-            $command->getEmail(),
-//            $this->passwordHasher->hashPassword(new User(), $command->getPassword())
+            ''
         );
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $command->getPassword());
+        $user->setPassword($hashedPassword);
 
         $this->userRepository->save($user);
     }

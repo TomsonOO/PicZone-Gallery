@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Image\Application\UloadImage;
+namespace App\Image\Application\UploadImage;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\Port\ImageStoragePort;
@@ -19,24 +19,16 @@ class UploadImageCommandHandler
 
     public function handle(UploadImageCommand $command): void
     {
-        $originalFilename = pathinfo($command->getFile()->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $this->slugger->slug($originalFilename);
-        $filename = $safeFilename.'-'.uniqid().'.'.$command->getFile()->guessExtension();
-
-        $directory = ($command->getImageType() === 'gallery') ? 'GalleryImages' : 'ProfileImages';
-        $s3Key = $directory . '/' . $filename;
-
-        $imageUrl = $this->imageStorage->upload($command->getFile(), $s3Key);
+        $uploadedImage = $this->imageStorage->upload($command->getImage(), $command->getImageType());
 
         $image = new Image(
-            $command->getFilename(),
-            $imageUrl,
-            $command->getDescription(),
-            $command->getCreatedAt(),
-            $command->getShowOnHomepage(),
-            $command->getObjectKey(),
-            $command->getType()
+            $uploadedImage['image_filename'],
+            $uploadedImage['url'],
+            $uploadedImage['objectKey'],
+            $command->getImageType()
         );
+        $image->setDescription($command->getDescription());
+        $image->setShowOnHomepage($command->getShowOnHomepage());
 
         $this->imageRepository->save($image);
     }

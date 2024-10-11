@@ -6,30 +6,30 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadImageCommand
 {
-    private string $filename;
+    private string $imageFilename;
     private string $url;
     private ?string $description;
     private bool $showOnHomepage;
     private string $imageType;
-    private UploadedFile $file;
+    private UploadedFile $image;
 
     public function __construct(
-        string $filename,
+        string $imageFilename,
         ?string $description,
         bool $showOnHomepage,
         string $imageType,
-        UploadedFile $file
+        UploadedFile $image
     ) {
-        $this->filename = $filename;
+        $this->imageFilename = $imageFilename;
         $this->description = $description;
         $this->showOnHomepage = $showOnHomepage;
-        $this->$imageType = $imageType;
-        $this->file = $file;
+        $this->imageType = $imageType;
+        $this->image = $image;
     }
 
-    public function getFilename(): string
+    public function getImageFilename(): string
     {
-        return $this->filename;
+        return $this->imageFilename;
     }
 
     public function getUrl(): string
@@ -52,8 +52,8 @@ class UploadImageCommand
         return $this->imageType;
     }
 
-    public function getFile(): UploadedFile
+    public function getImage(): UploadedFile
     {
-        return $this->file;
+        return $this->image;
     }
 }
