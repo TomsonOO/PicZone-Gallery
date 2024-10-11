@@ -1,35 +1,29 @@
 <?php
 
-namespace App\Image\Application\UloadImage;
+namespace App\Image\Application\UploadImage;
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadImageCommand
 {
     private string $filename;
     private string $url;
     private ?string $description;
-    private \DateTimeImmutable $createdAt;
     private bool $showOnHomepage;
-    private string $objectKey;
-    private string $type;
-    private $file;
+    private string $imageType;
+    private UploadedFile $file;
 
     public function __construct(
         string $filename,
-        string $url,
         ?string $description,
-        \DateTimeImmutable $createdAt,
         bool $showOnHomepage,
-        string $objectKey,
-        string $type,
-        $file
+        string $imageType,
+        UploadedFile $file
     ) {
         $this->filename = $filename;
-        $this->url = $url;
         $this->description = $description;
-        $this->createdAt = $createdAt;
         $this->showOnHomepage = $showOnHomepage;
-        $this->objectKey = $objectKey;
-        $this->type = $type;
+        $this->$imageType = $imageType;
         $this->file = $file;
     }
 
@@ -48,27 +42,17 @@ class UploadImageCommand
         return $this->description;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
     public function getShowOnHomepage(): bool
     {
         return $this->showOnHomepage;
     }
 
-    public function getObjectKey(): string
+    public function getImageType(): string
     {
-        return $this->objectKey;
+        return $this->imageType;
     }
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function getFile()
+    public function getFile(): UploadedFile
     {
         return $this->file;
     }

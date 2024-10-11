@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`image`')]
 class Image
 {
+    public const TYPE_PROFILE = 'profile';
+    public const TYPE_GALLERY = 'gallery';
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\SequenceGenerator(sequenceName: "images_id_seq", allocationSize: 1)]
@@ -27,7 +29,7 @@ class Image
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column (options: ["default" => false])]
-    private ?bool $showOnHomepage = null;
+    private ?bool $showOnHomepage = false;
 
     #[ORM\Column(length: 255)]
     private ?string $objectKey = null;
@@ -35,6 +37,14 @@ class Image
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
+    public function __construct(string $filename, string $url, string $objectKey, string $type)
+    {
+        $this->filename = $filename;
+        $this->url = $url;
+        $this->objectKey = $objectKey;
+        $this->type = $type;
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getType(): ?string
     {
@@ -58,23 +68,9 @@ class Image
         return $this->filename;
     }
 
-    public function setFilename(string $filename): static
-    {
-        $this->filename = $filename;
-
-        return $this;
-    }
-
     public function getUrl(): ?string
     {
         return $this->url;
-    }
-
-    public function setUrl(string $url): static
-    {
-        $this->url = $url;
-
-        return $this;
     }
 
     public function getDescription(): ?string
@@ -94,13 +90,6 @@ class Image
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getShowOnHomepage(): ?bool
     {
         return $this->showOnHomepage;
@@ -116,12 +105,5 @@ class Image
     public function getObjectKey(): ?string
     {
         return $this->objectKey;
-    }
-
-    public function setObjectKey(string $objectKey): static
-    {
-        $this->objectKey = $objectKey;
-
-        return $this;
     }
 }
