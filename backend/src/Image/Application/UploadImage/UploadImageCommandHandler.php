@@ -22,7 +22,7 @@ class UploadImageCommandHandler
         $uploadedImage = $this->imageStorage->upload($command->getImage(), $command->getImageType());
 
         $image = new Image(
-            $uploadedImage['image_filename'],
+            $uploadedImage['imageFilename'],
             $uploadedImage['url'],
             $uploadedImage['objectKey'],
             $command->getImageType()

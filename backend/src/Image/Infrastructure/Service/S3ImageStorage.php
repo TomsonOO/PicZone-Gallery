@@ -44,7 +44,7 @@ class S3ImageStorage implements ImageStoragePort
 
         return [
             'url' => $result['ObjectURL'],
-            'image_filename' => $imageFilename,
+            'imageFilename' => $imageFilename,
             'objectKey' => $s3Key,
         ];
     }
@@ -59,24 +59,17 @@ class S3ImageStorage implements ImageStoragePort
 
     public function getPresignedUrl(string $objectKey): string
     {
-        $s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => $_ENV['AWS_S3_REGION'],
-            'credentials' => [
-                'key' => $_ENV['AWS_ACCESS_KEY_ID'],
-                'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'],
-            ],
-        ]);
         try {
-            $cmd = $s3Client->getCommand('GetObject', [
-                'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
+            $cmd = $this->s3Client->getCommand('GetObject', [
+                'Bucket' => $this->bucketName,
                 'Key' => $objectKey,
             ]);
-            $request = $s3Client->createPresignedRequest($cmd, '+20 minutes');
+            $request = $this->s3Client->createPresignedRequest($cmd, '+20 minutes');
 
             return (string)$request->getUri();
         } catch (\Exception $e) {
             return new Response('Error generating presigned URL', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
 }

@@ -26,7 +26,7 @@ class UpdateUserProfileImageCommandHandler
         $uploadedImage = $this->imageStorage->upload($command->getProfileImage(), self::PROFILE_DIRECTORY);
 
         $profileImage = new Image(
-            $uploadedImage['image_filename'],
+            $uploadedImage['imageFilename'],
             $uploadedImage['url'],
             $uploadedImage['objectKey'],
             Image::TYPE_GALLERY,
