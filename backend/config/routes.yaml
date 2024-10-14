@@ -1,9 +1,3 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
-
 image_adapter:
     resource: ../src/Image/Infrastructure/Adapter
     type: attribute

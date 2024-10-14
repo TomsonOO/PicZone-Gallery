@@ -28,18 +28,10 @@ services:
                   key: '%env(AWS_ACCESS_KEY_ID)%'
                   secret: '%env(AWS_SECRET_ACCESS_KEY)%'
 
-    App\Service\ImageService:
-        arguments:
-            $s3Client: '@Aws\S3\S3Client'
-            $bucketName: '%env(AWS_S3_BUCKET_NAME)%'
-
     App\Image\Infrastructure\Service\S3ImageStorage:
         arguments:
             $bucketName: '%env(AWS_S3_BUCKET_NAME)%'
 
-    App\EventListener\ExceptionListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
 
     App\Command\TestElasticsearchConnectionCommand:
         tags: ['console.command']
