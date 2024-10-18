@@ -17,19 +17,19 @@
 ---
 <div align="center">
 
-PicZone Gallery is a full-stack web application that showcases AI-generated images, built with **Hexagonal Architecture** and **CQRS** to ensure high scalability and modularity for future enhancements.
+PicZone Gallery is a full-stack web application that showcases AI-generated images, following **Hexagonal Architecture** and **CQRS** principles.
 </div>
 
 ---
 
 ## 🔧 Technology Stack
 
-- **Frontend**: React ⚛️ for dynamic user interface
-- **Backend**: Symfony 🛠️ structured with Hexagonal Architecture + CQRS
-- **Database**: PostgreSQL 🗄️ for reliable data management
-- **Cloud Storage**: AWS S3 ☁️ to store and serve images
-- **Containerization**: Docker 🐳 for consistent development and deployment environments
-- **Hosting & Deployment**: Heroku 🌍 for easy scaling and deployment
+- **Frontend**: React ⚛️ — user interface
+- **Backend**: Symfony 🛠️ — application core
+- **Database**: PostgreSQL 🗄️ — data management
+- **Cloud Storage**: AWS S3 ☁️ — image storage
+- **Containerization**: Docker 🐳 — development and deployment
+- **Hosting & Deployment**: Heroku 🌍 — scalable deployment
 
 ---
 
@@ -46,14 +46,14 @@ PicZone Gallery is a full-stack web application that showcases AI-generated imag
 - **🔐 User Login**: Account holders can securely log in.
 - **⚙️ Profile Management**: Users can update their profile settings. *(Backend implemented only)*
 - **🖼️ Image Management API (CRUD)**: Users can upload, list, update, and remove images from the gallery. *(Backend implemented only)*
-- **🌗 Dark/Light Mode**: Users can toggle between dark and light mode for better user experience.
+- **🌗 Dark/Light Mode**: Users can toggle between dark and light mode.
 
 ---
 
 ## 🛠️ Ongoing Work
 
-- **⚙️ Hexagonal Architecture + CQRS**: The project has been refactored using **Hexagonal Architecture** and **CQRS** for enhanced separation of concerns and adaptability.
-- **🧪 Writing Tests**: Currently working on unit and integration tests to ensure reliability of the refactored architecture.
+- **⚙️ Hexagonal Architecture + CQRS**: The project has been refactored to follow **Hexagonal Architecture** and **CQRS** principles.
+- **🧪 Writing Tests**: Currently working on unit and integration tests to adapt to the changes introduced by the refactored architecture.
 - **🔍 Elasticsearch Integration**: Adding Elasticsearch to provide advanced search capabilities for images.
 - **🛠️ Minor Improvements**: Enhancing validation, refining error handling, and improving overall code quality.
 

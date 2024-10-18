@@ -1,106 +1,150 @@
 <?php
 
-namespace App\Tests\Integration\Image\Application;
+namespace App\Tests\Unit\Image\Application;
 
+use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use App\Image\Domain\Entity\Image;
-use App\Image\Application\Port\ImageRepositoryPort;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UploadImageCommandHandlerTest extends KernelTestCase
+class UploadImageCommandHandlerTest extends TestCase
 {
-    private UploadImageCommandHandler $handler;
-    private ImageStoragePort $imageStorageMock;
-    private ImageRepositoryPort $imageRepositoryMock;
+    private ImageRepositoryPort $imageRepository;
+    private ImageStoragePort $imageStorage;
+    private UploadImageCommandHandler $uploadImageHandler;
 
     protected function setUp(): void
     {
-        self::bootKernel();
+        $this->imageRepository = $this->createMock(ImageRepositoryPort::class);
+        $this->imageStorage = $this->createMock(ImageStoragePort::class);
 
-        $this->imageStorageMock = $this->createMock(ImageStoragePort::class);
-        $this->imageRepositoryMock = $this->createMock(ImageRepositoryPort::class);
-
-        $this->handler = new UploadImageCommandHandler($this->imageRepositoryMock, $this->imageStorageMock);
+        $this->uploadImageHandler = new UploadImageCommandHandler(
+            $this->imageRepository,
+            $this->imageStorage
+        );
     }
 
-    public function testUploadImageSuccess(): void
+    public function testHandle_CallsImageStorageAndImageRepository_WhenCalled(): void
     {
-        $file = new UploadedFile(
-            '/var/www/Tests/Resources/test_image.jpg',
-            'image.jpg',
-            'image/jpeg',
-            null,
-            true
-        );
-
+        $imageFile = $this->createMock(UploadedFile::class);
         $imageType = 'gallery';
-        $imageFilename = 'image-123456.jpg';
+        $description = 'testDescription';
+        $showOnHomepage = false;
+
         $uploadedImageData = [
-            'imageFilename' => $imageFilename,
-            'url' => 'https://example.com/gallery/image-123456.jpg',
-            'objectKey' => 'GalleryImages/image-123456.jpg',
+            'imageFilename' => 'testFilename',
+            'url' => 'testUrl',
+            'objectKey' => 'testObjectKey',
+            'imageType' => $imageType,
+            'description' => $description,
+            'showOnHomepage' => $showOnHomepage,
         ];
 
-        $this->imageStorageMock
+        $this->imageStorage
             ->expects($this->once())
             ->method('upload')
-            ->with(
-                $this->isInstanceOf(UploadedFile::class),
-                'gallery'
-            )
+            ->with($imageFile, $imageType)
             ->willReturn($uploadedImageData);
 
-        $this->imageRepositoryMock
+        $this->imageRepository
             ->expects($this->once())
             ->method('save')
-            ->with($this->isInstanceOf(Image::class));
+            ->with($this->callback(function (Image $image) use ($uploadedImageData) {
+                return $this->imageMatchesExpectedData($image, $uploadedImageData);
+            }));
+
+        $command = new UploadImageCommand(
+            $uploadedImageData['imageFilename'],
+            $showOnHomepage,
+            $imageType,
+            $imageFile,
+            $description
+        );
+        $this->uploadImageHandler->handle($command);
+    }
+
+    public function testHandle_ThrowsException_WhenStorageFails(): void
+    {
+        $imageFile = $this->createMock(UploadedFile::class);
+        $imageType = 'gallery';
+        $description = 'testDescription';
+        $showOnHomepage = false;
+        $imageFilename = 'testImageFilename';
+
+        $this->imageStorage
+            ->expects($this->once())
+            ->method('upload')
+            ->with($imageFile, $imageType)
+            ->willThrowException(new \Exception('Failed to upload image to the storage.'));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Failed to upload image to the storage.');
+
+        $this->imageRepository->expects($this->never())->method('save');
 
         $command = new UploadImageCommand(
             $imageFilename,
-            'This is a test description',
-            true,
+            $showOnHomepage,
             $imageType,
-            $file
+            $imageFile,
+            $description
         );
-
-        $this->handler->handle($command);
+        $this->uploadImageHandler->handle($command);
     }
 
-    public function testUploadImageFailure(): void
+    public function testHandle_ThrowsException_WhenRepositoryFails(): void
     {
-        $file = new UploadedFile(
-            '/var/www/Tests/Resources/test_image.jpg',
-            'image.jpg',
-            'image/jpeg',
-            null,
-            true
-        );
-
+        $imageFile = $this->createMock(UploadedFile::class);
         $imageType = 'gallery';
+        $description = 'testDescription';
+        $showOnHomepage = false;
 
-        $this->imageStorageMock
+        $uploadedImageData = [
+            'imageFilename' => 'testFilename',
+            'url' => 'testUrl',
+            'objectKey' => 'testObjectKey',
+            'imageType' => $imageType,
+            'description' => $description,
+            'showOnHomepage' => $showOnHomepage,
+        ];
+
+        $this->imageStorage
             ->expects($this->once())
             ->method('upload')
-            ->with(
-                $this->isInstanceOf(UploadedFile::class),
-                'gallery'
-            )
-            ->willThrowException(new \Exception("File size exceeds the maximum limit of 2MB."));
+            ->with($imageFile, $imageType)
+            ->willReturn($uploadedImageData);
+
+        $this->imageRepository
+            ->expects($this->once())
+            ->method('save')
+            ->with($this->callback(function (Image $image) use ($uploadedImageData) {
+                return $this->imageMatchesExpectedData($image, $uploadedImageData);
+            }))
+            ->willThrowException(new \Exception('Failed to save image in the repository.'));
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("File size exceeds the maximum limit of 2MB.");
+        $this->expectExceptionMessage('Failed to save image in the repository.');
 
         $command = new UploadImageCommand(
-            'image-123456.jpg',
-            'This is a test description',
-            true,
+            $uploadedImageData['imageFilename'],
+            $showOnHomepage,
             $imageType,
-            $file
+            $imageFile,
+            $description
         );
+        $this->uploadImageHandler->handle($command);
+    }
 
-        $this->handler->handle($command);
+    private function imageMatchesExpectedData(Image $image, array $expectedData): bool
+    {
+        return $image->getFilename() === $expectedData['imageFilename']
+            && $image->getUrl() === $expectedData['url']
+            && $image->getObjectKey() === $expectedData['objectKey']
+            && $image->getType() === $expectedData['imageType']
+            && $image->getDescription() === $expectedData['description']
+            && $image->getShowOnHomepage() === $expectedData['showOnHomepage'];
     }
 }

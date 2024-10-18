@@ -19,7 +19,7 @@ class UploadImageCommandHandler
 
     public function handle(UploadImageCommand $command): void
     {
-        $uploadedImage = $this->imageStorage->upload($command->getImage(), $command->getImageType());
+        $uploadedImage = $this->imageStorage->upload($command->getImageFile(), $command->getImageType());
 
         $image = new Image(
             $uploadedImage['imageFilename'],

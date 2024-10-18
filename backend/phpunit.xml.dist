@@ -19,7 +19,7 @@
 
     <testsuites>
         <testsuite name="unit">
-            <directory suffix=".php">Tests/Unit/Image</directory>
+            <directory suffix=".php">Tests/Unit</directory>
         </testsuite>
         <testsuite name="integration">
             <directory suffix=".php">Tests/Integration/Image</directory>

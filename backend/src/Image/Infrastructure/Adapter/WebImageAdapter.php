@@ -71,18 +71,18 @@ class WebImageAdapter extends AbstractController
     #[Route('/upload', name: 'upload_image', methods: ['POST'])]
     public function uploadImage(Request $request): JsonResponse
     {
-        $file = $request->files->get('image');
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $imageFile = $request->files->get('image');
+        $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $description = $request->request->get('description', $originalFilename);
         $showOnHomepage = $request->request->get('showOnHomePage', 'true');
         $imageType = $request->request->get('type', Image::TYPE_GALLERY);
 
         $command = new UploadImageCommand(
             $originalFilename,
-            $description,
             $showOnHomepage,
             $imageType,
-            $file
+            $imageFile,
+            $description
         );
 
         $this->uploadImageHandler->handle($command);

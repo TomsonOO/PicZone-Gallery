@@ -4,6 +4,7 @@ namespace App\Image\Infrastructure\Adapter;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Entity\Image;
+use App\Image\Domain\Exception\ImageNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImageRepositoryPostgresAdapter implements ImageRepositoryPort
@@ -21,9 +22,15 @@ class ImageRepositoryPostgresAdapter implements ImageRepositoryPort
         $this->entityManager->flush();
     }
 
-    public function findById(int $id): ?Image
+    public function findById(int $imageId): Image
     {
-        return $this->entityManager->getRepository(Image::class)->find($id);
+        $image = $this->entityManager->getRepository(Image::class)->find($imageId);
+
+        if ($image === null) {
+            throw new ImageNotFoundException("Image with ID: {$imageId} was not found.");
+        }
+
+        return $image;
     }
 
     public function findAll(): array

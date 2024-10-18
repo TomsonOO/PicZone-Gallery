@@ -14,7 +14,7 @@ class GetProfileImageQueryHandler
         $this->imageRepository = $imageRepository;
     }
 
-    public function handle(GetProfileImageQuery $query): ?Image
+    public function handle(GetProfileImageQuery $query): Image
     {
         return $this->imageRepository->findById($query->getProfileImageId());
     }
