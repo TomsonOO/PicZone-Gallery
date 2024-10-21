@@ -3,6 +3,7 @@
 namespace App\User\Application\DeleteUser;
 
 use App\User\Application\Port\UserRepositoryPort;
+use App\User\Domain\Exception\UserNotFoundException;
 
 class DeleteUserCommandHandler
 {
@@ -18,7 +19,7 @@ class DeleteUserCommandHandler
         $user = $this->userRepository->findById($command->getUserId());
 
         if ($user === null) {
-            throw new \DomainException('User not found');
+            throw new UserNotFoundException('User not found');
         }
 
         $this->userRepository->delete($user);

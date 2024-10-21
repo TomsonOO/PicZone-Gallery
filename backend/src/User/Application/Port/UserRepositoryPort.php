@@ -3,6 +3,7 @@
 namespace App\User\Application\Port;
 
 use App\User\Domain\Entity\User;
+use App\User\Domain\Exception\UserNotFoundException;
 
 interface UserRepositoryPort
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\User\Infrastructure\Adapter;
+namespace App\User\Infrastructure\Persistance;
 
-use App\User\Domain\Entity\User;
 use App\User\Application\Port\UserRepositoryPort;
+use App\User\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserRepositoryPostgresAdapter implements UserRepositoryPort

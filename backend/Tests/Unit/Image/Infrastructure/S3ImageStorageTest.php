@@ -2,22 +2,18 @@
 
 namespace App\Tests\Unit\Image\Infrastructure;
 
-use App\Image\Infrastructure\Service\S3ImageStorage;
-use Aws\S3\S3Client;
+use App\Image\Infrastructure\Storage\S3ImageStorageAdapter;
 use Aws\MockHandler;
 use Aws\Result;
-use Aws\Exception\AwsException;
+use Aws\S3\S3Client;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
-use Psr\Http\Message\RequestInterface;
-use Aws\CommandInterface;
 
 class S3ImageStorageTest extends TestCase
 {
-    private S3ImageStorage $imageStorage;
+    private S3ImageStorageAdapter $imageStorage;
     private S3Client $s3Client;
     private SluggerInterface $sluggerMock;
 
@@ -40,7 +36,7 @@ class S3ImageStorageTest extends TestCase
         $unicodeStringMock->method('toString')->willReturn('test-slug');
         $this->sluggerMock->method('slug')->willReturn($unicodeStringMock);
 
-        $this->imageStorage = new S3ImageStorage($this->s3Client, 'test-bucket', $this->sluggerMock);
+        $this->imageStorage = new S3ImageStorageAdapter($this->s3Client, 'test-bucket', $this->sluggerMock);
     }
 
     public function testUploadSuccess(): void

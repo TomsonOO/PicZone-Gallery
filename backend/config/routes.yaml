@@ -1,9 +1,9 @@
 image_adapter:
-    resource: ../src/Image/Infrastructure/Adapter
+    resource: ../src/Image/Infrastructure/Web
     type: attribute
 
 user_adapter:
-    resource: ../src/User/Infrastructure/Adapter
+    resource: ../src/User/Infrastructure/Web
     type: attribute
 
 api_login:

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Image\Infrastructure\Adapter;
+namespace App\Image\Infrastructure\Web;
 
-use App\Image\Application\DeleteImage\DeleteImageCommandHandler;
 use App\Image\Application\DeleteImage\DeleteImageCommand;
+use App\Image\Application\DeleteImage\DeleteImageCommandHandler;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQuery;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQueryHandler;
 use App\Image\Application\GetProfileImage\GetProfileImageQuery;
@@ -14,10 +14,10 @@ use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use App\Image\Domain\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 

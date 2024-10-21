@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Infrastructure\Adapter;
+namespace App\User\Infrastructure\Web;
 
 use App\User\Application\CreateUser\CreateUserCommand;
 use App\User\Application\CreateUser\CreateUserCommandHandler;

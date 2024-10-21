@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Infrastructure\Adapter;
+namespace App\User\Infrastructure\Auth;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
