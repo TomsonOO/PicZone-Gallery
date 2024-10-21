@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Image\Infrastructure\Service;
+namespace App\Image\Infrastructure\Storage;
 
 use App\Image\Application\Port\ImageStoragePort;
 use Aws\S3\S3Client;
@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class S3ImageStorage implements ImageStoragePort
+class S3ImageStorageAdapter implements ImageStoragePort
 {
     private const GALLERY_DIRECTORY = 'GalleryImages';
     private const PROFILE_DIRECTORY = 'ProfileImages';

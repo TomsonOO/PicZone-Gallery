@@ -63,7 +63,7 @@ class DeleteImageCommandHandlerTest extends TestCase
             ->expects($this->once())
             ->method('findById')
             ->with($imageId)
-            ->willThrowException(new ImageNotFoundException('Image not found'));
+            ->willReturn(null);
 
         $this->imageStorage->expects($this->never())->method('delete');
         $this->imageRepository->expects($this->never())->method('delete');

@@ -28,7 +28,7 @@ services:
                   key: '%env(AWS_ACCESS_KEY_ID)%'
                   secret: '%env(AWS_SECRET_ACCESS_KEY)%'
 
-    App\Image\Infrastructure\Service\S3ImageStorage:
+    App\Image\Infrastructure\Storage\S3ImageStorageAdapter:
         arguments:
             $bucketName: '%env(AWS_S3_BUCKET_NAME)%'
 

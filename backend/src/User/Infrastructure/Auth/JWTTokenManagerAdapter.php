@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Infrastructure\Adapter;
+namespace App\User\Infrastructure\Auth;
 
 use App\User\Application\Port\JWTTokenManagerPort;
 use App\User\Domain\Entity\User;
