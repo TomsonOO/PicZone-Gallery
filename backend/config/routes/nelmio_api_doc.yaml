@@ -1,10 +1,4 @@
 # Expose your documentation as JSON swagger compliant
-controllers:
-    resource:
-        path: ../../src/Controller/
-        namespace: App\Controller
-    type: attribute
-
 app.swagger:
     path: /api/doc.json
     methods: GET

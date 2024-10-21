@@ -1,7 +1,9 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+image_adapter:
+    resource: ../src/Image/Infrastructure/Adapter
+    type: attribute
+
+user_adapter:
+    resource: ../src/User/Infrastructure/Adapter
     type: attribute
 
 api_login:
