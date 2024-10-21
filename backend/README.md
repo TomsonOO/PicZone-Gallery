@@ -46,3 +46,4 @@ XDEBUG_CLIENT_HOST=      # Set to 'host.docker.internal' for Windows/Mac or your
 Ensure you configure path mappings for your project. Below is an example using PHPStorm, where the local directory maps to `/var/www` in the container:
 
 ![Path Mapping Example](../readme_screesnshots/xdebugger_path_mappings.png)
+
