@@ -11,10 +11,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CreateUserCommandHandlerTest extends TestCase
 {
-    protected string $password;
-    protected string $username;
-    protected string $email;
-    protected string $hashedPassword;
+    private string $password;
+    private string $username;
+    private string $email;
+    private string $hashedPassword;
     private UserRepositoryPort $userRepository;
     private UserPasswordHasherInterface $passwordHasher;
     private CreateUserCommandHandler $createUserHandler;

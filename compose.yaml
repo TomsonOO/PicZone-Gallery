@@ -47,6 +47,8 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
       XDEBUG_CLIENT_HOST: "${XDEBUG_CLIENT_HOST}"
       XDEBUG_CLIENT_PORT: "${XDEBUG_CLIENT_PORT}"
+      XDEBUG_CONFIG: "${XDEBUG_CONFIG}"
+      PHP_IDE_CONFIG: "${PHP_IDE_CONFIG}"
 
   backend-nginx:
     container_name: backend-nginx
