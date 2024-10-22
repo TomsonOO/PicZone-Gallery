@@ -18,7 +18,43 @@ The project includes both **unit tests** and **integration tests**. These tests 
 
 ⚠️ **Note**: The tests are currently being updated due to the project's transition to **Hexagonal Architecture**. Some tests may not be fully implemented yet.
 
-### 💻 Test Commands
+## ⚙️ Configuring the Test Environment
+
+Before running tests, you need to configure the test environment. You have two options for setting up the test database.
+
+### Option 1: Use the Same Database as in Development
+
+1. **Copy and update environment file**:
+
+   Copy the `backend/.env.example` file and rename it to `backend/.env.test`. Update the environment variables as needed, ensuring the database configuration matches the development database settings.
+
+### Option 2: Create a Separate Database for the Test Environment
+
+1. **Set up environment variables**:
+
+   Copy the `backend/.env.example` file and rename it to `backend/.env.test`. Update the environment variables as needed.
+
+2. **Modify the database volume**:
+
+   In the `compose.test.yaml` file, update the volume for the test database. Replace the development volume with a test volume:
+
+   ```yaml
+   volumes:
+     - postgres-data-test:/var/lib/postgresql/data
+   
+   # at the end of the compose.test.yaml:
+   volumes:
+       postgres-data-test:
+
+3. **Run migrations**:
+
+   Go into the `backend_test` container and run the migrations:
+
+   ```bash
+   docker exec -it backend_test bash
+   php bin/console doctrine:migrations:migrate
+
+## 💻 Test Commands
 
 The script supports the following commands:
 
@@ -47,3 +83,9 @@ Ensure you configure path mappings for your project. Below is an example using P
 
 ![Path Mapping Example](../readme_screesnshots/xdebugger_path_mappings.png)
 
+### 💻 For Xdebug to work with tests, add these two environment variables:
+
+```env
+XDEBUG_CONFIG=    # Set to idekey=PHPSTORM if using phpstorm
+PHP_IDE_CONFIG=serverName=Hostname    # Replace 'Hostname' with the server name you use in PHP>Servers (backend.local in the example above).
+```

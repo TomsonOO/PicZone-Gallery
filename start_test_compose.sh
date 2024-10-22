@@ -18,17 +18,17 @@ stop_env() {
 
 run_unit_tests() {
     echo "Running unit tests..."
-    docker compose -f compose.test.yaml run backend php bin/phpunit --testsuite unit
+    docker compose -f compose.test.yaml run php-fpm php bin/phpunit --testsuite unit
 }
 
 run_integration_tests() {
     echo "Running integration tests..."
-    docker compose -f compose.test.yaml run backend php bin/phpunit --testsuite integration
+    docker compose -f compose.test.yaml run php-fpm php bin/phpunit --testsuite integration
 }
 
 run_all_tests() {
     echo "Running all tests..."
-    docker compose -f compose.test.yaml run backend php bin/phpunit
+    docker compose -f compose.test.yaml run php-fpm php bin/phpunit
 }
 
 case "$1" in
