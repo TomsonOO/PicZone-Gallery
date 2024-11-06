@@ -8,14 +8,25 @@ import { useUser } from '../../context/UserContext';
 Modal.setAppElement('#root');
 
 const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
-    const { state, logout } = useUser();
+    const { state } = useUser();
     const [opacity, setOpacity] = useState(false);
-    const [username, setUsername] = useState(state.user?.username || '');
-    const [email, setEmail] = useState(state.user?.email || '');
-    const [biography, setBiography] = useState(state.user?.biography || '');
-    const [isProfilePublic, setIsProfilePublic] = useState(state.user?.isProfilePublic || false);
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [biography, setBiography] = useState('');
+    const [isProfilePublic, setIsProfilePublic] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (isSettingsOpen) {
+            setUsername(state.user?.username || '');
+            setEmail(state.user?.email || '');
+            setBiography(state.user?.biography || '');
+            setIsProfilePublic(state.user?.isProfilePublic || false);
+            setError('');
+            setTimeout(() => setOpacity(true), 10);
+        }
+    }, [isSettingsOpen, state.user]);
 
     const handleUpdate = async (event) => {
         event.preventDefault();
@@ -23,8 +34,8 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
         setError('');
 
         const formData = {
-            email,
             username,
+            email,
             biography,
             isProfilePublic,
         };
@@ -59,13 +70,6 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
             setError('Updating settings failed: An unexpected error occurred');
         }
     };
-
-    useEffect(() => {
-        if (isSettingsOpen) {
-            setError('');
-            setTimeout(() => setOpacity(true), 10);
-        }
-    }, [isSettingsOpen]);
 
     const handleAfterOpen = () => {
         setOpacity(true);

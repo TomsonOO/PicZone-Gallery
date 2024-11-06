@@ -79,8 +79,8 @@ class WebUserAdapter extends AbstractController
 
         $command = new UpdateUserCommand(
             $user->getId(),
-            $data['email'] ?? $user->getEmail(),
             $data['username'] ?? $user->getUsername(),
+            $data['email'] ?? $user->getEmail(),
             $data['biography'] ?? $user->getBiography(),
             $data['isProfilePublic'] ?? $user->getIsProfilePublic()
         );
