@@ -9,44 +9,52 @@ use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use App\Image\Domain\Entity\Image;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UploadImageCommandHandlerTest extends TestCase
 {
+    private UploadedFile $imageFile;
+    private string $imageType;
+    private string $description;
+    private bool $showOnHomepage;
     private ImageRepositoryPort $imageRepository;
     private ImageStoragePort $imageStorage;
     private UploadImageCommandHandler $uploadImageHandler;
+    private ValidatorInterface $validator;
 
     protected function setUp(): void
     {
+        $this->imageFile = $this->createMock(UploadedFile::class);
+        $this->imageType = 'gallery';
+        $this->description = 'testDescription';
+        $this->showOnHomepage = false;
+
         $this->imageRepository = $this->createMock(ImageRepositoryPort::class);
         $this->imageStorage = $this->createMock(ImageStoragePort::class);
+        $this->validator = $this->createMock(ValidatorInterface::class);
 
         $this->uploadImageHandler = new UploadImageCommandHandler(
             $this->imageRepository,
-            $this->imageStorage
+            $this->imageStorage,
+            $this->validator
         );
     }
 
     public function testHandle_CallsImageStorageAndImageRepository_WhenCalled(): void
     {
-        $imageFile = $this->createMock(UploadedFile::class);
-        $imageType = 'gallery';
-        $description = 'testDescription';
-        $showOnHomepage = false;
-
         $uploadedImageData = [
             'imageFilename' => 'testFilename',
             'url' => 'testUrl',
             'objectKey' => 'testObjectKey',
-            'imageType' => $imageType,
-            'description' => $description,
-            'showOnHomepage' => $showOnHomepage,
+            'imageType' => $this->imageType,
+            'description' => $this->description,
+            'showOnHomepage' => $this->showOnHomepage,
         ];
 
         $this->imageStorage
             ->expects($this->once())
             ->method('upload')
-            ->with($imageFile, $imageType)
+            ->with($this->imageFile, $this->imageType)
             ->willReturn($uploadedImageData);
 
         $this->imageRepository
@@ -58,26 +66,22 @@ class UploadImageCommandHandlerTest extends TestCase
 
         $command = new UploadImageCommand(
             $uploadedImageData['imageFilename'],
-            $showOnHomepage,
-            $imageType,
-            $imageFile,
-            $description
+            $this->showOnHomepage,
+            $this->imageType,
+            $this->imageFile,
+            $this->description
         );
         $this->uploadImageHandler->handle($command);
     }
 
     public function testHandle_ThrowsException_WhenStorageFails(): void
     {
-        $imageFile = $this->createMock(UploadedFile::class);
-        $imageType = 'gallery';
-        $description = 'testDescription';
-        $showOnHomepage = false;
         $imageFilename = 'testImageFilename';
 
         $this->imageStorage
             ->expects($this->once())
             ->method('upload')
-            ->with($imageFile, $imageType)
+            ->with($this->imageFile, $this->imageType)
             ->willThrowException(new \Exception('Failed to upload image to the storage.'));
 
         $this->expectException(\Exception::class);
@@ -87,34 +91,29 @@ class UploadImageCommandHandlerTest extends TestCase
 
         $command = new UploadImageCommand(
             $imageFilename,
-            $showOnHomepage,
-            $imageType,
-            $imageFile,
-            $description
+            $this->showOnHomepage,
+            $this->imageType,
+            $this->imageFile,
+            $this->description
         );
         $this->uploadImageHandler->handle($command);
     }
 
     public function testHandle_ThrowsException_WhenRepositoryFails(): void
     {
-        $imageFile = $this->createMock(UploadedFile::class);
-        $imageType = 'gallery';
-        $description = 'testDescription';
-        $showOnHomepage = false;
-
         $uploadedImageData = [
             'imageFilename' => 'testFilename',
             'url' => 'testUrl',
             'objectKey' => 'testObjectKey',
-            'imageType' => $imageType,
-            'description' => $description,
-            'showOnHomepage' => $showOnHomepage,
+            'imageType' => $this->imageType,
+            'description' => $this->description,
+            'showOnHomepage' => $this->showOnHomepage,
         ];
 
         $this->imageStorage
             ->expects($this->once())
             ->method('upload')
-            ->with($imageFile, $imageType)
+            ->with($this->imageFile, $this->imageType)
             ->willReturn($uploadedImageData);
 
         $this->imageRepository
@@ -130,10 +129,10 @@ class UploadImageCommandHandlerTest extends TestCase
 
         $command = new UploadImageCommand(
             $uploadedImageData['imageFilename'],
-            $showOnHomepage,
-            $imageType,
-            $imageFile,
-            $description
+            $this->showOnHomepage,
+            $this->imageType,
+            $this->imageFile,
+            $this->description
         );
         $this->uploadImageHandler->handle($command);
     }

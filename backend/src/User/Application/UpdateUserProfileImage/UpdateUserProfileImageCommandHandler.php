@@ -6,6 +6,7 @@ use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Domain\Entity\Image;
 use App\User\Application\Port\UserRepositoryPort;
+use App\User\Domain\Exception\UserNotFoundException;
 
 class UpdateUserProfileImageCommandHandler
 {
@@ -23,18 +24,21 @@ class UpdateUserProfileImageCommandHandler
 
     public function handle(UpdateUserProfileImageCommand $command): void
     {
+        $user = $this->userRepository->findById($command->getUserId());
+        if ($user === null) {
+            throw new UserNotFoundException('User not found');
+        }
         $uploadedImage = $this->imageStorage->upload($command->getProfileImage(), self::PROFILE_DIRECTORY);
 
         $profileImage = new Image(
             $uploadedImage['imageFilename'],
             $uploadedImage['url'],
             $uploadedImage['objectKey'],
-            Image::TYPE_GALLERY,
+            Image::TYPE_PROFILE,
         );
-        $this->imageRepository->save($profileImage);
 
-        $user = $this->userRepository->findById($command->getUserId());
         $user->setProfileImage($profileImage);
         $this->imageRepository->save($profileImage);
+        $this->userRepository->save($user);
     }
 }

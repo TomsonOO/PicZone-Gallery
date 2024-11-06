@@ -3,7 +3,6 @@
 namespace App\Image\Application\Port;
 
 use App\Image\Domain\Entity\Image;
-use App\Image\Domain\Exception\ImageNotFoundException;
 
 interface ImageRepositoryPort
 {

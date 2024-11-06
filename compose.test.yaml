@@ -1,3 +1,8 @@
+networks:
+  default:
+    name: dev-net
+    external: false
+
 services:
   db:
     container_name: db_postgres_test
@@ -9,10 +14,8 @@ services:
     volumes:
       - postgres-data-test:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - "5432:5432"
     restart: always
-    networks:
-      - test_net
 
   backend:
     container_name: backend_test
@@ -20,7 +23,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8002:80"
+      - "8000:80"
     depends_on:
       - db
     environment:
@@ -29,8 +32,6 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
       - ./backend:/var/www
-    networks:
-      - test_net
 
   php-fpm:
     container_name: php-fpm_test
@@ -40,11 +41,13 @@ services:
     volumes:
       - ./backend:/var/www:rw
     environment:
+      ELASTIC_USERNAME: "${ELASTIC_USERNAME}"
+      ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
       XDEBUG_CLIENT_HOST: "${XDEBUG_CLIENT_HOST}"
       XDEBUG_CLIENT_PORT: "${XDEBUG_CLIENT_PORT}"
-    networks:
-      - test_net
+      XDEBUG_CONFIG: "${XDEBUG_CONFIG}"
+      PHP_IDE_CONFIG: "${PHP_IDE_CONFIG}"
 
   backend-nginx:
     container_name: backend-nginx_test
@@ -55,8 +58,6 @@ services:
       - ./backend:/var/www:ro
     depends_on:
       - php-fpm
-    networks:
-      - test_net
 
   frontend:
     container_name: frontend_test
@@ -67,13 +68,11 @@ services:
       - './frontend:/app'
       - 'node_modules:/app/node_modules'
     ports:
-      - "3002:3000"
+      - "3000:3000"
     environment:
       - HOST=0.0.0.0
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_BACKEND_URL=http://localhost:8082
-    networks:
-      - test_net
 
   frontend-nginx:
     container_name: frontend-nginx_test
@@ -85,13 +84,9 @@ services:
     depends_on:
       - frontend
       - backend
-    networks:
-      - test_net
 
 volumes:
   postgres-data-test:
   node_modules:
-
-networks:
-  test_net:
-    driver: bridge
+  certs:
+    driver: local

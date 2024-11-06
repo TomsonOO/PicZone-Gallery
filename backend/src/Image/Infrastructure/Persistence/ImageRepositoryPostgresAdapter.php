@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Image\Infrastructure\Persistance;
+namespace App\Image\Infrastructure\Persistence;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Entity\Image;
-use App\Image\Domain\Exception\ImageNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImageRepositoryPostgresAdapter implements ImageRepositoryPort

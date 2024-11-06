@@ -3,6 +3,7 @@
 namespace App\Image\Application\GetPresignedUrl;
 
 use App\Image\Application\Port\ImageStoragePort;
+use App\Image\Domain\Exception\PresignedUrlGenerationException;
 
 class GetPresignedUrlQueryHandler
 {
@@ -14,7 +15,10 @@ class GetPresignedUrlQueryHandler
     }
     public function handle(GetPresignedUrlQuery $query): string
     {
-        return $this->imageStorage->getPresignedUrl($query->getObjectKey());
+        try {
+            return $this->imageStorage->getPresignedUrl($query->getObjectKey());
+        } catch (PresignedUrlGenerationException $e) {
+            throw $e;
+        }
     }
-
 }
