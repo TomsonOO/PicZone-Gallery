@@ -1,11 +1,18 @@
+import React from 'react';
 import { FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
 
-const UserDropdownMenu = ( {isUserDropdownMenuOpen} ) => {
+const UserDropdownMenu = ({ isUserDropdownMenuOpen, onSettings, onClose }) => {
     const { logout } = useUser();
 
     const handleLogout = () => {
         logout();
+        onClose();
+    };
+
+    const handleSettings = () => {
+        onSettings();
+        onClose();
     };
 
     return (
@@ -15,7 +22,7 @@ const UserDropdownMenu = ( {isUserDropdownMenuOpen} ) => {
                     <div className="p-4">
                         <button
                             className="w-full flex items-center p-2 hover:bg-blue-800 rounded"
-                            onClick={() => console.log('Settings clicked')}
+                            onClick={handleSettings}
                         >
                             <FaCog className="mr-2" /> Settings
                         </button>
