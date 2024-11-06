@@ -30,7 +30,7 @@ class DeleteImageCommandHandlerTest extends TestCase
     public function testHandle_CallsImageRepositoryAndImageStorage_WhenCalled(): void
     {
         $profileId = 123;
-        $objectKey = 'image_object_key';
+        $objectKey = 'testObjectKey';
 
         $image = $this->createMock(Image::class);
         $image->method('getObjectKey')->willReturn($objectKey);
@@ -79,7 +79,7 @@ class DeleteImageCommandHandlerTest extends TestCase
     {
         $imageId = 123;
         $image = $this->createMock(Image::class);
-        $objectKey = 'image_object_key';
+        $objectKey = 'testObjectKey';
 
         $image->method('getObjectKey')->willReturn($objectKey);
 
@@ -108,7 +108,7 @@ class DeleteImageCommandHandlerTest extends TestCase
     {
         $imageId = 123;
         $image = $this->createMock(Image::class);
-        $objectKey = "image_object_key";
+        $objectKey = "testObjectKey";
 
         $image->method('getObjectKey')->willReturn($objectKey);
 

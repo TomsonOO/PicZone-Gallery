@@ -16,7 +16,7 @@ docker run -p 8082:8080 -e SWAGGER_JSON=/api-docs/openapi.yaml -v $(pwd)/api-doc
 
 The project includes both **unit tests** and **integration tests**. These tests can be run through a script that manages the Docker environment for testing.
 
-⚠️ **Note**: The tests are currently being updated due to the project's transition to **Hexagonal Architecture**. Some tests may not be fully implemented yet.
+⚠️ **Note**: Integration tests for the **user module** are still being updated due to the project's transition to Hexagonal Architecture.
 
 ## ⚙️ Configuring the Test Environment
 

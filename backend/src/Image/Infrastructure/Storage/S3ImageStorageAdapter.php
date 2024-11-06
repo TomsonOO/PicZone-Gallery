@@ -3,9 +3,10 @@
 namespace App\Image\Infrastructure\Storage;
 
 use App\Image\Application\Port\ImageStoragePort;
+use App\Image\Domain\Exception\PresignedUrlGenerationException;
+use \Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class S3ImageStorageAdapter implements ImageStoragePort
@@ -60,6 +61,11 @@ class S3ImageStorageAdapter implements ImageStoragePort
     public function getPresignedUrl(string $objectKey): string
     {
         try {
+            $this->s3Client->headObject([
+                'Bucket' => $this->bucketName,
+                'Key' => $objectKey,
+            ]);
+
             $cmd = $this->s3Client->getCommand('GetObject', [
                 'Bucket' => $this->bucketName,
                 'Key' => $objectKey,
@@ -67,9 +73,8 @@ class S3ImageStorageAdapter implements ImageStoragePort
             $request = $this->s3Client->createPresignedRequest($cmd, '+20 minutes');
 
             return (string)$request->getUri();
-        } catch (\Exception $e) {
-            return new Response('Error generating presigned URL', Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (S3Exception $e) {
+            throw new PresignedUrlGenerationException('Error generating presigned URL', 0, $e);
         }
     }
-
 }

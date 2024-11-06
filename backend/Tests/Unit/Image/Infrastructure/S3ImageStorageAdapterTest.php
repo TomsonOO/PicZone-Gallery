@@ -11,15 +11,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
 
-class S3ImageStorageTest extends TestCase
+class S3ImageStorageAdapterTest extends TestCase
 {
+    private string $bucketName;
     private S3ImageStorageAdapter $imageStorage;
     private S3Client $s3Client;
     private SluggerInterface $sluggerMock;
 
     protected function setUp(): void
     {
+        $this->bucketName = 'testBucketName';
         $mock = new MockHandler();
+        $mock->append(new Result([]));
         $mock->append(new Result([]));
         $this->s3Client = new S3Client([
             'region'  => 'us-west-2',
@@ -36,10 +39,10 @@ class S3ImageStorageTest extends TestCase
         $unicodeStringMock->method('toString')->willReturn('test-slug');
         $this->sluggerMock->method('slug')->willReturn($unicodeStringMock);
 
-        $this->imageStorage = new S3ImageStorageAdapter($this->s3Client, 'test-bucket', $this->sluggerMock);
+        $this->imageStorage = new S3ImageStorageAdapter($this->s3Client, $this->bucketName, $this->sluggerMock);
     }
 
-    public function testUploadSuccess(): void
+    public function testUpload_ReturnsCorrectObjectUrl_WhenCalled(): void
     {
         $fileMock = $this->createMock(UploadedFile::class);
         $fileMock->method('getClientOriginalName')->willReturn('test.jpg');
@@ -57,7 +60,7 @@ class S3ImageStorageTest extends TestCase
         $this->assertStringStartsWith('GalleryImages/', $result['objectKey']);
     }
 
-    public function testUploadFailsWhenImageSizeExceedsLimit(): void
+    public function testUpload_ThrowsException_WhenImageSizeIsExceeded(): void
     {
         $fileMock = $this->createMock(UploadedFile::class);
         $fileMock->method('getClientOriginalName')->willReturn('test.jpg');
@@ -76,23 +79,4 @@ class S3ImageStorageTest extends TestCase
 
         unlink($tempFile);
     }
-
-    public function testUploadSucceedsWhenImageSizeIsWithinLimit(): void
-    {
-        $fileMock = $this->createMock(UploadedFile::class);
-        $fileMock->method('getClientOriginalName')->willReturn('test.jpg');
-        $fileMock->method('guessExtension')->willReturn('jpg');
-
-        $fileMock->method('getSize')->willReturn(1024000);
-
-        $tempFile = tempnam(sys_get_temp_dir(), 'test_image');
-        file_put_contents($tempFile, 'fake image content');
-        $fileMock->method('getRealPath')->willReturn($tempFile);
-
-        $result = $this->imageStorage->upload($fileMock, 'gallery');
-
-        unlink($tempFile);
-
-        $this->assertStringStartsWith('GalleryImages/', $result['objectKey']);
-    }
-    }
+}

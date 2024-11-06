@@ -9,6 +9,7 @@ use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use App\Image\Domain\Entity\Image;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UploadImageCommandHandlerTest extends TestCase
 {
@@ -19,6 +20,7 @@ class UploadImageCommandHandlerTest extends TestCase
     private ImageRepositoryPort $imageRepository;
     private ImageStoragePort $imageStorage;
     private UploadImageCommandHandler $uploadImageHandler;
+    private ValidatorInterface $validator;
 
     protected function setUp(): void
     {
@@ -29,10 +31,12 @@ class UploadImageCommandHandlerTest extends TestCase
 
         $this->imageRepository = $this->createMock(ImageRepositoryPort::class);
         $this->imageStorage = $this->createMock(ImageStoragePort::class);
+        $this->validator = $this->createMock(ValidatorInterface::class);
 
         $this->uploadImageHandler = new UploadImageCommandHandler(
             $this->imageRepository,
-            $this->imageStorage
+            $this->imageStorage,
+            $this->validator
         );
     }
 

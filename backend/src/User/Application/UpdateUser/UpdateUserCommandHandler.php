@@ -4,6 +4,7 @@ namespace App\User\Application\UpdateUser;
 
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Entity\User;
+use App\User\Domain\Exception\UserNotFoundException;
 
 class UpdateUserCommandHandler
 {
@@ -19,7 +20,7 @@ class UpdateUserCommandHandler
         $user = $this->userRepository->findById($command->getUserId());
 
         if ($user === null) {
-            throw new \DomainException('User not found');
+            throw new UserNotFoundException('User not found');
         }
 
         $user->setEmail($command->getEmail());

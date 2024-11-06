@@ -3,6 +3,7 @@
 namespace App\Image\Application\UploadImage;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UploadImageCommand
 {
@@ -10,6 +11,13 @@ class UploadImageCommand
     private ?string $description;
     private bool $showOnHomepage;
     private string $imageType;
+    #[Assert\NotNull(message: "Image file is required.")]
+    #[Assert\Image(
+        maxSize: "2M",
+        mimeTypes: ["image/jpeg", "image/png", "image/webp"],
+        maxSizeMessage: "The image size cannot exceed 2MB.",
+        mimeTypesMessage: "Invalid image type. Allowed types are JPEG and PNG."
+    )]
     private UploadedFile $imageFile;
 
     public function __construct(

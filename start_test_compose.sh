@@ -4,6 +4,12 @@ load_env() {
     export $(cat backend/.env.test | grep -v '^#' | xargs)
 }
 
+build_env() {
+    load_env
+    docker compose -f compose.test.yaml --env-file .env.test build
+    echo "Test environment built."
+}
+
 start_env() {
     load_env
     docker compose -f compose.test.yaml up -d  > /dev/null 2>&1
@@ -32,6 +38,9 @@ run_all_tests() {
 }
 
 case "$1" in
+    build)
+        build_env
+        ;;
     start)
         start_env
         ;;
@@ -54,7 +63,7 @@ case "$1" in
         stop_env
         ;;
     *)
-        echo "Usage: $0 {start|stop|test-unit|test-integration|test-all}"
+        echo "Usage: $0 {build|start|stop|test-unit|test-integration|test-all}"
         exit 1
         ;;
 esac

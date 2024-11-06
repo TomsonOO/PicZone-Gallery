@@ -13,6 +13,7 @@ use App\Image\Application\ListImages\ListImagesQueryHandler;
 use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use App\Image\Domain\Entity\Image;
+use App\Shared\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,6 +69,9 @@ class WebImageAdapter extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
+    /**
+     * @throws ValidationException
+     */
     #[Route('/upload', name: 'upload_image', methods: ['POST'])]
     public function uploadImage(Request $request): JsonResponse
     {
