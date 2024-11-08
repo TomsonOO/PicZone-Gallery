@@ -5,7 +5,6 @@ const initialState = {
     token: localStorage.getItem('token') || null,
 };
 
-
 const reducer = (state, action) => {
     switch (action.type) {
         case 'LOGIN':
@@ -19,6 +18,11 @@ const reducer = (state, action) => {
                 ...state,
                 user: null,
                 token: null,
+            };
+        case 'UPDATE_USER':
+            return {
+                ...state,
+                user: { ...state.user, ...action.payload.user },
             };
         default:
             return state;
@@ -51,13 +55,18 @@ export const UserProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
+    const updateUser = (updatedUserData) => {
+        const newUser = { ...state.user, ...updatedUserData };
+        dispatch({ type: 'UPDATE_USER', payload: { user: newUser } });
+        localStorage.setItem('user', JSON.stringify(newUser));
+    };
+
     return (
-        <UserContext.Provider value={{ state, login, logout }}>
+        <UserContext.Provider value={{ state, login, logout, updateUser }}>
             {children}
         </UserContext.Provider>
     );
 };
-
 
 export const useUser = () => useContext(UserContext);
 

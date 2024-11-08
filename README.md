@@ -29,7 +29,7 @@ PicZone Gallery is a full-stack web application that showcases AI-generated imag
 - **Database**: PostgreSQL 🗄️ — data management
 - **Cloud Storage**: AWS S3 ☁️ — image storage
 - **Containerization**: Docker 🐳 — development and deployment
-- **Hosting & Deployment**: Heroku 🌍 — scalable deployment
+- **Hosting & Deployment**: Heroku 🌍 —  deployment
 
 ---
 
@@ -43,8 +43,8 @@ PicZone Gallery is a full-stack web application that showcases AI-generated imag
 ## ✨ Implemented Features
 
 - **👤 User Registration**: Users can create an account and manage their profiles.
-- **🔐 User Login**: Account holders can securely log in.
-- **⚙️ Profile Management**: Users can update their profile settings. *(Backend implemented only)*
+- **🔐 User Login**: Account holders can log in.
+- **⚙️ Profile Management**: Users can update their profile settings.
 - **🖼️ Image Management API (CRUD)**: Users can upload, list, update, and remove images from the gallery. *(Backend implemented only)*
 - **🌗 Dark/Light Mode**: Users can toggle between dark and light mode.
 
