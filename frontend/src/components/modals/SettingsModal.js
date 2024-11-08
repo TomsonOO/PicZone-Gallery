@@ -8,7 +8,7 @@ import { useUser } from '../../context/UserContext';
 Modal.setAppElement('#root');
 
 const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
-    const { state } = useUser();
+    const { state, updateUser } = useUser();
     const [opacity, setOpacity] = useState(false);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -18,15 +18,37 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${state.token}`,
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setUsername(data.username || '');
+                    setEmail(data.email || '');
+                    setBiography(data.biography || '');
+                    setIsProfilePublic(data.isProfilePublic || false);
+                } else {
+                    setError(data.message || 'Failed to load profile information');
+                }
+            } catch (error) {
+                setError('An error occurred while fetching profile information');
+            }
+        };
+
         if (isSettingsOpen) {
-            setUsername(state.user?.username || '');
-            setEmail(state.user?.email || '');
-            setBiography(state.user?.biography || '');
-            setIsProfilePublic(state.user?.isProfilePublic || false);
+            fetchUserProfile();
             setError('');
             setTimeout(() => setOpacity(true), 10);
         }
-    }, [isSettingsOpen, state.user]);
+    }, [isSettingsOpen, state.token]);
 
     const handleUpdate = async (event) => {
         event.preventDefault();
@@ -41,7 +63,7 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
         };
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/update/info`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,13 +76,12 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
             setLoading(false);
 
             if (response.ok) {
-                setTimeout(() => {
-                    toast.success('✅ Your settings have been successfully updated!', {
-                        position: 'top-right',
-                        autoClose: 5000,
-                        className: 'custom-toast custom-toast-success',
-                    });
-                }, 500);
+                toast.success('✅ Your settings have been successfully updated!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    className: 'custom-toast custom-toast-success',
+                });
+                updateUser(data);
                 handleClose();
             } else {
                 setError(data.message || 'Failed to update settings');
