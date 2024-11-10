@@ -11,8 +11,6 @@ security:
         class: App\User\Domain\Entity\User
         property: username
 
-  enable_authenticator_manager: true
-
   firewalls:
     login:
       pattern: ^/api/login

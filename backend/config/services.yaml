@@ -32,6 +32,11 @@ services:
         arguments:
             $bucketName: '%env(AWS_S3_BUCKET_NAME)%'
 
+    App\User\Application\Validator\Constraints\UniqueUsernameValidator:
+        arguments:
+            $userRepository: '@App\User\Application\Port\UserRepositoryPort'
+        tags:
+            - { name: 'validator.constraint_validator', alias: 'app.unique_username_validator' }
 
     App\Command\TestElasticsearchConnectionCommand:
         tags: ['console.command']
