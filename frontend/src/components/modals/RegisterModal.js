@@ -14,10 +14,31 @@ const RegisterModal = ({ isRegisterOpen, onRequestClose }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const [usernameError, setUsernameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
     const handleRegister = async (event) => {
         event.preventDefault();
         setLoading(true);
         setError('');
+        setUsernameError('');
+        setEmailError('');
+        setPasswordError('');
+
+        if (!passwordRegex.test(password)) {
+            setPasswordError('Password must be at least 8 characters, include uppercase, lowercase, and a number.');
+            setLoading(false);
+            return;
+        }
+
+        if (username.length < 6) {
+            setUsernameError('Username must be at least 6 characters long.');
+            setLoading(false);
+            return;
+        }
 
         const formData = { username, email, password };
 
@@ -46,9 +67,20 @@ const RegisterModal = ({ isRegisterOpen, onRequestClose }) => {
                     });
                 }, 500);
             } else {
-                if (data.errors) {
-                    const firstError = Object.values(data.errors)[0];
-                    setError(firstError);
+                if (data.errors && Array.isArray(data.errors)) {
+                    data.errors.forEach((err) => {
+                        if (err.field === 'username') {
+                            setUsernameError(err.message);
+                        } else if (err.field === 'email') {
+                            setEmailError(err.message);
+                        } else if (err.field === 'password') {
+                            setPasswordError(err.message);
+                        } else {
+                            setError(err.message);
+                        }
+                    });
+                } else if (data.message) {
+                    setError(data.message);
                 } else {
                     setError('Failed to register');
                 }
@@ -62,6 +94,9 @@ const RegisterModal = ({ isRegisterOpen, onRequestClose }) => {
     useEffect(() => {
         if (isRegisterOpen) {
             setError('');
+            setUsernameError('');
+            setEmailError('');
+            setPasswordError('');
             setTimeout(() => setOpacity(true), 10);
         }
     }, [isRegisterOpen]);
@@ -79,6 +114,9 @@ const RegisterModal = ({ isRegisterOpen, onRequestClose }) => {
         setTimeout(() => {
             onRequestClose();
             setError('');
+            setUsernameError('');
+            setEmailError('');
+            setPasswordError('');
         }, 300);
     };
 
@@ -97,47 +135,58 @@ const RegisterModal = ({ isRegisterOpen, onRequestClose }) => {
                     <button onClick={handleClose} className="absolute top-4 right-4 text-2xl text-gray-700 dark:text-white hover:text-gray-500 dark:hover:text-gray-300">
                         <IoMdClose />
                     </button>
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mt-1">Register</h2>
-                        <div className="min-w-max ml-4">
-                            {error && (
-                                <div className="text-red-500 text-sm p-2 bg-red-100 dark:bg-red-200 rounded transition-opacity duration-300">
-                                    {error}
-                                </div>
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Register</h2>
+                    {error && (
+                        <div className="text-red-500 text-sm p-2 bg-red-100 dark:bg-red-200 rounded mb-4 transition-opacity duration-300">
+                            {error}
+                        </div>
+                    )}
+                    <form className="space-y-6" onSubmit={handleRegister}>
+                        <div>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                className={`block w-full p-3 border ${usernameError ? 'border-red-500' : 'border-gray-300'} rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800`}
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                disabled={loading}
+                            />
+                            {usernameError && (
+                                <p className="text-red-500 text-sm mt-1">{usernameError}</p>
                             )}
                         </div>
-                    </div>
-                    <form className="space-y-6" onSubmit={handleRegister}>
-                        <input
-                            type="text"
-                            name="username"
-                            placeholder="Username"
-                            className="block w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                            disabled={loading}
-                        />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            className="block w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            disabled={loading}
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            className="block w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            disabled={loading}
-                        />
+                        <div>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                className={`block w-full p-3 border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800`}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                disabled={loading}
+                            />
+                            {emailError && (
+                                <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                            )}
+                        </div>
+                        <div>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                className={`block w-full p-3 border ${passwordError ? 'border-red-500' : 'border-gray-300'} rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800`}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                disabled={loading}
+                            />
+                            {passwordError && (
+                                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+                            )}
+                        </div>
                         <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded text-lg hover:bg-blue-700 dark:bg-green-600 dark:hover:bg-green-700" disabled={loading}>
                             {loading ? 'Registering...' : 'Register'}
                         </button>

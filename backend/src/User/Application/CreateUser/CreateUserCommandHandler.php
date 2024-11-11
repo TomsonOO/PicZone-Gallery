@@ -2,30 +2,40 @@
 
 namespace App\User\Application\CreateUser;
 
+use App\Shared\Application\Exception\ValidationException;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Entity\User;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserCommandHandler
 {
+    private ValidatorInterface $validator;
     private UserRepositoryPort $userRepository;
-    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(UserRepositoryPort $userRepository, UserPasswordHasherInterface $passwordHasher)
-    {
+    public function __construct(
+        ValidatorInterface $validator,
+        UserRepositoryPort $userRepository,
+    ) {
+        $this->validator = $validator;
         $this->userRepository = $userRepository;
-        $this->passwordHasher = $passwordHasher;
     }
 
     public function handle(CreateUserCommand $command): void
     {
-        $user = new User(
+        $errors = $this->validator->validate($command);
+
+        if (count($errors) > 0) {
+            throw new ValidationException($errors);
+        }
+
+        $hashedPassword = password_hash($command->getPassword(), PASSWORD_DEFAULT);
+
+        $user = User::create(
             $command->getUsername(),
             $command->getEmail(),
-            ''
+            $hashedPassword
         );
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $command->getPassword());
-        $user->setPassword($hashedPassword);
+
 
         $this->userRepository->save($user);
     }

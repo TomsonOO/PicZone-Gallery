@@ -6,43 +6,60 @@ use App\User\Application\CreateUser\CreateUserCommand;
 use App\User\Application\CreateUser\CreateUserCommandHandler;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Entity\User;
+use App\Shared\Application\Exception\ValidationException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserCommandHandlerTest extends TestCase
 {
     private string $password;
     private string $username;
     private string $email;
-    private string $hashedPassword;
     private UserRepositoryPort $userRepository;
-    private UserPasswordHasherInterface $passwordHasher;
+    private ValidatorInterface $validator;
     private CreateUserCommandHandler $createUserHandler;
 
     protected function setUp(): void
     {
         $this->password = 'testPassword';
         $this->username = 'testUsername';
-        $this->email = 'testEmail';
-        $this->hashedPassword = 'testHashedPassword';
+        $this->email = 'testEmail@gmail.com';
 
         $this->userRepository = $this->createMock(UserRepositoryPort::class);
-        $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
+        $this->validator = $this->createMock(ValidatorInterface::class);
 
-        $this->createUserHandler = new CreateUserCommandHandler($this->userRepository, $this->passwordHasher);
+        $this->createUserHandler = new CreateUserCommandHandler($this->validator, $this->userRepository);
     }
 
-    public function testHandle_CallsPasswordHasherAndUserRepository_WhenCalled(): void
+    public function testHandle_ValidatesCommandAndCallsUserRepository_WhenCalled(): void
     {
-        $this->mockPasswordHasher();
+        $this->mockValidatorToPass();
         $this->userRepository
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function (User $userWithHashedPassword) {
                 return $userWithHashedPassword->getUsername() === $this->username &&
                     $userWithHashedPassword->getEmail() === $this->email &&
-                    $userWithHashedPassword->getPassword() === $this->hashedPassword;
+                    password_verify($this->password, $userWithHashedPassword->getPassword());
             }));
+
+        $command = new CreateUserCommand($this->username, $this->email, $this->password);
+        $this->createUserHandler->handle($command);
+    }
+
+    public function testHandle_ThrowsValidationException_WhenValidationFails(): void
+    {
+        $violations = $this->createMock(ConstraintViolationList::class);
+        $violations->method('count')->willReturn(1);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with($this->isInstanceOf(CreateUserCommand::class))
+            ->willReturn($violations);
+
+        $this->expectException(ValidationException::class);
 
         $command = new CreateUserCommand($this->username, $this->email, $this->password);
         $this->createUserHandler->handle($command);
@@ -50,7 +67,7 @@ class CreateUserCommandHandlerTest extends TestCase
 
     public function testHandle_ThrowsException_WhenRepositoryFails(): void
     {
-        $this->mockPasswordHasher();
+        $this->mockValidatorToPass();
 
         $this->userRepository
             ->expects($this->once())
@@ -58,7 +75,7 @@ class CreateUserCommandHandlerTest extends TestCase
             ->with($this->callback(function (User $userWithHashedPassword) {
                 return $userWithHashedPassword->getUsername() === $this->username &&
                     $userWithHashedPassword->getEmail() === $this->email &&
-                    $userWithHashedPassword->getPassword() === $this->hashedPassword;
+                    password_verify($this->password, $userWithHashedPassword->getPassword());
             }))
             ->willThrowException(new \Exception('Failed to save the user in the database.'));
 
@@ -69,33 +86,15 @@ class CreateUserCommandHandlerTest extends TestCase
         $this->createUserHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenHasherFails(): void
+    private function mockValidatorToPass(): void
     {
-        $this->passwordHasher
+        $violations = $this->createMock(ConstraintViolationList::class);
+        $violations->method('count')->willReturn(0);
+
+        $this->validator
             ->expects($this->once())
-            ->method('hashPassword')
-            ->with($this->callback(function (User $userWithEmptyPassword) {
-                return $userWithEmptyPassword->getUsername() === $this->username &&
-                    $userWithEmptyPassword->getEmail() === $this->email;
-            }))
-            ->willThrowException(new \Exception('Failed to hash the password.'));
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Failed to hash the password.');
-
-        $command = new CreateUserCommand($this->username, $this->email, $this->password);
-        $this->createUserHandler->handle($command);
-    }
-
-    private function mockPasswordHasher(): void
-    {
-        $this->passwordHasher
-            ->expects($this->once())
-            ->method('hashPassword')
-            ->with($this->callback(function (User $userWithEmptyPassword) {
-                return $userWithEmptyPassword->getUsername() === $this->username &&
-                    $userWithEmptyPassword->getEmail() === $this->email;
-            }))
-            ->willReturn($this->hashedPassword);
+            ->method('validate')
+            ->with($this->isInstanceOf(CreateUserCommand::class))
+            ->willReturn($violations);
     }
 }

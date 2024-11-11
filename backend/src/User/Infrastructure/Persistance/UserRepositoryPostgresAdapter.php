@@ -31,6 +31,17 @@ class UserRepositoryPostgresAdapter implements UserRepositoryPort
         return $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
     }
 
+    public function existsByUsername(string $username): bool
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(u.id)')
+            ->from(User::class, 'u')
+            ->where('u.username = :username')
+            ->setParameter('username', $username);
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
     public function delete(User $user): void
     {
         $this->entityManager->remove($user);
