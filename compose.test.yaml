@@ -40,6 +40,8 @@ services:
       dockerfile: php/Dockerfile
     volumes:
       - ./backend:/var/www:rw
+    env_file:
+      - .env.test
     environment:
       ELASTIC_USERNAME: "${ELASTIC_USERNAME}"
       ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
