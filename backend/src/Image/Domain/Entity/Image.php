@@ -3,6 +3,7 @@
 namespace App\Image\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity]
 #[ORM\Table(name: '`image`')]
@@ -14,27 +15,35 @@ class Image
     #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\SequenceGenerator(sequenceName: "images_id_seq", allocationSize: 1)]
     #[ORM\Column(type: "integer")]
+    #[Groups(['elastica'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['elastica'])]
     private ?string $filename = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['elastica'])]
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['elastica'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['elastica'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column (options: ["default" => false])]
+    #[Groups(['elastica'])]
     private ?bool $showOnHomepage = false;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['elastica'])]
     private ?string $objectKey = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['elastica'])]
     private ?string $type = null;
 
     public function __construct(string $filename, string $url, string $objectKey, string $type)

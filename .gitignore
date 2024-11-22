@@ -2,5 +2,4 @@
 .env.test
 .idea
 
-filebeat_ingest_data
-logstash_ingest_data
+logs
