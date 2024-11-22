@@ -25,7 +25,7 @@ class TestElasticsearchConnectionCommand extends Command
         echo $hosts[0];
         $client = ClientBuilder::create()
             ->setHosts($hosts)
-            ->setSSLVerification('/usr/share/elasticsearch/config/certs/ca/ca.crt')
+            ->setSSLVerification('/etc/ssl/certs/ca.crt')
             ->build();
 
         try {

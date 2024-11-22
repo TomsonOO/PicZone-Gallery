@@ -8,9 +8,9 @@ services:
     container_name: db_postgres
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
@@ -29,10 +29,11 @@ services:
     environment:
       ELASTIC_USERNAME: "${ELASTIC_USERNAME}"
       ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
+      ELASTICSEARCH_URL: "https://elastic:${ELASTIC_PASSWORD}@es01:9200"
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
       - ./backend:/var/www
-      - certs:/usr/share/elasticsearch/config/certs
+      - ./certs/ca/ca.crt:/etc/ssl/certs/ca.crt
 
   php-fpm:
     container_name: php-fpm
@@ -41,6 +42,7 @@ services:
       dockerfile: php/Dockerfile
     volumes:
       - ./backend:/var/www:rw
+      - ./certs/ca/ca.crt:/etc/ssl/certs/ca.crt
     environment:
       ELASTIC_USERNAME: "${ELASTIC_USERNAME}"
       ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
@@ -71,8 +73,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - HOST=0.0.0.0
-      - CHOKIDAR_USEPOLLING=true
+      HOST: "0.0.0.0"
+      CHOKIDAR_USEPOLLING: "true"
+
 
   frontend-nginx:
     container_name: frontend-nginx
