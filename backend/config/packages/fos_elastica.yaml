@@ -2,7 +2,7 @@
 fos_elastica:
     clients:
         default:
-            url: 'https://es01:9200'
+            url: '%env(ELASTIC_URL)%'
             username: '%env(ELASTIC_USERNAME)%'
             password: '%env(ELASTIC_PASSWORD)%'
             ssl: true
@@ -10,8 +10,7 @@ fos_elastica:
             curl:
                 !php/const:CURLOPT_SSL_VERIFYHOST: 2
                 !php/const:CURLOPT_SSL_VERIFYPEER: 1
-                !php/const:CURLOPT_CAINFO: '/etc/ssl/certs/ca.crt'
-            logger: true
+                !php/const:CURLOPT_CAINFO: '%elastic_ca_cert_path%'
 
     indexes:
         images:

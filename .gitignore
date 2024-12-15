@@ -3,3 +3,10 @@
 .idea
 
 logs
+
+elasticsearch-setup-prod.sh
+backend/add_elastic_ca.sh
+certs
+
+elasticsearch/config/elasticsearch-prod.yml
+elasticsearch/config/kibana-prod.yml
