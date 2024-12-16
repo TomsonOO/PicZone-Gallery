@@ -1,6 +1,6 @@
 <div align="center">
 
-#  [**PicZone**](https://piczone-frontend-1ae9d9713646.herokuapp.com/)
+# PicZone Gallery -  🚀 [**Live Demo**](https://piczone-frontend-1ae9d9713646.herokuapp.com/)
 
 ---
 
@@ -22,7 +22,7 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 
 
-## Technology Stack
+## 🔧 Technology Stack
 
 - **Frontend**: React
 - **Backend**: Symfony
@@ -33,14 +33,14 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 ---
 
-## Please Note
+## 🚧 Please Note
 
 - **Under Development**: PicZone is an evolving project with new features and improvements being added regularly
 - **Demo Optimization**: The current demo may take longer to load as optimization is still in progress
 
 ---
 
-## Implemented Features
+## ✨ Implemented Features
 
 - **User Account & Profile Management**: Users can register, log in, manage profiles, and upload personal avatars
 - **Image Management API (CRUD)**: Upload, list, update, and delete images. Images are stored on AWS S3
@@ -49,7 +49,7 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 ---
 
-## Ongoing Work
+## 🛠️ Ongoing Work
 
 - **Likes / Dislikes**
 - **Tagging & Advanced Search**: Images will have tags, based on which they can be searched for
@@ -57,7 +57,7 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 ---
 
-## Features to Be Implemented
+## 🚀 Features to Be Implemented
 
 - **Dashboard / Analytics**: Application stats
 - **Creating Personalized Galleries**: Users can organize images into custom galleries

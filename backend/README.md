@@ -1,8 +1,8 @@
 # Backend API Documentation
 
-## Viewing API Documentation
+## 📄 Viewing API Documentation
 
-**API Documentation Update In Progress**: The API documentation is currently outdated due to the recent architecture refactor to **Hexagonal Architecture** and **CQRS**. The documentation will be updated soon to reflect these changes.
+⚠️ **API Documentation Update In Progress**: The API documentation is currently outdated due to the recent architecture refactor to **Hexagonal Architecture** and **CQRS**. The documentation will be updated soon to reflect these changes.
 
 In the meantime, you can still view the existing documentation using Swagger UI with Docker, though it may not be fully accurate.
 
@@ -12,13 +12,13 @@ Run the following Docker command to start Swagger UI:
 docker run -p 8082:8080 -e SWAGGER_JSON=/api-docs/openapi.yaml -v $(pwd)/api-docs:/api-docs swaggerapi/swagger-ui
 ```
 
-## Running Tests
+## ✅ Running Tests
 
 The project includes both **unit tests** and **integration tests**. These tests can be run through a script that manages the Docker environment for testing.
 
-**Note**: Integration tests for the **user module** are still being updated due to the project's transition to Hexagonal Architecture.
+⚠️ **Note**: Integration tests for the **user module** are still being updated due to the project's transition to Hexagonal Architecture.
 
-## Configuring the Test Environment
+## ⚙️ Configuring the Test Environment
 
 Before running tests, you need to configure the test environment. You have two options for setting up the test database.
 
@@ -54,7 +54,7 @@ Before running tests, you need to configure the test environment. You have two o
    docker exec -it backend_test bash
    php bin/console doctrine:migrations:migrate
 
-## Test Commands
+## 💻 Test Commands
 
 The script supports the following commands:
 
@@ -62,8 +62,8 @@ The script supports the following commands:
 
   ```bash
   ./start_test_compose.sh
-  
-### Script Command Arguments
+
+### 🔧 Script Command Arguments
 
 - `start`: Initializes and starts all necessary services for testing without running tests automatically.
 - `stop`: Stops all services and cleans up the test environment.
@@ -71,7 +71,7 @@ The script supports the following commands:
 - `test-integration`: Executes all integration tests and then stops all services.
 - `test-all`: Runs both unit and integration tests, starting the environment beforehand and stopping it afterward.
 
-## Xdebug
+## 🐞 Xdebug
 
 To enable **Xdebug**, set the following environment variable in your `.env` file:
 
@@ -83,7 +83,7 @@ Ensure you configure path mappings for your project. Below is an example using P
 
 ![Path Mapping Example](../readme_screesnshots/xdebugger_path_mappings.png)
 
-### For Xdebug to work with tests, add these two environment variables:
+### 💻 For Xdebug to work with tests, add these two environment variables:
 
 ```env
 XDEBUG_CONFIG=    # Set to idekey=PHPSTORM if using phpstorm
