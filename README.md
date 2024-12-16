@@ -1,10 +1,16 @@
 <div align="center">
 
-# PicZone Gallery
+#  [**PicZone**](https://piczone-frontend-1ae9d9713646.herokuapp.com/)
 
-**The ultimate AI-generated image showcase.**
+---
 
-🚀 [**Live Demo**](https://piczone-frontend-1ae9d9713646.herokuapp.com/)
+<div align="center">
+
+PicZone Gallery is a full-stack web application that displays images, following **Hexagonal Architecture** and **CQRS** principles.
+</div>
+
+---
+
 
 ![PHP](https://img.shields.io/badge/Language-PHP-777bb4?style=flat-square)
 ![Hexagonal Architecture](https://img.shields.io/badge/Architecture-Hexagonal-blue?style=flat-square)
@@ -14,55 +20,46 @@
 
 </div>
 
----
-<div align="center">
 
-PicZone Gallery is a full-stack web application that showcases AI-generated images, following **Hexagonal Architecture** and **CQRS** principles.
-</div>
 
----
+## Technology Stack
 
-## 🔧 Technology Stack
-
-- **Frontend**: React ⚛️ — user interface
-- **Backend**: Symfony 🛠️ — application core
-- **Database**: PostgreSQL 🗄️ — data management
-- **Cloud Storage**: AWS S3 ☁️ — image storage
-- **Containerization**: Docker 🐳 — development and deployment
-- **Hosting & Deployment**: Heroku 🌍 —  deployment
+- **Frontend**: React
+- **Backend**: Symfony
+- **Database**: PostgreSQL
+- **Cloud Storage**: AWS S3
+- **Containerization**: Docker
+- **Hosting & Deployment**: Heroku 
 
 ---
 
-## 🚧 Please Note
+## Please Note
 
-- **Under Development**: PicZone is an evolving project with new features and improvements being added regularly.
-- **Demo Optimization**: The current demo may take longer to load as optimization is still in progress.
-
----
-
-## ✨ Implemented Features
-
-- **👤 User Registration**: Users can create an account and manage their profiles.
-- **🔐 User Login**: Account holders can log in.
-- **⚙️ Profile Management**: Users can update their profile settings.
-- **🖼️ Image Management API (CRUD)**: Users can upload, list, update, and remove images from the gallery. *(Backend implemented only)*
-- **🌗 Dark/Light Mode**: Users can toggle between dark and light mode.
+- **Under Development**: PicZone is an evolving project with new features and improvements being added regularly
+- **Demo Optimization**: The current demo may take longer to load as optimization is still in progress
 
 ---
 
-## 🛠️ Ongoing Work
+## Implemented Features
 
-- **⚙️ Hexagonal Architecture + CQRS**: The project has been refactored to follow **Hexagonal Architecture** and **CQRS** principles.
-- **🧪 Writing Tests**: Currently working on unit and integration tests to adapt to the changes introduced by the refactored architecture.
-- **🔍 Elasticsearch Integration**: Adding Elasticsearch to provide advanced search capabilities for images.
-- **🛠️ Minor Improvements**: Enhancing validation, refining error handling, and improving overall code quality.
+- **User Account & Profile Management**: Users can register, log in, manage profiles, and upload personal avatars
+- **Image Management API (CRUD)**: Upload, list, update, and delete images. Images are stored on AWS S3
+- **Automated Tests**: Includes unit and integration tests (PHPUnit)
+- **Dark/Light Mode**: Users can toggle between dark and light mode
 
 ---
 
-## 🚀 Features to Be Implemented
+## Ongoing Work
 
-- **🖼️ Creating Own Galleries**: Users will be able to create and manage personalized galleries.
-- **👍 Like / 👎 Dislike Options**: Users can like or dislike images, adding social interactivity to the gallery.
-- **👤 Advanced User Profiles**: Additional features and customization options for user profiles.
-- **🏷️ Image Tagging & 🔍 Searching**: Allow users to tag images and search through the gallery with tags.
-- **🔮 And More**
+- **Likes / Dislikes**
+- **Tagging & Advanced Search**: Images will have tags, based on which they can be searched for
+- **Dynamic Categories**: Generating categories (Popular, Recent, etc...)
+
+---
+
+## Features to Be Implemented
+
+- **Dashboard / Analytics**: Application stats
+- **Creating Personalized Galleries**: Users can organize images into custom galleries
+- **Additional Refinements**: Continued code optimization, error handling, and validation improvements
+- **And more**

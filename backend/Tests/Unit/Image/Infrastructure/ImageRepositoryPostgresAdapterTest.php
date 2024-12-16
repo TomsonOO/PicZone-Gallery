@@ -19,7 +19,7 @@ class ImageRepositoryPostgresAdapterTest extends TestCase
         $this->imageRepositoryAdapter = new ImageRepositoryPostgresAdapter($this->entityManager);
     }
 
-    public function testSave_CallsPersistsAndFlush_WhenCalled(): void
+    public function testSaveCallsPersistsAndFlushWhenCalled(): void
     {
         $image = $this->createMock(Image::class);
 
@@ -34,5 +34,4 @@ class ImageRepositoryPostgresAdapterTest extends TestCase
 
         $this->imageRepositoryAdapter->save($image);
     }
-
 }

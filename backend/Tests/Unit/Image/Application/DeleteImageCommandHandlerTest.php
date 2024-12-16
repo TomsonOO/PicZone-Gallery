@@ -2,7 +2,6 @@
 
 namespace App\Tests\Unit\Image\Application;
 
-
 use App\Image\Application\DeleteImage\DeleteImageCommand;
 use App\Image\Application\DeleteImage\DeleteImageCommandHandler;
 use App\Image\Application\Port\ImageRepositoryPort;
@@ -16,6 +15,7 @@ class DeleteImageCommandHandlerTest extends TestCase
     private ImageRepositoryPort $imageRepository;
     private ImageStoragePort $imageStorage;
     private DeleteImageCommandHandler $deleteImageHandler;
+
     protected function setUp(): void
     {
         $this->imageRepository = $this->createMock(ImageRepositoryPort::class);
@@ -27,7 +27,7 @@ class DeleteImageCommandHandlerTest extends TestCase
         );
     }
 
-    public function testHandle_CallsImageRepositoryAndImageStorage_WhenCalled(): void
+    public function testHandleCallsImageRepositoryAndImageStorageWhenCalled(): void
     {
         $profileId = 123;
         $objectKey = 'testObjectKey';
@@ -55,7 +55,7 @@ class DeleteImageCommandHandlerTest extends TestCase
         $this->deleteImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsImageNotFoundException_WhenImageIsNotFound(): void
+    public function testHandleThrowsImageNotFoundExceptionWhenImageIsNotFound(): void
     {
         $imageId = 123;
 
@@ -75,7 +75,7 @@ class DeleteImageCommandHandlerTest extends TestCase
         $this->deleteImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenStorageFails(): void
+    public function testHandleThrowsExceptionWhenStorageFails(): void
     {
         $imageId = 123;
         $image = $this->createMock(Image::class);
@@ -104,11 +104,11 @@ class DeleteImageCommandHandlerTest extends TestCase
         $this->deleteImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenRepositoryFails(): void
+    public function testHandleThrowsExceptionWhenRepositoryFails(): void
     {
         $imageId = 123;
         $image = $this->createMock(Image::class);
-        $objectKey = "testObjectKey";
+        $objectKey = 'testObjectKey';
 
         $image->method('getObjectKey')->willReturn($objectKey);
 

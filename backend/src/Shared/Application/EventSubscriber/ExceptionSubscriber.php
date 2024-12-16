@@ -4,8 +4,8 @@ namespace App\Shared\Application\EventSubscriber;
 
 use App\Shared\Application\Exception\ValidationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -38,6 +38,5 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
             $event->setResponse($response);
         }
-
     }
 }

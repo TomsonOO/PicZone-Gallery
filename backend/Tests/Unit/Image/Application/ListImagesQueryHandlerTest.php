@@ -20,7 +20,7 @@ class ListImagesQueryHandlerTest extends TestCase
         $this->listImagesHandler = new ListImagesQueryHandler($this->imageRepository);
     }
 
-    public function testHandle_ReturnsArrayOfImages_WhenCalled(): void
+    public function testHandleReturnsArrayOfImagesWhenCalled(): void
     {
         $testImage1 = $this->createMock(Image::class);
         $testImage2 = $this->createMock(Image::class);
@@ -37,7 +37,7 @@ class ListImagesQueryHandlerTest extends TestCase
         $this->assertSame($expectedImages, $returnedImages);
     }
 
-    public function testHandle_ReturnsEmptyArray_WhenNoImagesExist(): void
+    public function testHandleReturnsEmptyArrayWhenNoImagesExist(): void
     {
         $expectedImages = [];
 

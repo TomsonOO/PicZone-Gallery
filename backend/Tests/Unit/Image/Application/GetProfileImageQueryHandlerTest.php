@@ -21,7 +21,7 @@ class GetProfileImageQueryHandlerTest extends TestCase
         $this->getProfileImageHandler = new GetProfileImageQueryHandler($this->imageRepository);
     }
 
-    public function testHandle_ReturnsProfileImage_WhenCalled(): void
+    public function testHandleReturnsProfileImageWhenCalled(): void
     {
         $profileImageId = 1;
 
@@ -39,7 +39,7 @@ class GetProfileImageQueryHandlerTest extends TestCase
         $this->assertSame($expectedImage, $returnedImage);
     }
 
-    public function testHandle_ThrowsImageNotFoundException_WhenProfileImageIsNotFound(): void
+    public function testHandleThrowsImageNotFoundExceptionWhenProfileImageIsNotFound(): void
     {
         $profileImageId = 123;
 
@@ -55,5 +55,4 @@ class GetProfileImageQueryHandlerTest extends TestCase
         $query = new GetProfileImageQuery($profileImageId);
         $this->getProfileImageHandler->handle($query);
     }
-
 }

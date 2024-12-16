@@ -15,12 +15,13 @@ class UploadImageCommandHandler
     private ImageStoragePort $imageStorage;
     private ValidatorInterface $validator;
     private MessageBusInterface $messageBus;
+
     public function __construct(
         ImageRepositoryPort $imageRepository,
         ImageStoragePort $imageStorage,
         ValidatorInterface $validator,
-        MessageBusInterface $messageBus
-    )  {
+        MessageBusInterface $messageBus,
+    ) {
         $this->imageRepository = $imageRepository;
         $this->imageStorage = $imageStorage;
         $this->validator = $validator;
@@ -49,7 +50,7 @@ class UploadImageCommandHandler
         try {
             $this->imageRepository->save($image);
         } catch (\Exception $e) {
-            throw new \RuntimeException('Error saving image: ' . $e->getMessage(), 0, $e);
+            throw new \RuntimeException('Error saving image: '.$e->getMessage(), 0, $e);
         }
         $indexingMessage = new ElasticsearchIndexImageMessage($image->getId());
         $this->messageBus->dispatch($indexingMessage);

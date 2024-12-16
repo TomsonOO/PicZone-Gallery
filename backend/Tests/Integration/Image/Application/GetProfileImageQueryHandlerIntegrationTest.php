@@ -2,9 +2,9 @@
 
 namespace App\Tests\Integration\Image\Application;
 
-use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\GetProfileImage\GetProfileImageQuery;
 use App\Image\Application\GetProfileImage\GetProfileImageQueryHandler;
+use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Entity\Image;
 use App\Image\Domain\Exception\ImageNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -23,7 +23,7 @@ class GetProfileImageQueryHandlerIntegrationTest extends KernelTestCase
         $this->handler = new GetProfileImageQueryHandler($this->imageRepository);
     }
 
-    public function testHandle_ReturnsImage_WhenImageExists(): void
+    public function testHandleReturnsImageWhenImageExists(): void
     {
         $image = new Image('testProfileImage.jpg', 'ProfileImages/testProfileImage.jpg', 'ProfileImages/testProfileImage.jpg', Image::TYPE_PROFILE);
         $this->imageRepository->save($image);
@@ -35,7 +35,7 @@ class GetProfileImageQueryHandlerIntegrationTest extends KernelTestCase
         $this->assertEquals($image->getId(), $result->getId());
     }
 
-    public function testHandle_ThrowsImageNotFoundException_WhenImageDoesNotExist(): void
+    public function testHandleThrowsImageNotFoundExceptionWhenImageDoesNotExist(): void
     {
         $nonExistentImageId = 999;
 

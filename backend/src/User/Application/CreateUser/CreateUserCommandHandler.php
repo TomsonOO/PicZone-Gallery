@@ -36,7 +36,6 @@ class CreateUserCommandHandler
             $hashedPassword
         );
 
-
         $this->userRepository->save($user);
     }
 }

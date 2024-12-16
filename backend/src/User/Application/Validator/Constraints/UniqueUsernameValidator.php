@@ -2,9 +2,9 @@
 
 namespace App\User\Application\Validator\Constraints;
 
+use App\User\Application\Port\UserRepositoryPort;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use App\User\Application\Port\UserRepositoryPort;
 
 class UniqueUsernameValidator extends ConstraintValidator
 {

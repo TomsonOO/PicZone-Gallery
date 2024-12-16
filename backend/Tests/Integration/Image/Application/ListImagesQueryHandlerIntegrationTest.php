@@ -2,9 +2,9 @@
 
 namespace App\Tests\Integration\Image\Application;
 
-use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\ListImages\ListImagesQuery;
 use App\Image\Application\ListImages\ListImagesQueryHandler;
+use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -22,7 +22,7 @@ class ListImagesQueryHandlerIntegrationTest extends KernelTestCase
         $this->handler = new ListImagesQueryHandler($this->imageRepository);
     }
 
-    public function testHandle_ReturnsArrayOfImages_WhenImagesExist(): void
+    public function testHandleReturnsArrayOfImagesWhenImagesExist(): void
     {
         $image1 = new Image('testImage1.jpg', 'GalleryImages/testImage1.jpg', 'GalleryImages/testImage1.jpg', Image::TYPE_GALLERY);
         $image2 = new Image('testImage2.jpg', 'GalleryImages/testImage2.jpg', 'GalleryImages/testImage2.jpg', Image::TYPE_GALLERY);
@@ -39,7 +39,7 @@ class ListImagesQueryHandlerIntegrationTest extends KernelTestCase
         $this->assertInstanceOf(Image::class, $result[1]);
     }
 
-    public function testHandle_ReturnsEmptyArray_WhenNoImagesExist(): void
+    public function testHandleReturnsEmptyArrayWhenNoImagesExist(): void
     {
         $query = new ListImagesQuery();
         $result = $this->handler->handle($query);

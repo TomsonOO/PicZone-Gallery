@@ -31,7 +31,7 @@ class S3ImageStorageAdapterTest extends TestCase
                 'key'    => 'fakeAccessKeyId',
                 'secret' => 'fakeSecretAccessKey',
             ],
-            'handler' => $mock
+            'handler' => $mock,
         ]);
 
         $this->sluggerMock = $this->createMock(SluggerInterface::class);
@@ -42,7 +42,7 @@ class S3ImageStorageAdapterTest extends TestCase
         $this->imageStorage = new S3ImageStorageAdapter($this->s3Client, $this->bucketName, $this->sluggerMock);
     }
 
-    public function testUpload_ReturnsCorrectObjectUrl_WhenCalled(): void
+    public function testUploadReturnsCorrectObjectUrlWhenCalled(): void
     {
         $fileMock = $this->createMock(UploadedFile::class);
         $fileMock->method('getClientOriginalName')->willReturn('test.jpg');
@@ -60,7 +60,7 @@ class S3ImageStorageAdapterTest extends TestCase
         $this->assertStringStartsWith('GalleryImages/', $result['objectKey']);
     }
 
-    public function testUpload_ThrowsException_WhenImageSizeIsExceeded(): void
+    public function testUploadThrowsExceptionWhenImageSizeIsExceeded(): void
     {
         $fileMock = $this->createMock(UploadedFile::class);
         $fileMock->method('getClientOriginalName')->willReturn('test.jpg');
@@ -69,7 +69,7 @@ class S3ImageStorageAdapterTest extends TestCase
         $fileMock->method('getSize')->willReturn(3068000);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("File size exceeds the maximum limit of 2MB.");
+        $this->expectExceptionMessage('File size exceeds the maximum limit of 2MB.');
 
         $tempFile = tempnam(sys_get_temp_dir(), 'test_image');
         file_put_contents($tempFile, 'fake image content');

@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CreateUserCommandHandlerIntegrationTest extends KernelTestCase
 {
-
     // TODO
 
     protected function setUp(): void
@@ -14,7 +13,6 @@ class CreateUserCommandHandlerIntegrationTest extends KernelTestCase
         self::bootKernel();
 
         $container = self::getContainer();
-
     }
 
     public function testMethodToRemoveWarning(): void

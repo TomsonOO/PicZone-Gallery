@@ -19,6 +19,7 @@ class UpdateUserProfileImageCommand
     {
         return $this->userId;
     }
+
     public function getProfileImage(): UploadedFile
     {
         return $this->profileImage;

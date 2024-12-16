@@ -13,6 +13,7 @@ class GetPresignedUrlQueryHandler
     {
         $this->imageStorage = $imageStorage;
     }
+
     public function handle(GetPresignedUrlQuery $query): string
     {
         try {

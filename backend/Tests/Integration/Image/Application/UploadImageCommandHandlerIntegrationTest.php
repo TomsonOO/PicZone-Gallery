@@ -3,12 +3,11 @@
 namespace App\Tests\Integration\Image\Application;
 
 use App\Image\Application\Port\ImageRepositoryPort;
+use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
-use App\Image\Application\Port\ImageStoragePort;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Exception;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
@@ -37,12 +36,12 @@ class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
         foreach ($this->uploadedObjectKeys as $objectKey) {
             try {
                 $this->imageStorage->delete($objectKey);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
             }
         }
     }
 
-    public function testHandle_SavesImageToRepository_WithCorrectData(): void
+    public function testHandleSavesImageToRepositoryWithCorrectData(): void
     {
         $uploadedFile = new UploadedFile(
             '/var/www/Tests/Resources/test_image.jpg',
@@ -64,7 +63,7 @@ class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
         $this->uploadedObjectKeys[] = $images[0]->getObjectKey();
     }
 
-    public function testHandle_DoesNotSaveImage_WhenImageUploadFails(): void
+    public function testHandleDoesNotSaveImageWhenImageUploadFails(): void
     {
         $uploadedFile = new UploadedFile(
             '/var/www/Tests/Resources/invalid_test_file.txt',
@@ -76,12 +75,12 @@ class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
 
         $command = new UploadImageCommand('invalid_test_file.txt', true, 'gallery', $uploadedFile, 'Test description');
 
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Validation failed');
 
         try {
             $this->uploadImageHandler->handle($command);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $images = $this->imageRepository->findAll();
             $this->assertCount(0, $images);
             throw $e;

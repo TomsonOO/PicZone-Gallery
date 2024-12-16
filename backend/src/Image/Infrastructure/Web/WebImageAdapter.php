@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-
 #[Route('/api/images')]
 class WebImageAdapter extends AbstractController
 {
@@ -39,8 +38,8 @@ class WebImageAdapter extends AbstractController
         UploadImageCommandHandler $uploadImageHandler,
         GetProfileImageQueryHandler $getProfileImageHandler,
         DeleteImageCommandHandler $deleteImageHandler,
-        GetPresignedUrlQueryHandler $getPresignedUrlHandler
-    ){
+        GetPresignedUrlQueryHandler $getPresignedUrlHandler,
+    ) {
         $this->listImagesHandler = $listImagesHandler;
         $this->serializer = $serializer;
         $this->uploadImageHandler = $uploadImageHandler;
@@ -97,7 +96,7 @@ class WebImageAdapter extends AbstractController
     #[Route('/profile/{profileId}', name: 'profile_image', methods: ['GET'])]
     public function getProfileImage(int $profileId): JsonResponse
     {
-        $query = new getProfileImageQuery($profileId);
+        $query = new GetProfileImageQuery($profileId);
         $profileImage = $this->getProfileImageHandler->handle($query);
 
         return $this->json($profileImage);

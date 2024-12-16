@@ -19,7 +19,7 @@ class GetPresignedUrlQueryHandlerTest extends TestCase
         $this->getPresignedUrlHandler = new GetPresignedUrlQueryHandler($this->imageStorage);
     }
 
-    public function testHandle_ReturnsPresignedUrl_WhenCalled(): void
+    public function testHandleReturnsPresignedUrlWhenCalled(): void
     {
         $objectKey = 'testObjectKey';
         $passedUrl = 'tesUrl';
@@ -36,7 +36,7 @@ class GetPresignedUrlQueryHandlerTest extends TestCase
         $this->assertEquals($passedUrl, $returnedUrl);
     }
 
-    public function testHandle_ThrowsException_WhenPresignedUrlGenerationFails(): void
+    public function testHandleThrowsExceptionWhenPresignedUrlGenerationFails(): void
     {
         $objectKey = 'testObjectKey';
 
@@ -54,7 +54,7 @@ class GetPresignedUrlQueryHandlerTest extends TestCase
         $this->getPresignedUrlHandler->handle($query);
     }
 
-    public function testHandle_ThrowsInvalidArgumentException_WhenObjectKeyIsInvalid(): void
+    public function testHandleThrowsInvalidArgumentExceptionWhenObjectKeyIsInvalid(): void
     {
         $invalidObjectKey = '';
 

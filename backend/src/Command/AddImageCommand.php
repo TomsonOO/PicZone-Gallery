@@ -47,13 +47,13 @@ class AddImageCommand extends Command
         $image->setObjectKey($input->getArgument('objectKey'));
         $image->setType($input->getArgument('type'));
         $image->setDescription($input->getArgument('description') ?? 'No description provided');
-        $image->setShowOnHomepage((bool)$input->getArgument('showOnHomepage'));
+        $image->setShowOnHomepage((bool) $input->getArgument('showOnHomepage'));
         $image->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($image);
         $this->entityManager->flush();
 
-        $output->writeln("Image added successfully with type: " . $image->getType());
+        $output->writeln('Image added successfully with type: '.$image->getType());
 
         return Command::SUCCESS;
     }

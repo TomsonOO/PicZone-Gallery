@@ -2,18 +2,18 @@
 
 namespace App\Tests\Unit\User\Application;
 
+use App\User\Application\CreateUser\CreateUserCommand;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Application\Validator\Constraints\UniqueUsernameValidator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\User\Application\CreateUser\CreateUserCommand;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\EmailValidator;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
-use Symfony\Component\Validator\Constraints\EmailValidator;
-use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserCommandTest extends TestCase
 {
@@ -24,9 +24,9 @@ class CreateUserCommandTest extends TestCase
     {
         $this->userRepository = $this->createMock(UserRepositoryPort::class);
 
-//        $this->userRepository
-//            ->method('existsByUsername')
-//            ->willReturn(false);
+        //        $this->userRepository
+        //            ->method('existsByUsername')
+        //            ->willReturn(false);
 
         $this->uniqueUsernameValidator = new UniqueUsernameValidator($this->userRepository);
 

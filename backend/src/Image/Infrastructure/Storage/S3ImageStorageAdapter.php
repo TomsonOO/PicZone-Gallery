@@ -4,7 +4,7 @@ namespace App\Image\Infrastructure\Storage;
 
 use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Domain\Exception\PresignedUrlGenerationException;
-use \Aws\S3\Exception\S3Exception;
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -31,10 +31,10 @@ class S3ImageStorageAdapter implements ImageStoragePort
         $imageFilename = $safeImageFilename.'-'.uniqid().'.'.$image->guessExtension();
 
         $directory = ($imageType === 'gallery') ? self::GALLERY_DIRECTORY : self::PROFILE_DIRECTORY;
-        $s3Key = $directory . '/' . $imageFilename;
+        $s3Key = $directory.'/'.$imageFilename;
 
         if ($image->getSize() > 2048000) {
-            throw new \Exception("File size exceeds the maximum limit of 2MB.");
+            throw new \Exception('File size exceeds the maximum limit of 2MB.');
         }
 
         $result = $this->s3Client->putObject([
@@ -54,7 +54,7 @@ class S3ImageStorageAdapter implements ImageStoragePort
     {
         $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,
-            'Key' => $objectKey
+            'Key' => $objectKey,
         ]);
     }
 
@@ -72,7 +72,7 @@ class S3ImageStorageAdapter implements ImageStoragePort
             ]);
             $request = $this->s3Client->createPresignedRequest($cmd, '+20 minutes');
 
-            return (string)$request->getUri();
+            return (string) $request->getUri();
         } catch (S3Exception $e) {
             throw new PresignedUrlGenerationException('Error generating presigned URL', 0, $e);
         }

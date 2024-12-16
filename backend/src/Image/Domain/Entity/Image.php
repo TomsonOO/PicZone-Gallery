@@ -12,9 +12,9 @@ class Image
     public const TYPE_PROFILE = 'profile';
     public const TYPE_GALLERY = 'gallery';
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
-    #[ORM\SequenceGenerator(sequenceName: "images_id_seq", allocationSize: 1)]
-    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'images_id_seq', allocationSize: 1)]
+    #[ORM\Column(type: 'integer')]
     #[Groups(['elastica'])]
     private ?int $id = null;
 
@@ -34,7 +34,7 @@ class Image
     #[Groups(['elastica'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column (options: ["default" => false])]
+    #[ORM\Column(options: ['default' => false])]
     #[Groups(['elastica'])]
     private ?bool $showOnHomepage = false;
 

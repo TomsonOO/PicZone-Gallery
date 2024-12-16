@@ -5,9 +5,9 @@ namespace App\Tests\Integration\Image\Application;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQuery;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQueryHandler;
 use App\Image\Application\Port\ImageRepositoryPort;
+use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
-use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Domain\Exception\PresignedUrlGenerationException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -31,7 +31,7 @@ class GetPresignedUrlQueryHandlerIntegrationTest extends KernelTestCase
         $this->imageRepository = $container->get(ImageRepositoryPort::class);
     }
 
-    public function testHandle_ReturnsPresignedUrl_WhenObjectKeyExists(): void
+    public function testHandleReturnsPresignedUrlWhenObjectKeyExists(): void
     {
         $testImagePath = '/var/www/Tests/Resources/test_image.jpg';
 
@@ -68,7 +68,7 @@ class GetPresignedUrlQueryHandlerIntegrationTest extends KernelTestCase
         $this->imageStorage->delete($image->getObjectKey());
     }
 
-    public function testHandle_ThrowsException_WhenObjectKeyDoesNotExist(): void
+    public function testHandleThrowsExceptionWhenObjectKeyDoesNotExist(): void
     {
         $nonExistentObjectKey = 'invalidObjectKey';
 

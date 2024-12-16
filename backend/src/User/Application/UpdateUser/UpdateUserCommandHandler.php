@@ -3,7 +3,6 @@
 namespace App\User\Application\UpdateUser;
 
 use App\User\Application\Port\UserRepositoryPort;
-use App\User\Domain\Entity\User;
 use App\User\Domain\Exception\UserNotFoundException;
 
 class UpdateUserCommandHandler

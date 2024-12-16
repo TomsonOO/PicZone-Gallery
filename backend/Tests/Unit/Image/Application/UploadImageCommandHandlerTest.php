@@ -40,7 +40,7 @@ class UploadImageCommandHandlerTest extends TestCase
         );
     }
 
-    public function testHandle_CallsImageStorageAndImageRepository_WhenCalled(): void
+    public function testHandleCallsImageStorageAndImageRepositoryWhenCalled(): void
     {
         $uploadedImageData = [
             'imageFilename' => 'testFilename',
@@ -74,7 +74,7 @@ class UploadImageCommandHandlerTest extends TestCase
         $this->uploadImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenStorageFails(): void
+    public function testHandleThrowsExceptionWhenStorageFails(): void
     {
         $imageFilename = 'testImageFilename';
 
@@ -99,7 +99,7 @@ class UploadImageCommandHandlerTest extends TestCase
         $this->uploadImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenRepositoryFails(): void
+    public function testHandleThrowsExceptionWhenRepositoryFails(): void
     {
         $uploadedImageData = [
             'imageFilename' => 'testFilename',

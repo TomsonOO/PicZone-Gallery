@@ -2,8 +2,8 @@
 
 namespace App\User\Application\CreateUser;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use App\User\Application\Validator\Constraints as AppAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateUserCommand
 {
@@ -49,6 +49,7 @@ class CreateUserCommand
         $this->email = $email;
         $this->password = $password;
     }
+
     public function getUsername(): string
     {
         return $this->username;

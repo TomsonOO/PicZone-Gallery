@@ -5,7 +5,6 @@ namespace App\User\Domain\Entity;
 use App\Image\Domain\Entity\Image;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,8 +17,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     final public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
-    #[ORM\SequenceGenerator(sequenceName: "users_id_seq", allocationSize: 1)]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'users_id_seq', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 
@@ -36,13 +35,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $username = null;
 
     #[ORM\OneToOne(targetEntity: Image::class)]
-    #[ORM\JoinColumn(name: "profile_image_id", referencedColumnName: "id")]
+    #[ORM\JoinColumn(name: 'profile_image_id', referencedColumnName: 'id')]
     private ?Image $profileImage = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $biography = null;
 
-    #[ORM\Column(type: 'boolean', options: ["default" => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private ?bool $isProfilePublic = true;
 
     #[ORM\Column(type: 'json', nullable: true)]
@@ -51,15 +50,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct(string $username, string $email, string $password)
     {
         if (empty($username)) {
-            throw new InvalidArgumentException('Username cannot be empty.');
+            throw new \InvalidArgumentException('Username cannot be empty.');
         }
 
         if (empty($email)) {
-            throw new InvalidArgumentException('Email cannot be empty.');
+            throw new \InvalidArgumentException('Email cannot be empty.');
         }
 
         if (empty($password)) {
-            throw new InvalidArgumentException('Password cannot be empty.');
+            throw new \InvalidArgumentException('Password cannot be empty.');
         }
 
         $this->username = $username;
@@ -70,15 +69,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public static function create(string $username, string $email, string $password): self
     {
         if (strlen($username) < 6) {
-            throw new InvalidArgumentException('Username must be at least 6 characters long.');
+            throw new \InvalidArgumentException('Username must be at least 6 characters long.');
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('Invalid email address.');
+            throw new \InvalidArgumentException('Invalid email address.');
         }
 
         if (strlen($password) < 8) {
-            throw new InvalidArgumentException('Password must be at least 8 characters long.');
+            throw new \InvalidArgumentException('Password must be at least 8 characters long.');
         }
 
         $id = Uuid::uuid4()->toString();
@@ -179,7 +178,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return array_unique($roles);
-
     }
 
     public function setRoles(?array $roles): static

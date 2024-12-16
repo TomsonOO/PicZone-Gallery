@@ -2,8 +2,8 @@
 
 namespace App\User\Application\GetUserInformation;
 
-use App\User\Application\Port\UserRepositoryPort;
 use App\User\Application\DTO\UserDTO;
+use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Exception\UserNotFoundException;
 
 class GetUserInformationQueryHandler

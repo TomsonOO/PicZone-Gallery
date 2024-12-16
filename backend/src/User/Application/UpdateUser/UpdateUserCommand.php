@@ -15,7 +15,7 @@ class UpdateUserCommand
         ?string $username,
         ?string $email,
         ?string $biography,
-        ?bool $isProfilePublic
+        ?bool $isProfilePublic,
     ) {
         $this->userId = $userId;
         $this->username = $username;

@@ -2,8 +2,8 @@
 
 namespace App\User\Application\AuthenticateUser;
 
-use App\User\Application\Port\UserRepositoryPort;
 use App\User\Application\Port\JWTTokenManagerPort;
+use App\User\Application\Port\UserRepositoryPort;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 

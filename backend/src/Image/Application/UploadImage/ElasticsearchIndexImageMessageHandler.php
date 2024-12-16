@@ -15,7 +15,7 @@ class ElasticsearchIndexImageMessageHandler
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        ObjectPersisterInterface $objectPersister
+        ObjectPersisterInterface $objectPersister,
     ) {
         $this->entityManager = $entityManager;
         $this->objectPersister = $objectPersister;

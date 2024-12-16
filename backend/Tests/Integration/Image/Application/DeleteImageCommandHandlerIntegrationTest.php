@@ -27,9 +27,8 @@ class DeleteImageCommandHandlerIntegrationTest extends KernelTestCase
         $this->deleteImageHandler = self::getContainer()->get(DeleteImageCommandHandler::class);
     }
 
-    public function testDelete_DeleteImageFromRepository_WhenCalled(): void
+    public function testDeleteDeleteImageFromRepositoryWhenCalled(): void
     {
-
         $testImagePath = '/var/www/Tests/Resources/test_image.jpg';
 
         $uploadedFile = new UploadedFile(
@@ -67,7 +66,8 @@ class DeleteImageCommandHandlerIntegrationTest extends KernelTestCase
         $deletedImage = $this->imageRepository->findById($imageId);
         $this->assertNull($deletedImage);
     }
-    public function testDelete_ThrowsImageNotFoundException_WhenImageDoesNotExist(): void
+
+    public function testDeleteThrowsImageNotFoundExceptionWhenImageDoesNotExist(): void
     {
         $nonExistentImageId = 99999;
         $deleteCommand = new DeleteImageCommand($nonExistentImageId);

@@ -11,12 +11,12 @@ class UploadImageCommand
     private ?string $description;
     private bool $showOnHomepage;
     private string $imageType;
-    #[Assert\NotNull(message: "Image file is required.")]
+    #[Assert\NotNull(message: 'Image file is required.')]
     #[Assert\Image(
-        maxSize: "2M",
-        mimeTypes: ["image/jpeg", "image/png", "image/webp"],
-        maxSizeMessage: "The image size cannot exceed 2MB.",
-        mimeTypesMessage: "Invalid image type. Allowed types are JPEG and PNG."
+        maxSize: '2M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        maxSizeMessage: 'The image size cannot exceed 2MB.',
+        mimeTypesMessage: 'Invalid image type. Allowed types are JPEG and PNG.'
     )]
     private UploadedFile $imageFile;
 
@@ -25,7 +25,7 @@ class UploadImageCommand
         bool $showOnHomepage,
         string $imageType,
         UploadedFile $imageFile,
-        ?string $description
+        ?string $description,
     ) {
         $this->imageFilename = $imageFilename;
         $this->showOnHomepage = $showOnHomepage;

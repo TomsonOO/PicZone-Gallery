@@ -29,7 +29,7 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         }
     }
 
-    public function testUpload_ReturnsCorrectData_WhenValidImageAndGalleryTypeProvided(): void
+    public function testUploadReturnsCorrectDataWhenValidImageAndGalleryTypeProvided(): void
     {
         $testImagePath = '/var/www/Tests/Resources/test_image.jpg';
 
@@ -50,7 +50,7 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         $this->assertArrayHasKey('objectKey', $uploadResult);
     }
 
-    public function testUpload_ReturnsCorrectData_WhenValidImageAndProfileTypeProvided(): void
+    public function testUploadReturnsCorrectDataWhenValidImageAndProfileTypeProvided(): void
     {
         $testImagePath = '/var/www/Tests/Resources/test_image.jpg';
 
@@ -71,7 +71,7 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         $this->assertArrayHasKey('objectKey', $uploadResult);
     }
 
-    public function testUpload_ThrowsException_WhenImageExceedsMaxSize(): void
+    public function testUploadThrowsExceptionWhenImageExceedsMaxSize(): void
     {
         $testImagePath = '/var/www/Tests/Resources/large_test_image.png';
 
@@ -89,13 +89,13 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         $this->imageStorage->upload($uploadedFile, 'gallery');
     }
 
-    public function testUpload_ThrowsException_WhenImageIsNotUploadedFile(): void
+    public function testUploadThrowsExceptionWhenImageIsNotUploadedFile(): void
     {
         $this->expectException(\TypeError::class);
         $this->imageStorage->upload('not_a_file', 'gallery');
     }
 
-    public function testDelete_RemovesObjectFromS3_WhenObjectKeyExists(): void
+    public function testDeleteRemovesObjectFromS3WhenObjectKeyExists(): void
     {
         $testImagePath = '/var/www/Tests/Resources/test_image.jpg';
 
@@ -116,7 +116,7 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         $this->assertTrue(true);
     }
 
-    public function testDelete_ThrowsException_WhenInvalidObjectKeyProvided(): void
+    public function testDeleteThrowsExceptionWhenInvalidObjectKeyProvided(): void
     {
         $invalidObjectKey = '';
 
@@ -124,7 +124,7 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         $this->imageStorage->delete($invalidObjectKey);
     }
 
-    public function testGetPresignedUrl_ReturnsValidUrl_WhenObjectKeyExists(): void
+    public function testGetPresignedUrlReturnsValidUrlWhenObjectKeyExists(): void
     {
         $testImagePath = '/var/www/Tests/Resources/test_image.jpg';
 
@@ -148,7 +148,7 @@ class S3ImageStorageAdapterIntegrationTest extends KernelTestCase
         $this->assertStringStartsWith('http', $presignedUrl);
     }
 
-    public function testGetPresignedUrl_ThrowsPresignedUrlGenerationException_WhenObjectKeyDoesNotExist(): void
+    public function testGetPresignedUrlThrowsPresignedUrlGenerationExceptionWhenObjectKeyDoesNotExist(): void
     {
         $nonExistentObjectKey = 'nonexistentObjectKey';
 

@@ -23,7 +23,7 @@ class DeleteUserCommandHandlerTest extends TestCase
         $this->deleteUserHandler = new DeleteUserCommandHandler($this->userRepository);
     }
 
-    public function testHandle_CallsUserRepositoryMethods_WhenCalled(): void
+    public function testHandleCallsUserRepositoryMethodsWhenCalled(): void
     {
         $user = $this->createMock(User::class);
         $this->userRepository
@@ -41,7 +41,7 @@ class DeleteUserCommandHandlerTest extends TestCase
         $this->deleteUserHandler->handle($command);
     }
 
-    public function testHandle_ThrowsUserNotFoundException_WhenUserIsNotFound(): void
+    public function testHandleThrowsUserNotFoundExceptionWhenUserIsNotFound(): void
     {
         $this->userRepository
             ->expects($this->once())
@@ -58,7 +58,7 @@ class DeleteUserCommandHandlerTest extends TestCase
         $this->deleteUserHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenDeleteMethodFails(): void
+    public function testHandleThrowsExceptionWhenDeleteMethodFails(): void
     {
         $user = $this->createMock(User::class);
         $this->userRepository
@@ -79,5 +79,4 @@ class DeleteUserCommandHandlerTest extends TestCase
         $command = new DeleteUserCommand($this->userId);
         $this->deleteUserHandler->handle($command);
     }
-
 }

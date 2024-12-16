@@ -9,7 +9,7 @@ use App\User\Domain\Entity\User;
 use App\User\Domain\Exception\UserNotFoundException;
 use PHPUnit\Framework\TestCase;
 
-class UpdateUserCommandHandlerTest extends testCase
+class UpdateUserCommandHandlerTest extends TestCase
 {
     private int $userId;
     private string $email;
@@ -18,6 +18,7 @@ class UpdateUserCommandHandlerTest extends testCase
     private bool $isProfilePublic;
     private UserRepositoryPort $userRepository;
     private UpdateUserCommandHandler $updateUserHandler;
+
     protected function setUp(): void
     {
         $this->userId = 213;
@@ -31,7 +32,7 @@ class UpdateUserCommandHandlerTest extends testCase
         $this->updateUserHandler = new UpdateUserCommandHandler($this->userRepository);
     }
 
-    public function testHandle_CallsUserRepositoryWithCorrectUserData_WhenCalled(): void
+    public function testHandleCallsUserRepositoryWithCorrectUserDataWhenCalled(): void
     {
         $user = $this->createMock(User::class);
         $this->userRepository
@@ -60,7 +61,7 @@ class UpdateUserCommandHandlerTest extends testCase
         $this->updateUserHandler->handle($command);
     }
 
-    public function testHandle_ThrowsUsetNotFoundException_WhenUserIsNotFound(): void
+    public function testHandleThrowsUsetNotFoundExceptionWhenUserIsNotFound(): void
     {
         $this->userRepository
             ->expects($this->once())
@@ -83,7 +84,7 @@ class UpdateUserCommandHandlerTest extends testCase
         $this->updateUserHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenSaveMethodFails(): void
+    public function testHandleThrowsExceptionWhenSaveMethodFails(): void
     {
         $user = $this->createMock(User::class);
         $this->userRepository

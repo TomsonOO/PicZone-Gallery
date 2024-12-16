@@ -38,7 +38,7 @@ class UpdateUserProfileImageCommandHandlerTest extends TestCase
         );
     }
 
-    public function testHandle_CallsImageStorageAndRepositories_WhenCalled(): void
+    public function testHandleCallsImageStorageAndRepositoriesWhenCalled(): void
     {
         $uploadedImageData = [
             'imageFilename' => 'testFilename',
@@ -66,14 +66,14 @@ class UpdateUserProfileImageCommandHandlerTest extends TestCase
 
         $this->imageRepository
             ->expects($this->once())
-            ->method('save') 
+            ->method('save')
             ->with($this->isInstanceOf(Image::class));
 
         $command = new UpdateUserProfileImageCommand($this->userId, $this->profileImageFile);
         $this->updateUserProfileImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsUserNotFoundException_WhenUserIsNotFound(): void
+    public function testHandleThrowsUserNotFoundExceptionWhenUserIsNotFound(): void
     {
         $this->userRepository
             ->expects($this->once())
@@ -92,7 +92,7 @@ class UpdateUserProfileImageCommandHandlerTest extends TestCase
         $this->updateUserProfileImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenImageUploadFails(): void
+    public function testHandleThrowsExceptionWhenImageUploadFails(): void
     {
         $user = $this->createMock(User::class);
         $this->userRepository
@@ -118,7 +118,7 @@ class UpdateUserProfileImageCommandHandlerTest extends TestCase
         $this->updateUserProfileImageHandler->handle($command);
     }
 
-    public function testHandle_ThrowsException_WhenSaveMethodFails(): void
+    public function testHandleThrowsExceptionWhenSaveMethodFails(): void
     {
         $uploadedImageData = [
             'imageFilename' => 'testFilename',

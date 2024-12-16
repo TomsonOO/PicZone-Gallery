@@ -25,19 +25,19 @@ class WebUserAdapter extends AbstractController
 {
     private Security $security;
     private CreateUserCommandHandler $createUserHandler;
-    private getUserInformationQueryHandler $getUserInformationHandler;
+    private GetUserInformationQueryHandler $getUserInformationHandler;
     private DeleteUserCommandHandler $deleteUserHandler;
     private UpdateUserCommandHandler $updateUserHandler;
     private UpdateUserProfileImageCommandHandler $updateUserProfileImageHandler;
 
     public function __construct(
-        Security                             $security,
-        CreateUserCommandHandler             $createUserHandler,
-        GetUserInformationQueryHandler              $getUserInformationHandler,
-        DeleteUserCommandHandler             $deleteUserHandler,
-        UpdateUserCommandHandler             $updateUserHandler,
+        Security $security,
+        CreateUserCommandHandler $createUserHandler,
+        GetUserInformationQueryHandler $getUserInformationHandler,
+        DeleteUserCommandHandler $deleteUserHandler,
+        UpdateUserCommandHandler $updateUserHandler,
         UpdateUserProfileImageCommandHandler $updateUserProfileImageHandler,
-    ){
+    ) {
         $this->security = $security;
         $this->createUserHandler = $createUserHandler;
         $this->getUserInformationHandler = $getUserInformationHandler;
@@ -102,7 +102,7 @@ class WebUserAdapter extends AbstractController
         return new JsonResponse(['message' => 'User information updated successfully'], Response::HTTP_OK);
     }
 
-    #[Route('/{userId}', name: "delete_user", methods: ['DELETE'])]
+    #[Route('/{userId}', name: 'delete_user', methods: ['DELETE'])]
     public function deleteUser(int $userId): JsonResponse
     {
         $command = new DeleteUserCommand($userId);
@@ -127,5 +127,4 @@ class WebUserAdapter extends AbstractController
 
         return new JsonResponse(['message' => 'User avatar updated successfully'], Response::HTTP_OK);
     }
-
 }
