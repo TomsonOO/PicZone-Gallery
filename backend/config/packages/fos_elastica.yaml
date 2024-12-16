@@ -2,28 +2,22 @@
 fos_elastica:
     clients:
         default:
-            host: 'es01'
-            port: 9200
+            url: '%env(ELASTIC_URL)%'
             username: '%env(ELASTIC_USERNAME)%'
             password: '%env(ELASTIC_PASSWORD)%'
+            ssl: true
+            transport: 'Https'
+            curl:
+                !php/const:CURLOPT_SSL_VERIFYHOST: 2
+                !php/const:CURLOPT_SSL_VERIFYPEER: 1
+                !php/const:CURLOPT_CAINFO: '%elastic_ca_cert_path%'
+
     indexes:
         images:
-            index_name: images
-            settings:
-                index:
-                    number_of_shards: 1
-                    number_of_replicas: 0
-            persistence:
-                driver: orm
-                model: App\Entity\Image
-                provider: ~
-                finder: ~
             properties:
                 id:
                     type: integer
                 filename:
-                    type: text
-                url:
                     type: text
                 description:
                     type: text
@@ -32,6 +26,17 @@ fos_elastica:
                 showOnHomepage:
                     type: boolean
                 objectKey:
-                    type: text
-                type:
-                    type: text
+                    type: keyword
+            persistence:
+                driver: orm
+                model: App\Image\Domain\Entity\Image
+                provider: ~
+                finder: ~
+                listener:
+                    insert: false
+                    update: false
+                    delete: false
+            settings:
+                index:
+                    number_of_shards: 1
+                    number_of_replicas: 0
