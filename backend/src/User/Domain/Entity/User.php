@@ -3,6 +3,8 @@
 namespace App\User\Domain\Entity;
 
 use App\Image\Domain\Entity\Image;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -47,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $settings = null;
 
+    #[ORM\OneToMany(targetEntity: FavoriteImage::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private Collection $favoriteImages;
+
     public function __construct(string $username, string $email, string $password)
     {
         if (empty($username)) {
@@ -64,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
+        $this->favoriteImages = new ArrayCollection();
     }
 
     public static function create(string $username, string $email, string $password): self
@@ -195,6 +201,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getFavoriteImages(): Collection
+    {
+        return $this->favoriteImages;
+    }
+
+    public function addFavoriteImage(FavoriteImage $favorite): self
+    {
+        if (!$this->favoriteImages->contains($favorite)) {
+            $this->favoriteImages->add($favorite);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteImage(FavoriteImage $favorite): self
+    {
+        $this->favoriteImages->removeElement($favorite);
 
         return $this;
     }
