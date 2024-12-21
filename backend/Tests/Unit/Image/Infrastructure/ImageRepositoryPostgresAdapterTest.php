@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Image\Infrastructure;
+namespace Tests\Unit\Image\Infrastructure;
 
 use App\Image\Domain\Entity\Image;
 use App\Image\Infrastructure\Persistence\ImageRepositoryPostgresAdapter;

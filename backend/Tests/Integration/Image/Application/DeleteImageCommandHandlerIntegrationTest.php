@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Image\Application;
+namespace Tests\Integration\Image\Application;
 
 use App\Image\Application\DeleteImage\DeleteImageCommand;
 use App\Image\Application\DeleteImage\DeleteImageCommandHandler;
