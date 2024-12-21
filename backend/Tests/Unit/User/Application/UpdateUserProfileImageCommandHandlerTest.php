@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\User\Application;
+namespace Tests\Unit\User\Application;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\Port\ImageStoragePort;

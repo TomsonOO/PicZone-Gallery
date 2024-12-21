@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Image\Infrastructure;
+namespace Tests\Unit\Image\Infrastructure;
 
 use App\Image\Infrastructure\Storage\S3ImageStorageAdapter;
 use Aws\MockHandler;

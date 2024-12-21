@@ -13,7 +13,7 @@ class RemoveImageFromFavoritesCommandHandler
 
     public function __construct(
         UserRepositoryPort $userRepository,
-        FavoriteImageRepositoryPort $favoriteImageRepository
+        FavoriteImageRepositoryPort $favoriteImageRepository,
     ) {
         $this->userRepository = $userRepository;
         $this->favoriteImageRepository = $favoriteImageRepository;
@@ -26,9 +26,9 @@ class RemoveImageFromFavoritesCommandHandler
             throw new UserNotFoundException('User not found');
         }
 
-        $favorite = $this->favoriteImageRepository->findByUserIdAndImageId($command->getUserId(), $command->getImageId());
-        if ($favorite !== null) {
-            $this->favoriteImageRepository->remove($favorite);
+        $favoriteImage = $this->favoriteImageRepository->findByUserIdAndImageId($command->getUserId(), $command->getImageId());
+        if ($favoriteImage !== null) {
+            $this->favoriteImageRepository->remove($favoriteImage);
         }
     }
 }

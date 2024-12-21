@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Image\Application;
+namespace Tests\Integration\Image\Application;
 
 use App\Image\Application\GetProfileImage\GetProfileImageQuery;
 use App\Image\Application\GetProfileImage\GetProfileImageQueryHandler;

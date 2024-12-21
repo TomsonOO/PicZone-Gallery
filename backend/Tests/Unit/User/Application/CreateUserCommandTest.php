@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\User\Application;
+namespace Tests\Unit\User\Application;
 
 use App\User\Application\CreateUser\CreateUserCommand;
 use App\User\Application\Port\UserRepositoryPort;
@@ -23,10 +23,6 @@ class CreateUserCommandTest extends TestCase
     protected function setUp(): void
     {
         $this->userRepository = $this->createMock(UserRepositoryPort::class);
-
-        //        $this->userRepository
-        //            ->method('existsByUsername')
-        //            ->willReturn(false);
 
         $this->uniqueUsernameValidator = new UniqueUsernameValidator($this->userRepository);
 
