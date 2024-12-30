@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -85,8 +84,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (strlen($password) < 8) {
             throw new \InvalidArgumentException('Password must be at least 8 characters long.');
         }
-
-        $id = Uuid::uuid4()->toString();
 
         return new self($username, $email, $password);
     }

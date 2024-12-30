@@ -45,6 +45,12 @@ class Image
     #[ORM\Column(length: 255)]
     #[Groups(['elastica'])]
     private ?string $type = null;
+    #[ORM\Column(type: 'json', options: ['default' => '[]'])]
+    #[Groups(['elastica'])]
+    private array $tags = [];
+    #[ORM\Column(type: 'integer', options: ['default' => '0'])]
+    #[Groups(['elastica'])]
+    private int $likeCount = 0;
 
     public function __construct(string $filename, string $url, string $objectKey, string $type)
     {
@@ -60,11 +66,11 @@ class Image
         return $this->type;
     }
 
-    public function setType(string $type): string
+    public function setType(string $type): static
     {
         $this->type = $type;
 
-        return $this->type;
+        return $this;
     }
 
     public function getId(): ?int
@@ -114,5 +120,38 @@ class Image
     public function getObjectKey(): ?string
     {
         return $this->objectKey;
+    }
+
+    public function getLikeCount(): ?int
+    {
+        return $this->likeCount;
+    }
+
+    public function incrementLikeCount(): static
+    {
+        ++$this->likeCount;
+
+        return $this;
+    }
+
+    public function decrementLikeCount(): static
+    {
+        if ($this->likeCount > 0) {
+            --$this->likeCount;
+        }
+
+        return $this;
+    }
+
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): static
+    {
+        $this->tags = $tags;
+
+        return $this;
     }
 }

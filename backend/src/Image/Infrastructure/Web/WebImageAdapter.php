@@ -8,6 +8,8 @@ use App\Image\Application\GetPresignedUrl\GetPresignedUrlQuery;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQueryHandler;
 use App\Image\Application\GetProfileImage\GetProfileImageQuery;
 use App\Image\Application\GetProfileImage\GetProfileImageQueryHandler;
+use App\Image\Application\LikeOrUnlikeImage\LikeOrUnlikeImageCommand;
+use App\Image\Application\LikeOrUnlikeImage\LikeOrUnlikeImageCommandHandler;
 use App\Image\Application\ListImages\ListImagesQuery;
 use App\Image\Application\ListImages\ListImagesQueryHandler;
 use App\Image\Application\UploadImage\UploadImageCommand;
@@ -31,6 +33,7 @@ class WebImageAdapter extends AbstractController
     private GetProfileImageQueryHandler $getProfileImageHandler;
     private DeleteImageCommandHandler $deleteImageHandler;
     private GetPresignedUrlQueryHandler $getPresignedUrlHandler;
+    private LikeOrUnlikeImageCommandHandler $likeOrUnlikeImageHandler;
 
     public function __construct(
         ListImagesQueryHandler $listImagesHandler,
@@ -39,6 +42,7 @@ class WebImageAdapter extends AbstractController
         GetProfileImageQueryHandler $getProfileImageHandler,
         DeleteImageCommandHandler $deleteImageHandler,
         GetPresignedUrlQueryHandler $getPresignedUrlHandler,
+        LikeOrUnlikeImageCommandHandler $likeOrUnlikeImageHandler,
     ) {
         $this->listImagesHandler = $listImagesHandler;
         $this->serializer = $serializer;
@@ -46,6 +50,7 @@ class WebImageAdapter extends AbstractController
         $this->getProfileImageHandler = $getProfileImageHandler;
         $this->deleteImageHandler = $deleteImageHandler;
         $this->getPresignedUrlHandler = $getPresignedUrlHandler;
+        $this->likeOrUnlikeImageHandler = $likeOrUnlikeImageHandler;
     }
 
     #[Route('/presigned-url/{objectKey}', name: 'image_presigned_url', requirements: ['objectKey' => '.+'])]
@@ -109,5 +114,15 @@ class WebImageAdapter extends AbstractController
         $this->deleteImageHandler->handle($command);
 
         return new JsonResponse(['message' => 'Image deleted successfully'], Response::HTTP_OK);
+    }
+
+    #[Route('/like/{imageId}')]
+    public function likeOrUnlikeImage(int $imageId): JsonResponse
+    {
+        $user = $this->getUser();
+        $command = new LikeOrUnlikeImageCommand($user->getId(), $imageId);
+        $this->likeOrUnlikeImageHandler->handle($command);
+
+        return new JsonResponse(['message' => 'Image like added or removed'], Response::HTTP_OK);
     }
 }
