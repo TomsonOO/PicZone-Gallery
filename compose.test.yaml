@@ -33,6 +33,7 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
       - ./backend:/var/www
+      - ./certs/ca/ca.crt:/etc/ssl/certs/ca.crt
 
   php-fpm:
     container_name: php-fpm_test
@@ -41,6 +42,7 @@ services:
       dockerfile: php/Dockerfile
     volumes:
       - ./backend:/var/www:rw
+      - ./certs/ca/ca.crt:/etc/ssl/certs/ca.crt
     env_file:
       - .env.test
     environment:
@@ -103,6 +105,11 @@ services:
       - ELASTIC_USERNAME=${ELASTIC_USERNAME}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - LICENSE=${LICENSE}
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --insecure https://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"' || exit 1"]
+      interval: 10s
+      retries: 10
+      timeout: 10s
     ulimits:
       memlock:
         soft: -1
