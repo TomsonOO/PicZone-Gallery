@@ -12,7 +12,14 @@ build_env() {
 
 start_env() {
     load_env
-    docker compose -f compose.test.yaml up -d  > /dev/null 2>&1
+    docker compose -f compose.test.yaml --env-file .env.test up -d  > /dev/null 2>&1
+    echo "Test environment started."
+    wait_for_elasticsearch
+}
+
+start_env_without_elastic() {
+    load_env
+    docker compose -f compose.test.yaml --env-file .env.test up -d  > /dev/null 2>&1
     echo "Test environment started."
 }
 
@@ -24,17 +31,39 @@ stop_env() {
 
 run_unit_tests() {
     echo "Running unit tests..."
-    docker compose -f compose.test.yaml run php-fpm php bin/phpunit --testsuite unit
+    docker compose exec backend php bin/phpunit --testsuite unit
 }
 
 run_integration_tests() {
     echo "Running integration tests..."
-    docker compose -f compose.test.yaml run php-fpm php bin/phpunit --testsuite integration
+    docker compose exec backend php bin/phpunit --testsuite integration
 }
 
 run_all_tests() {
     echo "Running all tests..."
-    docker compose -f compose.test.yaml run php-fpm php bin/phpunit
+    docker compose exec backend php bin/phpunit
+}
+
+wait_for_elasticsearch() {
+  echo "Waiting for Elasticsearch to be ready (should take around 20 seconds)"
+  local container_name="backend_test"
+  local max_attempts=20
+  local attempt=0
+  while true; do
+    if docker exec $container_name curl --silent --fail \
+          -u "$ELASTIC_USERNAME:$ELASTIC_PASSWORD" \
+          --cacert "$CA_CERT_PATH" \
+          "$ELASTIC_URL"_cluster/health; then
+      echo "Elasticsearch is up."
+      break
+    fi
+    attempt=$((attempt+1))
+    if [ "$attempt" -ge "$max_attempts" ]; then
+      echo "Elasticsearch took too long to start."
+      exit 1
+    fi
+    sleep 5
+  done
 }
 
 case "$1" in
@@ -48,19 +77,28 @@ case "$1" in
         stop_env
         ;;
     test-unit)
-        start_env
+        start_env_without_elastic
         run_unit_tests
         stop_env
+        ;;
+    test-unit-no-restart)
+        run_unit_tests
         ;;
     test-integration)
         start_env
         run_integration_tests
         stop_env
         ;;
+    test-integration-no-restart)
+        run_integration_tests
+        ;;
     test-all)
         start_env
         run_all_tests
         stop_env
+        ;;
+    test-all-no-restart)
+        run_all_tests
         ;;
     *)
         echo "Usage: $0 {build|start|stop|test-unit|test-integration|test-all}"
