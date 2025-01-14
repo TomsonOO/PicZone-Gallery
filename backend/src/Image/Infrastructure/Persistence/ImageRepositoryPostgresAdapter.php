@@ -26,11 +26,6 @@ class ImageRepositoryPostgresAdapter implements ImageRepositoryPort
         return $this->entityManager->getRepository(Image::class)->find($imageId);
     }
 
-    public function findAll(): array
-    {
-        return $this->entityManager->getRepository(Image::class)->findAll();
-    }
-
     public function delete(Image $image): void
     {
         $this->entityManager->remove($image);

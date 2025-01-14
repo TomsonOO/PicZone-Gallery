@@ -3,14 +3,14 @@
 namespace Tests\Integration\Image\Application;
 
 use App\Image\Application\ListImages\ListImagesQuery;
-use App\Image\Application\ListImages\ListImagesQueryHandler;
+use App\Image\Application\ListImages\SearchImagesQueryHandler;
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ListImagesQueryHandlerIntegrationTest extends KernelTestCase
 {
-    private ListImagesQueryHandler $handler;
+    private SearchImagesQueryHandler $handler;
     private ImageRepositoryPort $imageRepository;
 
     protected function setUp(): void
@@ -19,7 +19,7 @@ class ListImagesQueryHandlerIntegrationTest extends KernelTestCase
 
         $container = self::getContainer();
         $this->imageRepository = $container->get(ImageRepositoryPort::class);
-        $this->handler = new ListImagesQueryHandler($this->imageRepository);
+        $this->handler = new SearchImagesQueryHandler($this->imageRepository);
     }
 
     public function testHandleReturnsArrayOfImagesWhenImagesExist(): void

@@ -46,6 +46,10 @@ services:
         alias: 'fos_elastica.object_persister.images'
         public: false
 
+    App\Image\Infrastructure\Persistence\ElasticsearchImagesSearchAdapter:
+        arguments:
+            $finder: '@fos_elastica.finder.images'
+
     App\Command\TestElasticsearchConnectionCommand:
         tags: ['console.command']
     # add more service definitions when explicit configuration is needed

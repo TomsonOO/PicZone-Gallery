@@ -17,7 +17,6 @@ use App\User\Application\UpdateUser\UpdateUserCommandHandler;
 use App\User\Application\UpdateUserProfileImage\UpdateUserProfileImageCommand;
 use App\User\Application\UpdateUserProfileImage\UpdateUserProfileImageCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +26,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[Route('/api/user')]
 class WebUserAdapter extends AbstractController
 {
-    private Security $security;
     private CreateUserCommandHandler $createUserHandler;
     private GetUserInformationQueryHandler $getUserInformationHandler;
     private DeleteUserCommandHandler $deleteUserHandler;
@@ -37,7 +35,6 @@ class WebUserAdapter extends AbstractController
     private RemoveImageFromFavoritesCommandHandler $removeImageFromFavoritesHandler;
 
     public function __construct(
-        Security $security,
         CreateUserCommandHandler $createUserHandler,
         GetUserInformationQueryHandler $getUserInformationHandler,
         DeleteUserCommandHandler $deleteUserHandler,
@@ -46,7 +43,6 @@ class WebUserAdapter extends AbstractController
         AddImageToFavoritesCommandHandler $addImageToFavoritesHandler,
         RemoveImageFromFavoritesCommandHandler $removeImageFromFavoritesHandler,
     ) {
-        $this->security = $security;
         $this->createUserHandler = $createUserHandler;
         $this->getUserInformationHandler = $getUserInformationHandler;
         $this->deleteUserHandler = $deleteUserHandler;
@@ -75,8 +71,7 @@ class WebUserAdapter extends AbstractController
     #[Route('/profile', name: 'get_user_profile', methods: ['GET'])]
     public function getUserProfile(): JsonResponse
     {
-        $token = $this->security->getToken();
-        $user = $token?->getUser();
+        $user = $this->getUser();
 
         if (!$user || !is_a($user, UserInterface::class)) {
             return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
@@ -91,8 +86,7 @@ class WebUserAdapter extends AbstractController
     #[Route('/profile', name: 'update_user_info', methods: ['PATCH'])]
     public function updateUserInformation(Request $request): JsonResponse
     {
-        $token = $this->security->getToken();
-        $user = $token?->getUser();
+        $user = $this->getUser();
 
         if (!$user || !is_a($user, UserInterface::class)) {
             return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
@@ -124,11 +118,10 @@ class WebUserAdapter extends AbstractController
     #[Route('/update/avatar', name: 'update_profile_image', methods: ['POST'])]
     public function updateUserProfileImage(Request $request): JsonResponse
     {
-        $token = $this->security->getToken();
-        $user = $token?->getUser();
+        $user = $this->getUser();
 
-        if (!$user || !is_a($user, UserInterface::class)) {
-            return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
         $profileImage = $request->files->get('profile_image');
@@ -141,11 +134,10 @@ class WebUserAdapter extends AbstractController
     #[Route('/favorites/add', name: 'add_image_to_favorites', methods: ['POST'])]
     public function addImageToFavorites(Request $request): JsonResponse
     {
-        $token = $this->security->getToken();
-        $user = $token?->getUser();
+        $user = $this->getUser();
 
-        if (!$user || !is_a($user, UserInterface::class)) {
-            return $this->json(['message' => 'User not found'], Response::HTTP_UNAUTHORIZED);
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
         $data = json_decode($request->getContent(), true);

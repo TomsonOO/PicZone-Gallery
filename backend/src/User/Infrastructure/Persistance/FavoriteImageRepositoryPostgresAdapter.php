@@ -32,4 +32,22 @@ class FavoriteImageRepositoryPostgresAdapter implements FavoriteImageRepositoryP
         return $this->entityManager->getRepository(FavoriteImage::class)
             ->findOneBy(['user' => $userId, 'image' => $imageId]);
     }
+
+    public function findFavoriteIdsForUser(?int $userId, array $imageIds): array
+    {
+        if (!$userId || empty($imageIds)) {
+            return [];
+        }
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('IDENTITY(f.image) AS imageId')
+            ->from(FavoriteImage::class, 'f')
+            ->where('f.user = :userId')
+            ->andWhere('f.image IN (:ids)')
+            ->setParameter('userId', $userId)
+            ->setParameter('ids', $imageIds);
+
+        $rows = $qb->getQuery()->getArrayResult();
+        return array_column($rows, 'imageId');
+    }
 }

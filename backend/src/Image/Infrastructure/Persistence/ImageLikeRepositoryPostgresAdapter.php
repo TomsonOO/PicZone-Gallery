@@ -32,6 +32,24 @@ class ImageLikeRepositoryPostgresAdapter implements ImageLikeRepositoryPort
         return $count > 0;
     }
 
+    public function findLikedImageIdsForUser(?int $userId, array $imageIds): array
+    {
+        if (!$userId || empty($imageIds)) {
+            return [];
+        }
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('IDENTITY(il.image) AS imageId')
+            ->from(ImageLike::class, 'il')
+            ->where('il.user = :userId')
+            ->andWhere('il.image IN (:ids)')
+            ->setParameter('userId', $userId)
+            ->setParameter('ids', $imageIds);
+
+        $rows = $qb->getQuery()->getArrayResult();
+        return array_column($rows, 'imageId');
+    }
+
     public function addLike(int $userId, int $imageId): void
     {
         $userRef = $this->entityManager->getReference(User::class, $userId);
