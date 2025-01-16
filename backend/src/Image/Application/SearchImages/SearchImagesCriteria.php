@@ -2,7 +2,6 @@
 
 namespace App\Image\Application\SearchImages;
 
-
 class SearchImagesCriteria
 {
     public ?CategoryEnum $category;
@@ -18,7 +17,7 @@ class SearchImagesCriteria
         ?string $searchTerm,
         ?SortByEnum $sortBy,
         int $pageNumber,
-        int $pageSize
+        int $pageSize,
     ) {
         $this->category = $category;
         $this->showOnHomepage = $showOnHomepage;

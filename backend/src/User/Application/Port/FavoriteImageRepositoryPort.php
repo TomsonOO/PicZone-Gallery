@@ -11,5 +11,6 @@ interface FavoriteImageRepositoryPort
     public function remove(FavoriteImage $favoriteImage): void;
 
     public function findByUserIdAndImageId(int $userId, int $imageId): ?FavoriteImage;
+
     public function findFavoriteIdsForUser(?int $userId, array $imageIds): array;
 }

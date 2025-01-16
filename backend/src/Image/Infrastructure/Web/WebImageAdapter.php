@@ -91,7 +91,6 @@ class WebImageAdapter extends AbstractController
         return new JsonResponse($resultDto, Response::HTTP_OK);
     }
 
-
     /**
      * @throws ValidationException
      */

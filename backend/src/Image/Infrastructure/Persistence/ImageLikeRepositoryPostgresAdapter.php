@@ -47,6 +47,7 @@ class ImageLikeRepositoryPostgresAdapter implements ImageLikeRepositoryPort
             ->setParameter('ids', $imageIds);
 
         $rows = $qb->getQuery()->getArrayResult();
+
         return array_column($rows, 'imageId');
     }
 

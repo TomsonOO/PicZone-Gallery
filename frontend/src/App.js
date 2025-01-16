@@ -6,17 +6,17 @@ import WelcomePage from './pages/WelcomePage';
 import HomePage from './pages/HomePage';
 
 const App = () => {
-    return (
-        <>
-            <ToastContainer />
-            <Router>
-                <Routes>
-                    <Route path="/" element={<WelcomePage />} />
-                    <Route path="/gallery" element={<HomePage />} />
-                </Routes>
-            </Router>
-        </>
-    );
+  return (
+    <>
+      <ToastContainer />
+      <Router>
+        <Routes>
+          <Route path='/' element={<WelcomePage />} />
+          <Route path='/gallery' element={<HomePage />} />
+        </Routes>
+      </Router>
+    </>
+  );
 };
 
 export default App;

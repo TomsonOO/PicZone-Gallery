@@ -19,7 +19,7 @@ class SearchImagesQuery
         ?SortByEnum $sortBy,
         int $pageNumber,
         int $pageSize,
-        ?int $userId
+        ?int $userId,
     ) {
         $this->category = $category;
         $this->showOnHomepage = $showOnHomepage;

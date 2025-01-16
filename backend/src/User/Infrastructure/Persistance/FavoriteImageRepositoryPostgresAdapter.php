@@ -48,6 +48,7 @@ class FavoriteImageRepositoryPostgresAdapter implements FavoriteImageRepositoryP
             ->setParameter('ids', $imageIds);
 
         $rows = $qb->getQuery()->getArrayResult();
+
         return array_column($rows, 'imageId');
     }
 }

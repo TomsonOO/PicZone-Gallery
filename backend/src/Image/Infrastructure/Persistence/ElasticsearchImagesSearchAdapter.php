@@ -3,7 +3,9 @@
 namespace App\Image\Infrastructure\Persistence;
 
 use App\Image\Application\Port\ImageSearchPort;
+use App\Image\Application\SearchImages\CategoryEnum;
 use App\Image\Application\SearchImages\SearchImagesCriteria;
+use App\Image\Application\SearchImages\SortByEnum;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\MultiMatch;
@@ -23,18 +25,6 @@ class ElasticsearchImagesSearchAdapter implements ImageSearchPort
     {
         $boolQuery = new BoolQuery();
 
-        if ($searchCriteria->category) {
-            $boolQuery->addMust(
-                new Term(['category' => $searchCriteria->category->value])
-            );
-        }
-
-        if ($searchCriteria->showOnHomepage) {
-            $boolQuery->addFilter(
-                new Term(['showOnHomepage' => true])
-            );
-        }
-
         if ($searchCriteria->searchTerm) {
             $matchQuery = new MultiMatch();
             $matchQuery->setFields(['description', 'tags']);
@@ -43,15 +33,29 @@ class ElasticsearchImagesSearchAdapter implements ImageSearchPort
             $boolQuery->addMust($matchQuery);
         }
 
+        if ($searchCriteria->showOnHomepage) {
+            $boolQuery->addFilter(
+                new Term(['showOnHomepage' => true])
+            );
+        }
+
         $query = new Query($boolQuery);
 
-        if ($searchCriteria->sortBy) {
-
-            switch ($searchCriteria->sortBy) {
-                case 'likeCount':
+        if ($searchCriteria->category) {
+            switch ($searchCriteria->category) {
+                case CategoryEnum::MOST_LIKED:
                     $query->setSort(['likeCount' => ['order' => 'desc']]);
                     break;
-                case 'createdAt':
+                case CategoryEnum::NEWEST:
+                    $query->setSort(['createdAt' => ['order' => 'desc']]);
+                    break;
+            }
+        } elseif ($searchCriteria->sortBy) {
+            switch ($searchCriteria->sortBy) {
+                case SortByEnum::LIKE_COUNT:
+                    $query->setSort(['likeCount' => ['order' => 'desc']]);
+                    break;
+                case SortByEnum::CREATED_AT:
                     $query->setSort(['createdAt' => ['order' => 'desc']]);
                     break;
             }
