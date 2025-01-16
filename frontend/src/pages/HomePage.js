@@ -21,7 +21,7 @@ const HomePage = () => {
         <Sidebar />
         <main className='flex flex-col flex-grow p-0 bg-gray-150 dark:bg-gradient-to-b from-[#111f4a] to-[#1a327e]'>
           <CategoriesNavbar onCategoryChange={handleCategoryChange} />
-          <GalleryGrid category={category} sortBY={sortBy} />
+          <GalleryGrid category={category} sortBy={sortBy} />
         </main>
       </div>
     </div>

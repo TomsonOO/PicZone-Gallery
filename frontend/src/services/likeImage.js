@@ -6,7 +6,7 @@ const likeImage = async (imageId, backendUrl) => {
   }
 
   try {
-    const response = await fetch(`${backendUrl}/api/images/${imageId}/like`, {
+    const response = await fetch(`${backendUrl}/api/images/like/${imageId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

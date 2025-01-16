@@ -3,15 +3,14 @@ import useFetchImages from '../hooks/useFetchImages';
 import { FaSpinner } from 'react-icons/fa';
 import ImageItem from './ImageItem';
 
-const GalleryGrid = (
-  category = '',
-  sortBy = '',
-  searchTerm = '',
-  pageNumber = 1,
-  pageSize = 10
-) => {
+const GalleryGrid = ({
+                         category = '',
+                         sortBy = '',
+                         searchTerm = '',
+                         pageNumber = 1,
+                         pageSize = 10
+                     }) => {
   const { images, loading, error } = useFetchImages({ category, sortBy });
-
   if (loading) {
     return (
       <div className='flex justify-center items-center min-h-screen bg-animated'>

@@ -60,6 +60,7 @@ class SearchImagesQueryHandler
                 $foundImage->getId(),
                 $presignedUrl,
                 $foundImage->getDescription(),
+                $foundImage->getLikeCount(),
                 $isLiked,
                 $isFavorited
             );
@@ -69,7 +70,6 @@ class SearchImagesQueryHandler
             $imageDtoList,
             $criteria->pageNumber,
             $criteria->pageSize,
-            \count($imageDtoList)
         );
     }
 }

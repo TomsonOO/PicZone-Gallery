@@ -10,6 +10,7 @@ export default function ImageItem({ image }) {
   async function handleLike() {
     const token = localStorage.getItem('token');
     if (!token) {
+      console.log("trza sie zalogowac")
       return;
     }
     setAnimating(true);
