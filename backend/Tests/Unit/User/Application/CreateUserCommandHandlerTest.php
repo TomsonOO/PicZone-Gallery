@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\User\Application;
+namespace Tests\Unit\User\Application;
 
 use App\Shared\Application\Exception\ValidationException;
 use App\User\Application\CreateUser\CreateUserCommand;

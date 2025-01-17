@@ -29,9 +29,11 @@ services:
     environment:
       ELASTIC_USERNAME: "${ELASTIC_USERNAME}"
       ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
+      ELASTIC_URL: "${ELASTIC_URL}"
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
     volumes:
       - ./backend:/var/www
+      - ./certs/ca/ca.crt:/etc/ssl/certs/ca.crt
 
   php-fpm:
     container_name: php-fpm_test
@@ -40,9 +42,11 @@ services:
       dockerfile: php/Dockerfile
     volumes:
       - ./backend:/var/www:rw
+      - ./certs/ca/ca.crt:/etc/ssl/certs/ca.crt
     env_file:
       - .env.test
     environment:
+      ELASTIC_URL: "${ELASTIC_URL}"
       ELASTIC_USERNAME: "${ELASTIC_USERNAME}"
       ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
@@ -87,8 +91,35 @@ services:
       - frontend
       - backend
 
+  es01:
+    container_name: es01_test
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    volumes:
+      - ./certs:/usr/share/elasticsearch/config/certs
+      - esdata01-test:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+    environment:
+      - CLUSTER_NAME=docker-cluster
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - LICENSE=${LICENSE}
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --insecure https://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"' || exit 1"]
+      interval: 10s
+      retries: 10
+      timeout: 10s
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+
 volumes:
   postgres-data-test:
   node_modules:
+  esdata01-test:
+    driver: local
   certs:
     driver: local

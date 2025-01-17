@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Image\Application;
+namespace Tests\Integration\Image\Application;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Application\Port\ImageStoragePort;
@@ -8,6 +8,7 @@ use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
@@ -16,6 +17,7 @@ class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
     private ImageRepositoryPort $imageRepository;
     private ImageStoragePort $imageStorage;
     private ValidatorInterface $validator;
+    private MessageBusInterface $messageBus;
     private array $uploadedObjectKeys = [];
 
     protected function setUp(): void
@@ -26,7 +28,8 @@ class UploadImageCommandHandlerIntegrationTest extends KernelTestCase
         $this->imageRepository = $container->get(ImageRepositoryPort::class);
         $this->imageStorage = $container->get(ImageStoragePort::class);
         $this->validator = $container->get(ValidatorInterface::class);
-        $this->uploadImageHandler = new UploadImageCommandHandler($this->imageRepository, $this->imageStorage, $this->validator);
+        $this->messageBus = $container->get(MessageBusInterface::class);
+        $this->uploadImageHandler = new UploadImageCommandHandler($this->imageRepository, $this->imageStorage, $this->validator, $this->messageBus);
     }
 
     protected function tearDown(): void

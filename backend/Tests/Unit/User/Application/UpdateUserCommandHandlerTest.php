@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\User\Application;
+namespace Tests\Unit\User\Application;
 
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Application\UpdateUser\UpdateUserCommand;

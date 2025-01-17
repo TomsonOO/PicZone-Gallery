@@ -27,6 +27,11 @@ fos_elastica:
                     type: boolean
                 objectKey:
                     type: keyword
+                likeCount:
+                    type: integer
+                tags:
+                    type: text
+
             persistence:
                 driver: orm
                 model: App\Image\Domain\Entity\Image

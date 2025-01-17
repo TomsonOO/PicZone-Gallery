@@ -8,8 +8,12 @@ use App\Image\Application\GetPresignedUrl\GetPresignedUrlQuery;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQueryHandler;
 use App\Image\Application\GetProfileImage\GetProfileImageQuery;
 use App\Image\Application\GetProfileImage\GetProfileImageQueryHandler;
-use App\Image\Application\ListImages\ListImagesQuery;
-use App\Image\Application\ListImages\ListImagesQueryHandler;
+use App\Image\Application\LikeOrUnlikeImage\LikeOrUnlikeImageCommand;
+use App\Image\Application\LikeOrUnlikeImage\LikeOrUnlikeImageCommandHandler;
+use App\Image\Application\SearchImages\CategoryEnum;
+use App\Image\Application\SearchImages\SearchImagesQuery;
+use App\Image\Application\SearchImages\SearchImagesQueryHandler;
+use App\Image\Application\SearchImages\SortByEnum;
 use App\Image\Application\UploadImage\UploadImageCommand;
 use App\Image\Application\UploadImage\UploadImageCommandHandler;
 use App\Image\Domain\Entity\Image;
@@ -19,33 +23,33 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/api/images')]
 class WebImageAdapter extends AbstractController
 {
-    private ListImagesQueryHandler $listImagesHandler;
+    private SearchImagesQueryHandler $searchImagesHandler;
 
     private UploadImageCommandHandler $uploadImageHandler;
-    private SerializerInterface $serializer;
     private GetProfileImageQueryHandler $getProfileImageHandler;
     private DeleteImageCommandHandler $deleteImageHandler;
     private GetPresignedUrlQueryHandler $getPresignedUrlHandler;
+    private LikeOrUnlikeImageCommandHandler $likeOrUnlikeImageHandler;
 
     public function __construct(
-        ListImagesQueryHandler $listImagesHandler,
-        SerializerInterface $serializer,
+        SearchImagesQueryHandler $searchImagesHandler,
         UploadImageCommandHandler $uploadImageHandler,
         GetProfileImageQueryHandler $getProfileImageHandler,
         DeleteImageCommandHandler $deleteImageHandler,
         GetPresignedUrlQueryHandler $getPresignedUrlHandler,
+        LikeOrUnlikeImageCommandHandler $likeOrUnlikeImageHandler,
     ) {
-        $this->listImagesHandler = $listImagesHandler;
-        $this->serializer = $serializer;
+        $this->searchImagesHandler = $searchImagesHandler;
         $this->uploadImageHandler = $uploadImageHandler;
         $this->getProfileImageHandler = $getProfileImageHandler;
         $this->deleteImageHandler = $deleteImageHandler;
         $this->getPresignedUrlHandler = $getPresignedUrlHandler;
+        $this->likeOrUnlikeImageHandler = $likeOrUnlikeImageHandler;
     }
 
     #[Route('/presigned-url/{objectKey}', name: 'image_presigned_url', requirements: ['objectKey' => '.+'])]
@@ -60,12 +64,31 @@ class WebImageAdapter extends AbstractController
     #[Route('', name: 'api_images', methods: ['GET'])]
     public function listImages(Request $request): JsonResponse
     {
-        $query = new ListImagesQuery();
-        $images = $this->listImagesHandler->handle($query);
+        $user = $this->getUser();
+        $userId = $user instanceof UserInterface ? $user->getId() : null;
+        $categoryRequest = $request->get('category');
+        $showOnHomepage = (bool) $request->get('showOnHomepage', false);
+        $searchTerm = $request->get('searchTerm');
+        $sortRequest = $request->get('sortBy');
+        $pageNumber = (int) $request->get('pageNumber', 1);
+        $pageSize = (int) $request->get('pageSize', 10);
 
-        $data = $this->serializer->serialize($images, 'json');
+        $categoryEnum = $categoryRequest ? CategoryEnum::tryFrom($categoryRequest) : null;
+        $sortEnum = $sortRequest ? SortByEnum::tryFrom($sortRequest) : null;
 
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
+        $query = new SearchImagesQuery(
+            $categoryEnum,
+            $showOnHomepage,
+            $searchTerm,
+            $sortEnum,
+            $pageNumber,
+            $pageSize,
+            $userId
+        );
+
+        $resultDto = $this->searchImagesHandler->handle($query);
+
+        return new JsonResponse($resultDto, Response::HTTP_OK);
     }
 
     /**
@@ -109,5 +132,18 @@ class WebImageAdapter extends AbstractController
         $this->deleteImageHandler->handle($command);
 
         return new JsonResponse(['message' => 'Image deleted successfully'], Response::HTTP_OK);
+    }
+
+    #[Route('/like/{imageId}', name: 'like_image', methods: ['POST'])]
+    public function likeOrUnlikeImage(int $imageId): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+        $command = new LikeOrUnlikeImageCommand($user->getId(), $imageId);
+        $this->likeOrUnlikeImageHandler->handle($command);
+
+        return new JsonResponse(['message' => 'Image like added or removed'], Response::HTTP_OK);
     }
 }

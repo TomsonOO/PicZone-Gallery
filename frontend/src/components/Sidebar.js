@@ -5,89 +5,112 @@ import RegisterModal from './modals/RegisterModal';
 import SettingsModal from './modals/SettingsModal';
 import { useUser } from '../context/UserContext';
 import UserDropdownMenu from './UserDropdownMenu';
-import useFetchProfileImage from "../hooks/useFetchProfileImage";
+import useFetchProfileImage from '../hooks/useFetchProfileImage';
 
 const Sidebar = () => {
-    const [darkMode, setDarkMode] = useState(true);
-    const { state, logout } = useUser();
-    const [isLoginOpen, setLoginOpen] = useState(false);
-    const [isRegisterOpen, setRegisterOpen] = useState(false);
-    const [isSettingsOpen, setSettingsOpen] = useState(false);
-    const { profileImage, error } = useFetchProfileImage(state.user ? state.user.profileImageId : null);
-    const [isUserDropdownMenuOpen, setUserDropdownMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+  const { state, logout } = useUser();
+  const [isLoginOpen, setLoginOpen] = useState(false);
+  const [isRegisterOpen, setRegisterOpen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const { profileImage, error } = useFetchProfileImage(
+    state.user ? state.user.profileImageId : null
+  );
+  const [isUserDropdownMenuOpen, setUserDropdownMenuOpen] = useState(false);
 
-    useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.remove(darkMode ? 'light' : 'dark');
-        root.classList.add(darkMode ? 'dark' : 'light');
-    }, [darkMode]);
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove(darkMode ? 'light' : 'dark');
+    root.classList.add(darkMode ? 'dark' : 'light');
+  }, [darkMode]);
 
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-    };
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
-    const toggleDropdownMenu = () => {
-        setUserDropdownMenuOpen(!isUserDropdownMenuOpen);
-    };
+  const toggleDropdownMenu = () => {
+    setUserDropdownMenuOpen(!isUserDropdownMenuOpen);
+  };
 
-    const openSettingsModal = () => {
-        setSettingsOpen(true);
-    };
+  const openSettingsModal = () => {
+    setSettingsOpen(true);
+  };
 
-    const handleCloseDropdownMenu = () => {
-        setUserDropdownMenuOpen(false);
-    };
+  const handleCloseDropdownMenu = () => {
+    setUserDropdownMenuOpen(false);
+  };
 
-    return (
-        <aside className="w-48 p-4 sticky top-0 h-screen flex flex-col items-center justify-between bg-gray-200 dark:bg-gradient-to-b dark:from-[#0a152e] dark:to-[#152969] z-50">
-            <div className="w-full flex flex-col items-center">
-                <button onClick={toggleDarkMode}
-                        className="mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-700 dark:text-gray-300 flex items-center justify-center">
-                    {darkMode ? <FaSun className="inline mr-2"/> : <FaMoon className="inline mr-2"/>}
-                    {darkMode ? 'Light Mode' : 'Dark Mode'}
-                </button>
+  return (
+    <aside className='w-48 p-4 sticky top-0 h-screen flex flex-col items-center justify-between bg-gray-200 dark:bg-gradient-to-b dark:from-[#0a152e] dark:to-[#152969] z-50'>
+      <div className='w-full flex flex-col items-center'>
+        <button
+          onClick={toggleDarkMode}
+          className='mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
+        >
+          {darkMode ? (
+            <FaSun className='inline mr-2' />
+          ) : (
+            <FaMoon className='inline mr-2' />
+          )}
+          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+      </div>
+      <div className='w-full flex flex-col items-center'>
+        {state.user ? (
+          <div className='relative flex flex-col items-center'>
+            <button
+              onClick={toggleDropdownMenu}
+              className='focus:outline-none transition-transform transform hover:scale-105'
+            >
+              <img
+                src={profileImage.presignedUrl}
+                alt='Profile'
+                className='w-24 h-24 rounded-full border-2 border-gray-300 dark:border-gray-600'
+              />
+            </button>
+            <UserDropdownMenu
+              isUserDropdownMenuOpen={isUserDropdownMenuOpen}
+              onSettings={openSettingsModal}
+              onClose={handleCloseDropdownMenu}
+            />
+          </div>
+        ) : (
+          <div className='w-full flex flex-col items-center'>
+            <div className='mb-2 w-full'>
+              <button
+                onClick={() => setLoginOpen(true)}
+                className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
+              >
+                <FaSignInAlt className='inline mr-2' />
+                Login
+              </button>
+              <LoginModal
+                isLoginOpen={isLoginOpen}
+                onRequestClose={() => setLoginOpen(false)}
+              />
             </div>
-            <div className="w-full flex flex-col items-center">
-                {state.user ? (
-                    <div className="relative flex flex-col items-center">
-                        <button
-                            onClick={toggleDropdownMenu}
-                            className="focus:outline-none transition-transform transform hover:scale-105"
-                        >
-                            <img
-                                src={profileImage.presignedUrl}
-                                alt="Profile"
-                                className="w-24 h-24 rounded-full border-2 border-gray-300 dark:border-gray-600"
-                            />
-                        </button>
-                        <UserDropdownMenu
-                            isUserDropdownMenuOpen={isUserDropdownMenuOpen}
-                            onSettings={openSettingsModal}
-                            onClose={handleCloseDropdownMenu}
-                        />
-                    </div>
-                ) : (
-                    <div className="w-full flex flex-col items-center">
-                        <div className="mb-2 w-full">
-                            <button onClick={() => setLoginOpen(true)}
-                                    className="w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-gray-300 flex items-center justify-center">
-                                <FaSignInAlt className="inline mr-2"/>Login
-                            </button>
-                            <LoginModal isLoginOpen={isLoginOpen} onRequestClose={() => setLoginOpen(false)} />
-                        </div>
-                        <div className="w-full">
-                            <button onClick={() => setRegisterOpen(true)}
-                                    className="w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-gray-300 flex items-center justify-center">
-                                <FaUserPlus className="inline mr-2"/>Register
-                            </button>
-                            <RegisterModal isRegisterOpen={isRegisterOpen} onRequestClose={() => setRegisterOpen(false)} />
-                        </div>
-                    </div>
-                )}
+            <div className='w-full'>
+              <button
+                onClick={() => setRegisterOpen(true)}
+                className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
+              >
+                <FaUserPlus className='inline mr-2' />
+                Register
+              </button>
+              <RegisterModal
+                isRegisterOpen={isRegisterOpen}
+                onRequestClose={() => setRegisterOpen(false)}
+              />
             </div>
-            <SettingsModal isSettingsOpen={isSettingsOpen} onRequestClose={() => setSettingsOpen(false)} />
-        </aside>
-    );
+          </div>
+        )}
+      </div>
+      <SettingsModal
+        isSettingsOpen={isSettingsOpen}
+        onRequestClose={() => setSettingsOpen(false)}
+      />
+    </aside>
+  );
 };
 
 export default Sidebar;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Unit\Image\Application;
+namespace Tests\Unit\Image\Application;
 
 use App\Image\Application\ListImages\ListImagesQuery;
-use App\Image\Application\ListImages\ListImagesQueryHandler;
+use App\Image\Application\ListImages\SearchImagesQueryHandler;
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Entity\Image;
 use PHPUnit\Framework\TestCase;
@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
 class ListImagesQueryHandlerTest extends TestCase
 {
     private ImageRepositoryPort $imageRepository;
-    private ListImagesQueryHandler $listImagesHandler;
+    private SearchImagesQueryHandler $listImagesHandler;
 
     protected function setUp(): void
     {
         $this->imageRepository = $this->createMock(ImageRepositoryPort::class);
 
-        $this->listImagesHandler = new ListImagesQueryHandler($this->imageRepository);
+        $this->listImagesHandler = new SearchImagesQueryHandler($this->imageRepository);
     }
 
     public function testHandleReturnsArrayOfImagesWhenCalled(): void

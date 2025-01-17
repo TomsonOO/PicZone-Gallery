@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Image\Infrastructure;
+namespace Tests\Integration\Image\Infrastructure;
 
 use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Domain\Exception\PresignedUrlGenerationException;
