@@ -1,10 +1,5 @@
 const likeImage = async (imageId, backendUrl) => {
   const token = localStorage.getItem('token');
-
-  if (!token) {
-    throw new Error('User not authenticated');
-  }
-
   try {
     const response = await fetch(`${backendUrl}/api/images/like/${imageId}`, {
       method: 'POST',

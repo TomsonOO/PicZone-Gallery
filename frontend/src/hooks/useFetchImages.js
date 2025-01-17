@@ -28,7 +28,12 @@ const useFetchImages = ({
         params.append('pageSize', pageSize);
 
         const url = `${backendUrl}/api/images?${params.toString()}`;
-        const response = await fetch(url);
+        const token = localStorage.getItem('token');
+        const response = await fetch(url, {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : '',
+          },
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

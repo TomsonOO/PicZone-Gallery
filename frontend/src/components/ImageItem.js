@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaThumbsUp } from 'react-icons/fa';
 import likeImage from '../services/likeImage';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+let toastId = null;
 
 export default function ImageItem({ image }) {
   const [userLiked, setUserLiked] = useState(image.liked);
   const [likeCount, setLikeCount] = useState(image.likeCount || 0);
   const [animating, setAnimating] = useState(false);
 
+  useEffect(() => {
+    setUserLiked(image.liked);
+  }, [image.liked]);
+
   async function handleLike() {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.log("trza sie zalogowac")
+      if (!toastId) {
+        toastId = toast.error('You must be logged in to like images.', {
+          position: 'top-right',
+          autoClose: 5000,
+          className: 'custom-toast custom-toast-error',
+          onClose: () => (toastId = null),
+        });
+      }
       return;
     }
     setAnimating(true);
@@ -39,7 +54,7 @@ export default function ImageItem({ image }) {
             <p className='text-white text-sm break-words max-w-[90%]'>
               {image.description}
             </p>
-            <div className='flex items-center'>
+            <div className='flex items-center relative'>
               <button
                 onClick={handleLike}
                 className={`mr-2 focus:outline-none transform transition-all duration-300 scale-125 ${

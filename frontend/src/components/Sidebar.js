@@ -45,7 +45,7 @@ const Sidebar = () => {
       <div className='w-full flex flex-col items-center'>
         <button
           onClick={toggleDarkMode}
-          className='mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-700 dark:text-gray-300 flex items-center justify-center'
+          className='mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
         >
           {darkMode ? (
             <FaSun className='inline mr-2' />
@@ -79,7 +79,7 @@ const Sidebar = () => {
             <div className='mb-2 w-full'>
               <button
                 onClick={() => setLoginOpen(true)}
-                className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-gray-300 flex items-center justify-center'
+                className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
               >
                 <FaSignInAlt className='inline mr-2' />
                 Login
@@ -92,7 +92,7 @@ const Sidebar = () => {
             <div className='w-full'>
               <button
                 onClick={() => setRegisterOpen(true)}
-                className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-gray-300 flex items-center justify-center'
+                className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
               >
                 <FaUserPlus className='inline mr-2' />
                 Register

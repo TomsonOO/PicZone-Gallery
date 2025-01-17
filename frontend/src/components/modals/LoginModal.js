@@ -142,7 +142,7 @@ const LoginModal = ({ isLoginOpen, onRequestClose }) => {
               />
               <button
                 type='submit'
-                className='w-full p-3 bg-blue-600 text-white rounded text-lg hover:bg-blue-700 dark:bg-green-600 dark:hover:bg-green-700'
+                className='w-full p-3 bg-blue-600 text-white rounded text-lg hover:bg-blue-700 dark:bg-sky-600 dark:hover:bg-sky-700'
                 disabled={loading}
               >
                 {loading ? 'Logging in...' : 'Log In'}
