@@ -35,31 +35,29 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 ## 🚧 Please Note
 
-- **Under Development**: PicZone is an evolving project with new features and improvements being added regularly
-- **Demo Optimization**: The current demo may take longer to load as optimization is still in progress
+- **Application is being developed**
 
 ---
 
 ## ✨ Implemented Features
 
 - **User Account & Profile Management**: Users can register, log in, manage profiles, and upload personal avatars
-- **Image Management API (CRUD)**: Upload, list, update, and delete images. Images are stored on AWS S3
-- **Automated Tests**: Includes unit and integration tests (PHPUnit)
-- **Dark/Light Mode**: Users can toggle between dark and light mode
+- **Image Management API**: Upload, list, update, and delete images. Images are stored on AWS S3
+- **Likes**
+- **Dark/Light Mode**
+- **Categories based on which application makes a request to the Elasticsearch**
+- **Integration and Unit tests (PHPUnit)**
 
 ---
 
 ## 🛠️ Ongoing Work
-
-- **Likes / Dislikes**
+- **Favorites images (personal gallery)**
 - **Tagging & Advanced Search**: Images will have tags, based on which they can be searched for
-- **Dynamic Categories**: Generating categories (Popular, Recent, etc...)
 
 ---
 
 ## 🚀 Features to Be Implemented
 
 - **Dashboard / Analytics**: Application stats
-- **Creating Personalized Galleries**: Users can organize images into custom galleries
-- **Additional Refinements**: Continued code optimization, error handling, and validation improvements
+- **Code optimization, error handling, validation improvements**
 - **And more**

@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import React, {createContext, useReducer, useContext, useEffect, useState} from 'react';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -33,6 +33,7 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -47,12 +48,14 @@ export const UserProvider = ({ children }) => {
 
   const login = (user, token) => {
     dispatch({ type: 'LOGIN', payload: { user, token } });
+    setIsUserLoggedIn(true);
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
   };
 
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
+    setIsUserLoggedIn(false);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   };
@@ -64,7 +67,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ state, login, logout, updateUser }}>
+    <UserContext.Provider value={{ state, isUserLoggedIn, login, logout, updateUser }}>
       {children}
     </UserContext.Provider>
   );

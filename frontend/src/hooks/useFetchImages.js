@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useUser } from '../context/UserContext'
 
 const useFetchImages = ({
   category = '',
@@ -12,6 +13,7 @@ const useFetchImages = ({
   const [pagination, setPagination] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isUserLoggedIn } = useUser();
 
   useEffect(() => {
     let isCanceled = false;
@@ -68,7 +70,7 @@ const useFetchImages = ({
     return () => {
       isCanceled = true;
     };
-  }, [category]);
+  }, [category, isUserLoggedIn]);
 
   return { images, loading, error, pagination };
 };
