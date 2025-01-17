@@ -82,7 +82,7 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
       setLoading(false);
 
       if (response.ok) {
-        toast.success('✅ Your settings have been successfully updated!', {
+        toast.success('Your settings have been successfully updated!', {
           position: 'top-right',
           autoClose: 5000,
           className: 'custom-toast custom-toast-success',

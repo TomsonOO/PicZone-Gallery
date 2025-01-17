@@ -1,4 +1,10 @@
-import React, {createContext, useReducer, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -67,7 +73,9 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ state, isUserLoggedIn, login, logout, updateUser }}>
+    <UserContext.Provider
+      value={{ state, isUserLoggedIn, login, logout, updateUser }}
+    >
       {children}
     </UserContext.Provider>
   );
