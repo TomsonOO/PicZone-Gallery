@@ -71,7 +71,7 @@ class WebImageAdapter extends AbstractController
         $searchTerm = $request->get('searchTerm');
         $sortRequest = $request->get('sortBy');
         $pageNumber = (int) $request->get('pageNumber', 1);
-        $pageSize = (int) $request->get('pageSize', 10);
+        $pageSize = (int) $request->get('pageSize', 20);
 
         $categoryEnum = $categoryRequest ? CategoryEnum::tryFrom($categoryRequest) : null;
         $sortEnum = $sortRequest ? SortByEnum::tryFrom($sortRequest) : null;
