@@ -82,7 +82,7 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
       setLoading(false);
 
       if (response.ok) {
-        toast.success('✅ Your settings have been successfully updated!', {
+        toast.success('Your settings have been successfully updated!', {
           position: 'top-right',
           autoClose: 5000,
           className: 'custom-toast custom-toast-success',
@@ -126,7 +126,7 @@ const SettingsModal = ({ isSettingsOpen, onRequestClose }) => {
     >
       <div className='flex justify-center items-center min-h-screen p-4 sm:p-6 md:p-8 lg:p-10'>
         <div
-          className={`relative p-10 pt-12 rounded-lg shadow-lg max-w-2xl w-full transform-gpu transition-transform duration-300 ${opacity ? 'translate-y-0' : '-translate-y-10'} bg-white dark:bg-gradient-to-b dark:from-[#111f4a] dark:to-[#1a327e]`}
+          className={`relative p-10 pt-12 rounded-lg shadow-lg max-w-2xl w-full transform-gpu transition-transform duration-300 ${opacity ? 'translate-y-0' : '-translate-y-10'} bg-[#e0e0e0] dark:bg-gradient-to-b dark:from-[#111f4a] dark:to-[#1a327e]`}
         >
           <button
             onClick={handleClose}
