@@ -2,11 +2,17 @@ import React from 'react';
 import { FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
 
-const UserDropdownMenu = ({ isUserDropdownMenuOpen, onSettings, onClose }) => {
+const UserDropdownMenu = ({
+  isUserDropdownMenuOpen,
+  onCategoryReset,
+  onSettings,
+  onClose,
+}) => {
   const { logout } = useUser();
 
   const handleLogout = () => {
     logout();
+    onCategoryReset();
     onClose();
   };
 

@@ -21,15 +21,20 @@ const useFetchImages = ({
       try {
         setLoading(true);
         setError(null);
+        let url;
+        if (isUserLoggedIn && category === 'favorites') {
+          url = `${backendUrl}/api/images/favorites`;
+        } else {
+          const params = new URLSearchParams();
+          if (category) params.append('category', category);
+          if (sortBy) params.append('sortBy', sortBy);
+          if (searchTerm) params.append('searchTerm', searchTerm);
+          params.append('pageNumber', pageNumber);
+          params.append('pageSize', pageSize);
 
-        const params = new URLSearchParams();
-        if (category) params.append('category', category);
-        if (sortBy) params.append('sortBy', sortBy);
-        if (searchTerm) params.append('searchTerm', searchTerm);
-        params.append('pageNumber', pageNumber);
-        params.append('pageSize', pageSize);
+          url = `${backendUrl}/api/images?${params.toString()}`;
+        }
 
-        const url = `${backendUrl}/api/images?${params.toString()}`;
         const token = localStorage.getItem('token');
         const response = await fetch(url, {
           headers: {

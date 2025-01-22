@@ -80,6 +80,7 @@ const Sidebar = ({ onCategoryReset }) => {
             </button>
             <UserDropdownMenu
               isUserDropdownMenuOpen={isUserDropdownMenuOpen}
+              onCategoryReset={onCategoryReset}
               onSettings={openSettingsModal}
               onClose={handleCloseDropdownMenu}
             />

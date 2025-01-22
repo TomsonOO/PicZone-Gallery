@@ -98,12 +98,35 @@ class WebImageAdapter extends AbstractController
         return new JsonResponse($imagesDto, Response::HTTP_OK);
     }
 
+    #[Route('/favorites', name: 'return_favorite_images', methods: ['GET'])]
+    public function listFavoriteImages(Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        $pageNumber = (int) $request->get('pageNumber', 1);
+        $pageSize = (int) $request->get('pageSize', 20);
+
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $query = new GetFavoriteImagesQuery($user->getId(), $pageNumber, $pageSize);
+        $favoriteImagesDto = $this->getFavoriteImagesHandler->handle($query);
+
+
+        return new JsonResponse($favoriteImagesDto, Response::HTTP_OK);
+    }
+
     /**
      * @throws ValidationException
      */
     #[Route('/upload', name: 'upload_image', methods: ['POST'])]
     public function uploadImage(Request $request): JsonResponse
     {
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $imageFile = $request->files->get('image');
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $description = $request->request->get('description', $originalFilename);
@@ -111,6 +134,7 @@ class WebImageAdapter extends AbstractController
         $imageType = $request->request->get('type', Image::TYPE_GALLERY);
 
         $command = new UploadImageCommand(
+            $user->getId(),
             $originalFilename,
             $showOnHomepage,
             $imageType,
@@ -152,22 +176,5 @@ class WebImageAdapter extends AbstractController
         $this->likeOrUnlikeImageHandler->handle($command);
 
         return new JsonResponse(['message' => 'Image like added or removed'], Response::HTTP_OK);
-    }
-    #[Route('/favorites', name: 'return_favorite_images', methods: ['GET'])]
-    public function listFavoriteImages(Request $request): JsonResponse
-    {
-        $user = $this->getUser();
-        $pageNumber = (int) $request->get('pageNumber', 1);
-        $pageSize = (int) $request->get('pageSize', 20);
-
-        if (!$user instanceof UserInterface) {
-            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
-        }
-
-        $query = new GetFavoriteImagesQuery($user->getId(), $pageNumber, $pageSize);
-        $favoriteImagesDto = $this->getFavoriteImagesHandler->handle($query);
-
-
-        return new JsonResponse($favoriteImagesDto, Response::HTTP_OK);
     }
 }
