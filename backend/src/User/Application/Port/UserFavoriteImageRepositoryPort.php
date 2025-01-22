@@ -4,7 +4,7 @@ namespace App\User\Application\Port;
 
 use App\User\Domain\Entity\FavoriteImage;
 
-interface FavoriteImageRepositoryPort
+interface UserFavoriteImageRepositoryPort
 {
     public function save(FavoriteImage $favoriteImage): void;
 
@@ -12,5 +12,5 @@ interface FavoriteImageRepositoryPort
 
     public function findByUserIdAndImageId(int $userId, int $imageId): ?FavoriteImage;
 
-    public function findFavoriteIdsForUser(?int $userId, array $imageIds): array;
+    public function findFavoriteImageIdsForUser(?int $userId, ?array $imageIds = null): array;
 }

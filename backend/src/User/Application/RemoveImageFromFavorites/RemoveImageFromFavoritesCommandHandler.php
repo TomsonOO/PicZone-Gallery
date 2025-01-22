@@ -2,18 +2,18 @@
 
 namespace App\User\Application\RemoveImageFromFavorites;
 
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Exception\UserNotFoundException;
 
 class RemoveImageFromFavoritesCommandHandler
 {
     private UserRepositoryPort $userRepository;
-    private FavoriteImageRepositoryPort $favoriteImageRepository;
+    private UserFavoriteImageRepositoryPort $favoriteImageRepository;
 
     public function __construct(
-        UserRepositoryPort $userRepository,
-        FavoriteImageRepositoryPort $favoriteImageRepository,
+        UserRepositoryPort              $userRepository,
+        UserFavoriteImageRepositoryPort $favoriteImageRepository,
     ) {
         $this->userRepository = $userRepository;
         $this->favoriteImageRepository = $favoriteImageRepository;

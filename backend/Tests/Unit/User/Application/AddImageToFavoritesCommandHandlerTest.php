@@ -7,7 +7,7 @@ use App\Image\Domain\Entity\Image;
 use App\Image\Domain\Exception\ImageNotFoundException;
 use App\User\Application\AddImageToFavorites\AddImageToFavoritesCommand;
 use App\User\Application\AddImageToFavorites\AddImageToFavoritesCommandHandler;
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Entity\FavoriteImage;
 use App\User\Domain\Entity\User;
@@ -20,7 +20,7 @@ class AddImageToFavoritesCommandHandlerTest extends TestCase
     private $imageId;
     private UserRepositoryPort $userRepository;
     private ImageRepositoryPort $imageRepository;
-    private FavoriteImageRepositoryPort $favoriteImageRepository;
+    private UserFavoriteImageRepositoryPort $favoriteImageRepository;
     private AddImageToFavoritesCommandHandler $addImageToFavoritesHandler;
 
     protected function setUp(): void
@@ -29,7 +29,7 @@ class AddImageToFavoritesCommandHandlerTest extends TestCase
         $this->imageId = 123;
         $this->userRepository = $this->createMock(UserRepositoryPort::class);
         $this->imageRepository = $this->createMock(ImageRepositoryPort::class);
-        $this->favoriteImageRepository = $this->createMock(FavoriteImageRepositoryPort::class);
+        $this->favoriteImageRepository = $this->createMock(UserFavoriteImageRepositoryPort::class);
 
         $this->addImageToFavoritesHandler = new AddImageToFavoritesCommandHandler($this->userRepository, $this->imageRepository, $this->favoriteImageRepository);
     }

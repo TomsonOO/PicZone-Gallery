@@ -10,5 +10,11 @@ interface ImageRepositoryPort
 
     public function findById(int $imageId): ?Image;
 
+    /**
+     * @param int[] $imageIds
+     * @return Image[]
+     */
+    public function findByIds(array $imageIds): array;
+
     public function delete(Image $image): void;
 }

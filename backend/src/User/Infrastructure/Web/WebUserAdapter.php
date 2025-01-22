@@ -2,6 +2,7 @@
 
 namespace App\User\Infrastructure\Web;
 
+use App\Image\Application\GetFavoriteImages\GetFavoriteImagesQuery;
 use App\User\Application\AddImageToFavorites\AddImageToFavoritesCommand;
 use App\User\Application\AddImageToFavorites\AddImageToFavoritesCommandHandler;
 use App\User\Application\CreateUser\CreateUserCommand;
@@ -131,8 +132,8 @@ class WebUserAdapter extends AbstractController
         return new JsonResponse(['message' => 'User avatar updated successfully'], Response::HTTP_OK);
     }
 
-    #[Route('/favorites/add', name: 'add_image_to_favorites', methods: ['POST'])]
-    public function addImageToFavorites(Request $request): JsonResponse
+    #[Route('/favorites/{imageId}', name: 'add_image_to_favorites', methods: ['POST'])]
+    public function addImageToFavorites(int $imageId): JsonResponse
     {
         $user = $this->getUser();
 
@@ -140,11 +141,9 @@ class WebUserAdapter extends AbstractController
             return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $data = json_decode($request->getContent(), true);
-
         $command = new AddImageToFavoritesCommand(
             $user->getId(),
-            $data['imageId']
+            $imageId
         );
 
         $this->addImageToFavoritesHandler->handle($command);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image\Application\SearchImages;
 
 use App\Image\Application\Port\ImageLikeRepositoryPort;
@@ -7,20 +9,20 @@ use App\Image\Application\Port\ImageSearchPort;
 use App\Image\Application\Port\ImageStoragePort;
 use App\Image\Application\SearchImages\DTO\ImageDTO;
 use App\Image\Application\SearchImages\DTO\SearchImagesResultDTO;
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 
 class SearchImagesQueryHandler
 {
     private ImageSearchPort $imageSearch;
     private ImageLikeRepositoryPort $imageLikeRepository;
-    private FavoriteImageRepositoryPort $favoriteImageRepository;
+    private UserFavoriteImageRepositoryPort $favoriteImageRepository;
     private ImageStoragePort $imageStorage;
 
     public function __construct(
-        ImageSearchPort $imageSearch,
-        ImageLikeRepositoryPort $imageLikeRepository,
-        FavoriteImageRepositoryPort $favoriteImageRepository,
-        ImageStoragePort $imageStorage,
+        ImageSearchPort                 $imageSearch,
+        ImageLikeRepositoryPort         $imageLikeRepository,
+        UserFavoriteImageRepositoryPort $favoriteImageRepository,
+        ImageStoragePort                $imageStorage,
     ) {
         $this->imageSearch = $imageSearch;
         $this->imageLikeRepository = $imageLikeRepository;
@@ -47,7 +49,7 @@ class SearchImagesQueryHandler
         }
 
         $likedImageIds = $this->imageLikeRepository->findLikedImageIdsForUser($query->getUserId(), $imageIds);
-        $favoriteImageIds = $this->favoriteImageRepository->findFavoriteIdsForUser($query->getUserId(), $imageIds);
+        $favoriteImageIds = $this->favoriteImageRepository->findFavoriteImageIdsForUser($query->getUserId(), $imageIds);
 
         $imageDtoList = [];
         foreach ($foundImages as $foundImage) {

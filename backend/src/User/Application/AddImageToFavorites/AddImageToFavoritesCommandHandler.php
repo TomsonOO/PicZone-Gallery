@@ -4,7 +4,7 @@ namespace App\User\Application\AddImageToFavorites;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Exception\ImageNotFoundException;
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Entity\FavoriteImage;
 use App\User\Domain\Exception\UserNotFoundException;
@@ -13,12 +13,12 @@ class AddImageToFavoritesCommandHandler
 {
     private UserRepositoryPort $userRepository;
     private ImageRepositoryPort $imageRepository;
-    private FavoriteImageRepositoryPort $favoriteImageRepository;
+    private UserFavoriteImageRepositoryPort $favoriteImageRepository;
 
     public function __construct(
-        UserRepositoryPort $userRepository,
-        ImageRepositoryPort $imageRepository,
-        FavoriteImageRepositoryPort $favoriteImageRepository,
+        UserRepositoryPort              $userRepository,
+        ImageRepositoryPort             $imageRepository,
+        UserFavoriteImageRepositoryPort $favoriteImageRepository,
     ) {
         $this->userRepository = $userRepository;
         $this->imageRepository = $imageRepository;
