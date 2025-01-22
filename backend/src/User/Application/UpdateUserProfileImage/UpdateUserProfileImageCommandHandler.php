@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Application\UpdateUserProfileImage;
 
 use App\Image\Application\Port\ImageRepositoryPort;

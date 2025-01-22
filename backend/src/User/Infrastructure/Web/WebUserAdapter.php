@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\Web;
 
 use App\Image\Application\GetFavoriteImages\GetFavoriteImagesQuery;

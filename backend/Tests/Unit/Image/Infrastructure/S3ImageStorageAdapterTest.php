@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Image\Infrastructure;
 
 use App\Image\Infrastructure\Storage\S3ImageStorageAdapter;

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Tests\Integration\User\Application;
+declare(strict_types=1);
+
+namespace Tests\Integration\User\Application;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

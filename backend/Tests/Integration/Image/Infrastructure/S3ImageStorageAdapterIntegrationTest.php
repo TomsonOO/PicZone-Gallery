@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Image\Infrastructure;
 
 use App\Image\Application\Port\ImageStoragePort;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image\Application\Port;
 
 use App\Image\Application\SearchImages\SearchImagesCriteria;
