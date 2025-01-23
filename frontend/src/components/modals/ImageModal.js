@@ -37,7 +37,7 @@ export default function ImageModal({
             alt='Modal'
             className='max-w-full max-h-[85vh] object-contain'
           />
-          <div className='absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 px-4 py-2 rounded flex items-center space-x-4'>
+          <div className='absolute bottom-4 left-1/2 transform -translate-x-1/2  px-4 py-2 rounded flex items-center space-x-4'>
             <FavoriteButton
               isFavorite={isFavorite}
               onToggleFavorite={onFavorite}

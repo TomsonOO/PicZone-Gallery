@@ -10,9 +10,8 @@ let toastId = null;
 export default function ImageItem({ image }) {
   const [userLiked, setUserLiked] = useState(image.liked);
   const [likeCount, setLikeCount] = useState(image.likeCount || 0);
-  const [animating, setAnimating] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(image.favorited);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -33,7 +32,6 @@ export default function ImageItem({ image }) {
       }
       return;
     }
-    setAnimating(true);
     setUserLiked(!userLiked);
     setLikeCount(prev => (userLiked ? prev - 1 : prev + 1));
     try {
@@ -41,8 +39,6 @@ export default function ImageItem({ image }) {
     } catch {
       setUserLiked(userLiked);
       setLikeCount(prev => (userLiked ? prev + 1 : prev - 1));
-    } finally {
-      setAnimating(false);
     }
   }
 
@@ -109,7 +105,6 @@ export default function ImageItem({ image }) {
                   <LikeButton
                       userLiked={userLiked}
                       likeCount={likeCount}
-                      animating={animating}
                       onLike={handleToggleLike}
                   />
                 </div>
@@ -124,7 +119,6 @@ export default function ImageItem({ image }) {
             imageUrl={image.url}
             userLiked={userLiked}
             likeCount={likeCount}
-            animating={animating}
             isFavorite={isFavorite}
             onLike={handleToggleLike}
             onFavorite={handleToggleFavorite}
