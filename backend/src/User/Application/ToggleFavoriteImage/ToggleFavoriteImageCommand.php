@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\User\Application\RemoveImageFromFavorites;
+namespace App\User\Application\ToggleFavoriteImage;
 
-class RemoveImageFromFavoritesCommand
+class ToggleFavoriteImageCommand
 {
     private int $userId;
     private int $imageId;

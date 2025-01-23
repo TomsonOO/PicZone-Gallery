@@ -15,6 +15,8 @@ use App\User\Application\GetUserInformation\GetUserInformationQuery;
 use App\User\Application\GetUserInformation\GetUserInformationQueryHandler;
 use App\User\Application\RemoveImageFromFavorites\RemoveImageFromFavoritesCommand;
 use App\User\Application\RemoveImageFromFavorites\RemoveImageFromFavoritesCommandHandler;
+use App\User\Application\ToggleFavoriteImage\ToggleFavoriteImageCommand;
+use App\User\Application\ToggleFavoriteImage\ToggleFavoriteImageCommandHandler;
 use App\User\Application\UpdateUser\UpdateUserCommand;
 use App\User\Application\UpdateUser\UpdateUserCommandHandler;
 use App\User\Application\UpdateUserProfileImage\UpdateUserProfileImageCommand;
@@ -34,8 +36,7 @@ class WebUserAdapter extends AbstractController
     private DeleteUserCommandHandler $deleteUserHandler;
     private UpdateUserCommandHandler $updateUserHandler;
     private UpdateUserProfileImageCommandHandler $updateUserProfileImageHandler;
-    private AddImageToFavoritesCommandHandler $addImageToFavoritesHandler;
-    private RemoveImageFromFavoritesCommandHandler $removeImageFromFavoritesHandler;
+    private ToggleFavoriteImageCommandHandler $toggleFavoriteImageHandler;
 
     public function __construct(
         CreateUserCommandHandler $createUserHandler,
@@ -43,16 +44,14 @@ class WebUserAdapter extends AbstractController
         DeleteUserCommandHandler $deleteUserHandler,
         UpdateUserCommandHandler $updateUserHandler,
         UpdateUserProfileImageCommandHandler $updateUserProfileImageHandler,
-        AddImageToFavoritesCommandHandler $addImageToFavoritesHandler,
-        RemoveImageFromFavoritesCommandHandler $removeImageFromFavoritesHandler,
+        ToggleFavoriteImageCommandHandler $toggleFavoriteImageHandler
     ) {
         $this->createUserHandler = $createUserHandler;
         $this->getUserInformationHandler = $getUserInformationHandler;
         $this->deleteUserHandler = $deleteUserHandler;
         $this->updateUserHandler = $updateUserHandler;
         $this->updateUserProfileImageHandler = $updateUserProfileImageHandler;
-        $this->addImageToFavoritesHandler = $addImageToFavoritesHandler;
-        $this->removeImageFromFavoritesHandler = $removeImageFromFavoritesHandler;
+        $this->toggleFavoriteImageHandler = $toggleFavoriteImageHandler;
     }
 
     #[Route('', name: 'create_user', methods: ['POST'])]
@@ -134,8 +133,8 @@ class WebUserAdapter extends AbstractController
         return new JsonResponse(['message' => 'User avatar updated successfully'], Response::HTTP_OK);
     }
 
-    #[Route('/favorites/{imageId}', name: 'add_image_to_favorites', methods: ['POST'])]
-    public function addImageToFavorites(int $imageId): JsonResponse
+    #[Route('/favorites/{imageId}', name: 'add_or_remove_favorite_image', methods: ['POST'])]
+    public function toggleFavoriteImage(int $imageId): JsonResponse
     {
         $user = $this->getUser();
 
@@ -143,32 +142,13 @@ class WebUserAdapter extends AbstractController
             return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $command = new AddImageToFavoritesCommand(
+        $command = new ToggleFavoriteImageCommand(
             $user->getId(),
             $imageId
         );
 
-        $this->addImageToFavoritesHandler->handle($command);
+        $this->toggleFavoriteImageHandler->handle($command);
 
         return new JsonResponse(['message' => 'Image added to favorites successfully'], Response::HTTP_OK);
-    }
-
-    #[Route('/favorites/{imageId}', name: 'remove_image_from_favorites', methods: ['DELETE'])]
-    public function removeImageFromFavorites(int $imageId): JsonResponse
-    {
-        $user = $this->getUser();
-
-        if (!$user instanceof UserInterface) {
-            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
-        }
-
-        $command = new RemoveImageFromFavoritesCommand(
-            $user->getId(),
-            $imageId
-        );
-
-        $this->removeImageFromFavoritesHandler->handle($command);
-
-        return new JsonResponse(['message' => 'Image removed from favorites successfully'], Response::HTTP_OK);
     }
 }
