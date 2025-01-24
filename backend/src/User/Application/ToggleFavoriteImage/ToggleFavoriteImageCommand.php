@@ -1,8 +1,10 @@
 <?php
 
-namespace App\User\Application\AddImageToFavorites;
+declare(strict_types=1);
 
-class AddImageToFavoritesCommand
+namespace App\User\Application\ToggleFavoriteImage;
+
+class ToggleFavoriteImageCommand
 {
     private int $userId;
     private int $imageId;

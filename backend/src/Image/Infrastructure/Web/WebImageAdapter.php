@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image\Infrastructure\Web;
 
 use App\Image\Application\DeleteImage\DeleteImageCommand;
 use App\Image\Application\DeleteImage\DeleteImageCommandHandler;
+use App\Image\Application\GetFavoriteImages\GetFavoriteImagesQuery;
+use App\Image\Application\GetFavoriteImages\GetFavoriteImagesQueryHandler;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQuery;
 use App\Image\Application\GetPresignedUrl\GetPresignedUrlQueryHandler;
 use App\Image\Application\GetProfileImage\GetProfileImageQuery;
@@ -35,6 +39,7 @@ class WebImageAdapter extends AbstractController
     private DeleteImageCommandHandler $deleteImageHandler;
     private GetPresignedUrlQueryHandler $getPresignedUrlHandler;
     private LikeOrUnlikeImageCommandHandler $likeOrUnlikeImageHandler;
+    private GetFavoriteImagesQueryHandler $getFavoriteImagesHandler;
 
     public function __construct(
         SearchImagesQueryHandler $searchImagesHandler,
@@ -43,6 +48,7 @@ class WebImageAdapter extends AbstractController
         DeleteImageCommandHandler $deleteImageHandler,
         GetPresignedUrlQueryHandler $getPresignedUrlHandler,
         LikeOrUnlikeImageCommandHandler $likeOrUnlikeImageHandler,
+        GetFavoriteImagesQueryHandler $getFavoriteImagesHandler,
     ) {
         $this->searchImagesHandler = $searchImagesHandler;
         $this->uploadImageHandler = $uploadImageHandler;
@@ -50,6 +56,7 @@ class WebImageAdapter extends AbstractController
         $this->deleteImageHandler = $deleteImageHandler;
         $this->getPresignedUrlHandler = $getPresignedUrlHandler;
         $this->likeOrUnlikeImageHandler = $likeOrUnlikeImageHandler;
+        $this->getFavoriteImagesHandler = $getFavoriteImagesHandler;
     }
 
     #[Route('/presigned-url/{objectKey}', name: 'image_presigned_url', requirements: ['objectKey' => '.+'])]
@@ -61,7 +68,7 @@ class WebImageAdapter extends AbstractController
         return new Response($presignedUrl, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
     }
 
-    #[Route('', name: 'api_images', methods: ['GET'])]
+    #[Route('', name: 'list_images', methods: ['GET'])]
     public function listImages(Request $request): JsonResponse
     {
         $user = $this->getUser();
@@ -71,7 +78,7 @@ class WebImageAdapter extends AbstractController
         $searchTerm = $request->get('searchTerm');
         $sortRequest = $request->get('sortBy');
         $pageNumber = (int) $request->get('pageNumber', 1);
-        $pageSize = (int) $request->get('pageSize', 10);
+        $pageSize = (int) $request->get('pageSize', 20);
 
         $categoryEnum = $categoryRequest ? CategoryEnum::tryFrom($categoryRequest) : null;
         $sortEnum = $sortRequest ? SortByEnum::tryFrom($sortRequest) : null;
@@ -86,9 +93,27 @@ class WebImageAdapter extends AbstractController
             $userId
         );
 
-        $resultDto = $this->searchImagesHandler->handle($query);
+        $imagesDto = $this->searchImagesHandler->handle($query);
 
-        return new JsonResponse($resultDto, Response::HTTP_OK);
+        return new JsonResponse($imagesDto, Response::HTTP_OK);
+    }
+
+    #[Route('/favorites', name: 'return_favorite_images', methods: ['GET'])]
+    public function listFavoriteImages(Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        $pageNumber = (int) $request->get('pageNumber', 1);
+        $pageSize = (int) $request->get('pageSize', 20);
+
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $query = new GetFavoriteImagesQuery($user->getId(), $pageNumber, $pageSize);
+        $favoriteImagesDto = $this->getFavoriteImagesHandler->handle($query);
+
+
+        return new JsonResponse($favoriteImagesDto, Response::HTTP_OK);
     }
 
     /**
@@ -97,6 +122,11 @@ class WebImageAdapter extends AbstractController
     #[Route('/upload', name: 'upload_image', methods: ['POST'])]
     public function uploadImage(Request $request): JsonResponse
     {
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            return $this->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $imageFile = $request->files->get('image');
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $description = $request->request->get('description', $originalFilename);
@@ -104,6 +134,7 @@ class WebImageAdapter extends AbstractController
         $imageType = $request->request->get('type', Image::TYPE_GALLERY);
 
         $command = new UploadImageCommand(
+            $user->getId(),
             $originalFilename,
             $showOnHomepage,
             $imageType,

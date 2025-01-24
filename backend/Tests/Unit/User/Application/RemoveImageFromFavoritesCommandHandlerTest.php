@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\User\Application;
 
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Application\RemoveImageFromFavorites\RemoveImageFromFavoritesCommand;
 use App\User\Application\RemoveImageFromFavorites\RemoveImageFromFavoritesCommandHandler;
@@ -16,7 +18,7 @@ class RemoveImageFromFavoritesCommandHandlerTest extends TestCase
     private $userId;
     private $imageId;
     private UserRepositoryPort $userRepository;
-    private FavoriteImageRepositoryPort $favoriteImageRepository;
+    private UserFavoriteImageRepositoryPort $favoriteImageRepository;
     private RemoveImageFromFavoritesCommandHandler $removeImageFromFavoritesHandler;
 
     protected function setUp(): void
@@ -24,7 +26,7 @@ class RemoveImageFromFavoritesCommandHandlerTest extends TestCase
         $this->userId = 213;
         $this->imageId = 123;
         $this->userRepository = $this->createMock(UserRepositoryPort::class);
-        $this->favoriteImageRepository = $this->createMock(FavoriteImageRepositoryPort::class);
+        $this->favoriteImageRepository = $this->createMock(UserFavoriteImageRepositoryPort::class);
 
         $this->removeImageFromFavoritesHandler = new RemoveImageFromFavoritesCommandHandler($this->userRepository, $this->favoriteImageRepository);
     }

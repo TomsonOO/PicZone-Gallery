@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Application\EventSubscriber;
 
 use App\Shared\Application\Exception\ValidationException;

@@ -1,31 +1,33 @@
 <?php
 
-namespace App\User\Application\AddImageToFavorites;
+declare(strict_types=1);
+
+namespace App\User\Application\ToggleFavoriteImage;
 
 use App\Image\Application\Port\ImageRepositoryPort;
 use App\Image\Domain\Exception\ImageNotFoundException;
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 use App\User\Application\Port\UserRepositoryPort;
 use App\User\Domain\Entity\FavoriteImage;
 use App\User\Domain\Exception\UserNotFoundException;
 
-class AddImageToFavoritesCommandHandler
+class ToggleFavoriteImageCommandHandler
 {
     private UserRepositoryPort $userRepository;
     private ImageRepositoryPort $imageRepository;
-    private FavoriteImageRepositoryPort $favoriteImageRepository;
+    private UserFavoriteImageRepositoryPort $favoriteImageRepository;
 
     public function __construct(
-        UserRepositoryPort $userRepository,
-        ImageRepositoryPort $imageRepository,
-        FavoriteImageRepositoryPort $favoriteImageRepository,
+        UserRepositoryPort              $userRepository,
+        ImageRepositoryPort             $imageRepository,
+        UserFavoriteImageRepositoryPort $favoriteImageRepository,
     ) {
         $this->userRepository = $userRepository;
         $this->imageRepository = $imageRepository;
         $this->favoriteImageRepository = $favoriteImageRepository;
     }
 
-    public function handle(AddImageToFavoritesCommand $command): void
+    public function handle(ToggleFavoriteImageCommand $command): void
     {
         $user = $this->userRepository->findById($command->getUserId());
         if ($user === null) {
@@ -37,10 +39,17 @@ class AddImageToFavoritesCommandHandler
             throw new ImageNotFoundException('Image not found');
         }
 
-        $favorite = new FavoriteImage($user, $image);
+        $favoriteImage = $this->favoriteImageRepository->findByUserIdAndImageId(
+            $command->getUserId(),
+            $command->getImageId()
+        );
 
-        if (!$this->favoriteImageRepository->findByUserIdAndImageId($command->getUserId(), $command->getImageId())) {
-            $this->favoriteImageRepository->save($favorite);
+        if (!$favoriteImage) {
+            $favoriteImage = new FavoriteImage($user, $image);
+            $this->favoriteImageRepository->save($favoriteImage);
+
+        } else {
+            $this->favoriteImageRepository->remove($favoriteImage);
         }
     }
 }

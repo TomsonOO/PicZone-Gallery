@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image\Application\UploadImage;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -7,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UploadImageCommand
 {
+    private int $userId;
     private string $imageFilename;
     private ?string $description;
     private bool $showOnHomepage;
@@ -21,17 +24,24 @@ class UploadImageCommand
     private UploadedFile $imageFile;
 
     public function __construct(
+        int $userId,
         string $imageFilename,
         bool $showOnHomepage,
         string $imageType,
         UploadedFile $imageFile,
         ?string $description,
     ) {
+        $this->userId = $userId;
         $this->imageFilename = $imageFilename;
         $this->showOnHomepage = $showOnHomepage;
         $this->imageType = $imageType;
         $this->imageFile = $imageFile;
         $this->description = $description;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
     }
 
     public function getImageFilename(): string

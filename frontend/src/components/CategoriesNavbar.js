@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
+import { useUser } from '../context/UserContext';
 
 const categories = [
   { id: 1, name: 'Most Liked', categoryValue: 'mostLiked' },
   { id: 2, name: 'Latest', categoryValue: 'newest' },
+  { id: 3, name: 'Favorites', categoryValue: 'favorites' },
 ];
 
 const CategoriesNavbar = ({ onCategoryChange }) => {
   const [activeCategory, setActiveCategory] = useState('');
+  const { isUserLoggedIn } = useUser();
 
   const handleCategoryClick = (categoryValue) => {
+    if (categoryValue === 'favorites' && !isUserLoggedIn) return;
     setActiveCategory(categoryValue);
     onCategoryChange(categoryValue);
   };
@@ -25,6 +29,7 @@ const CategoriesNavbar = ({ onCategoryChange }) => {
                   ? 'bg-gray-300 dark:bg-sky-900'
                   : 'bg-gray-250 hover:bg-gray-300 dark:hover:bg-sky-900'
               } 
+              ${!isUserLoggedIn && cat.categoryValue === 'favorites' ? 'opacity-50 cursor-not-allowed' : ''}\`}
                                `}
             onClick={() => handleCategoryClick(cat.categoryValue)}
             style={{

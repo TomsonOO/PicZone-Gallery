@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\Persistance;
 
-use App\User\Application\Port\FavoriteImageRepositoryPort;
+use App\User\Application\Port\UserFavoriteImageRepositoryPort;
 use App\User\Domain\Entity\FavoriteImage;
 use Doctrine\ORM\EntityManagerInterface;
 
-class FavoriteImageRepositoryPostgresAdapter implements FavoriteImageRepositoryPort
+class UserFavoriteImageRepositoryPostgresAdapter implements UserFavoriteImageRepositoryPort
 {
     private EntityManagerInterface $entityManager;
 
@@ -33,9 +35,9 @@ class FavoriteImageRepositoryPostgresAdapter implements FavoriteImageRepositoryP
             ->findOneBy(['user' => $userId, 'image' => $imageId]);
     }
 
-    public function findFavoriteIdsForUser(?int $userId, array $imageIds): array
+    public function findFavoriteImageIdsForUser(?int $userId, ?array $imageIds = null): array
     {
-        if (!$userId || empty($imageIds)) {
+        if (!$userId) {
             return [];
         }
 
@@ -43,9 +45,12 @@ class FavoriteImageRepositoryPostgresAdapter implements FavoriteImageRepositoryP
         $qb->select('IDENTITY(f.image) AS imageId')
             ->from(FavoriteImage::class, 'f')
             ->where('f.user = :userId')
-            ->andWhere('f.image IN (:ids)')
-            ->setParameter('userId', $userId)
-            ->setParameter('ids', $imageIds);
+            ->setParameter('userId', $userId);
+
+        if (!empty($imageIds)) {
+            $qb->andWhere('f.image IN (:ids)')
+                ->setParameter('ids', $imageIds);
+        }
 
         $rows = $qb->getQuery()->getArrayResult();
 
