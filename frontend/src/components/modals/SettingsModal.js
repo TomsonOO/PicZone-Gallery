@@ -3,7 +3,8 @@ import Modal from 'react-modal';
 import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { useUser } from '../../context/UserContext';
-import { getUserProfile, updateUserProfile } from '../../services/userProfileService';
+import { getUserProfile, updateUserProfile, updateUserAvatar, getProfileImage } from '../../services/userProfileService';
+import { HiPencilAlt } from 'react-icons/hi';
 
 Modal.setAppElement('#root');
 
@@ -16,6 +17,23 @@ export default function SettingsModal({ isSettingsOpen, onRequestClose }) {
   const [isProfilePublic, setIsProfilePublic] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [profileImage, setProfileImage] = useState({ presignedUrl: '' });
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
+  useEffect(() => {
+    if (state.user && state.user.profileImageId) {
+      setIsImageLoading(true);
+      getProfileImage(state.user.profileImageId)
+          .then((imageData) => {
+            setProfileImage(imageData);
+            setIsImageLoading(false);
+          })
+          .catch((error) => {
+            console.error('Failed to fetch profile image:', error);
+            setIsImageLoading(false);
+          });
+    }
+  }, [state.user]);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -62,6 +80,27 @@ export default function SettingsModal({ isSettingsOpen, onRequestClose }) {
     }
   }
 
+  async function handleChangeProfileImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+      setLoading(true);
+      try {
+        const updatedData = await updateUserAvatar(state.token, file);
+        setProfileImage(updatedData);
+        toast.success('Profile image updated successfully! The changes will be visible after your next login', {
+          position: 'top-right',
+          autoClose: 5000,
+          className: 'custom-toast custom-toast-success',
+        });
+        updateUser(updatedData);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        setError(err.message);
+      }
+    }
+  }
+
   function handleAfterOpen() {
     setOpacity(true);
   }
@@ -82,10 +121,10 @@ export default function SettingsModal({ isSettingsOpen, onRequestClose }) {
       <Modal
           isOpen={isSettingsOpen}
           onRequestClose={handleClose}
-          className={`fixed inset-0 z-50 transition-opacity duration-300 ${
+          className={`fixed inset-0 z-[1000] transition-opacity duration-300 ${
               opacity ? 'opacity-100' : 'opacity-0'
           }`}
-          overlayClassName="fixed inset-0 bg-black bg-opacity-70 overflow-y-auto h-full w-full transition-opacity duration-300"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-70 overflow-y-auto h-full w-full transition-opacity duration-300 z-[999]"
           onAfterOpen={handleAfterOpen}
           onAfterClose={handleAfterClose}
           contentLabel="Settings"
@@ -111,46 +150,78 @@ export default function SettingsModal({ isSettingsOpen, onRequestClose }) {
                 </div>
             )}
             <form className="space-y-6" onSubmit={handleUpdate}>
-              <input
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                  className="block w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  disabled={loading}
-              />
-              <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="block w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-              />
+              <div className="flex flex-col items-center sm:flex-row justify-between gap-6">
+                <div className="flex-grow">
+                  <input
+                      type="text"
+                      name="username"
+                      placeholder="Username"
+                      className="w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800 mb-6"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                      disabled={loading}
+                  />
+                  <input
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      className="w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      disabled={loading}
+                  />
+                </div>
+                <div className="relative flex-shrink-0 sm:self-start">
+                  {isImageLoading ? (
+                      <div className="w-36 h-36 flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 rounded-full bg-gray-100 dark:bg-gray-700">
+                        <span className="text-gray-500 dark:text-gray-300">Loading...</span>
+                      </div>
+                  ) : (
+                      <img
+                          src={profileImage.presignedUrl}
+                          alt="Profile"
+                          className="w-36 h-36 rounded-full border-2 border-gray-300 dark:border-gray-600 object-cover"
+                      />
+                  )}
+                  <label
+                      htmlFor="change-avatar"
+                      className="absolute bottom-1 right-1 bg-gray-800 text-white text-xs px-2 py-1 rounded-full cursor-pointer flex items-center gap-1 hover:bg-gray-700"
+                  >
+                    <HiPencilAlt /> Edit
+                  </label>
+                  <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleChangeProfileImage}
+                      className="hidden"
+                      id="change-avatar"
+                  />
+                </div>
+              </div>
               <textarea
                   name="biography"
                   placeholder="Biography"
-                  className="block w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
+                  className="w-full p-3 border border-gray-300 rounded text-lg bg-gray-50 focus:border-blue-500 focus:bg-white dark:bg-gray-700 dark:text-gray-300 dark:focus:bg-gray-800"
                   value={biography}
                   onChange={(e) => setBiography(e.target.value)}
                   disabled={loading}
               />
-              <div className="flex items-center">
-                <input
-                    type="checkbox"
-                    name="isProfilePublic"
-                    className="mr-2"
-                    checked={isProfilePublic}
-                    onChange={() => setIsProfilePublic(!isProfilePublic)}
-                    disabled={loading}
-                />
-                <label className="text-lg text-gray-800 dark:text-gray-300">
-                  Profile Public
-                </label>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <input
+                      type="checkbox"
+                      name="isProfilePublic"
+                      className="mr-2"
+                      checked={isProfilePublic}
+                      onChange={() => setIsProfilePublic(!isProfilePublic)}
+                      disabled={loading}
+                  />
+                  <label className="text-lg text-gray-800 dark:text-gray-300">
+                    Profile Public
+                  </label>
+                </div>
               </div>
               <button
                   type="submit"

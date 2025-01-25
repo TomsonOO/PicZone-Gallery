@@ -25,6 +25,7 @@ export default function ImageItem({ image }) {
         toastId = toast.error('You must be logged in to like images.', {
           position: 'top-right',
           autoClose: 3000,
+          className: 'toast-notification',
           onClose: () => {
             toastId = null;
           },
@@ -46,7 +47,7 @@ export default function ImageItem({ image }) {
     const token = localStorage.getItem('token');
     if (!token) {
       if (!toastId) {
-        toastId = toast.error('You must be logged in to favorite images.', {
+        toastId = toast.error('You must be logged in to add image to favorites.', {
           position: 'top-right',
           autoClose: 3000,
           className: 'toast-notification',
