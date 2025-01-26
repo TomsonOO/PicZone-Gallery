@@ -44,15 +44,14 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user')
-        ? JSON.parse(localStorage.getItem('user'))
-        : null;
+      ? JSON.parse(localStorage.getItem('user'))
+      : null;
 
     if (token && user) {
       dispatch({ type: 'LOGIN', payload: { user, token } });
       setIsUserLoggedIn(true);
     }
   }, []);
-
 
   const login = (user, token) => {
     dispatch({ type: 'LOGIN', payload: { user, token } });
