@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaMoon, FaSun, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import { FaMoon, FaSun, FaSignInAlt, FaUserPlus, FaUpload } from 'react-icons/fa';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
 import SettingsModal from './modals/SettingsModal';
@@ -9,13 +9,15 @@ import { getProfileImage } from '../services/userProfileService';
 import logo from '../assets/images/logo.png';
 import logoDarkMode from '../assets/images/logo_darkmode.png';
 import { Link } from 'react-router-dom';
+import UploadImageModal from './modals/UploadImageModal';
 
 const Sidebar = ({ onCategoryReset }) => {
   const [darkMode, setDarkMode] = useState(true);
-  const { state } = useUser();
+  const { isUserLoggedIn, state } = useUser();
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isRegisterOpen, setRegisterOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isUploadImageOpen, setUploadImageOpen] = useState(false);
   const [profileImage, setProfileImage] = useState({ presignedUrl: '' });
   const [isUserDropdownMenuOpen, setUserDropdownMenuOpen] = useState(false);
 
@@ -47,6 +49,10 @@ const Sidebar = ({ onCategoryReset }) => {
     setSettingsOpen(true);
   };
 
+  const openUploadImageModal = () => {
+    setUploadImageOpen(true);
+  };
+
   const handleCloseDropdownMenu = () => {
     setUserDropdownMenuOpen(false);
   };
@@ -66,11 +72,21 @@ const Sidebar = ({ onCategoryReset }) => {
               className='mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
           >
             {darkMode ? (
-                <FaSun className='inline mr-2' />
+                <FaSun className='inline mr-2'/>
             ) : (
-                <FaMoon className='inline mr-2' />
+                <FaMoon className='inline mr-2'/>
             )}
             {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button
+              onClick={isUserLoggedIn ? openUploadImageModal : null}
+              className={`mb-4 w-full p-2 rounded transition duration-300
+                  'hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
+              ${!isUserLoggedIn  ? 'opacity-50' : ''}
+              `}
+          >
+              <FaUpload className='inline mr-1'/>
+            Upload an Image
           </button>
         </div>
         <div className='w-full flex flex-col items-center'>
@@ -127,6 +143,10 @@ const Sidebar = ({ onCategoryReset }) => {
         <SettingsModal
             isSettingsOpen={isSettingsOpen}
             onRequestClose={() => setSettingsOpen(false)}
+        />
+        <UploadImageModal
+            isOpen={isUploadImageOpen}
+            onRequestClose={() => setUploadImageOpen(false)}
         />
       </aside>
   );

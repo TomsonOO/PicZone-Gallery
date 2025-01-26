@@ -225,7 +225,7 @@ export default function SettingsModal({ isSettingsOpen, onRequestClose }) {
               </div>
               <button
                   type="submit"
-                  className="w-full p-3 bg-blue-600 text-white rounded text-lg hover:bg-blue-700 dark:bg-green-600 dark:hover:bg-green-700"
+                  className="w-full p-3 bg-blue-600 text-white rounded text-lg hover:bg-blue-700"
                   disabled={loading}
               >
                 {loading ? 'Updating...' : 'Update Settings'}
