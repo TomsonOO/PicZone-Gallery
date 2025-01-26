@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { FaMoon, FaSun, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import {
+  FaMoon,
+  FaSun,
+  FaSignInAlt,
+  FaUserPlus,
+  FaUpload,
+} from 'react-icons/fa';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
 import SettingsModal from './modals/SettingsModal';
 import { useUser } from '../context/UserContext';
 import UserDropdownMenu from './UserDropdownMenu';
-import useFetchProfileImage from '../hooks/useFetchProfileImage';
+import { getProfileImage } from '../services/userProfileService';
 import logo from '../assets/images/logo.png';
 import logoDarkMode from '../assets/images/logo_darkmode.png';
 import { Link } from 'react-router-dom';
+import UploadImageModal from './modals/UploadImageModal';
 
 const Sidebar = ({ onCategoryReset }) => {
   const [darkMode, setDarkMode] = useState(true);
-  const { state } = useUser();
+  const { isUserLoggedIn, state } = useUser();
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isRegisterOpen, setRegisterOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const { profileImage } = useFetchProfileImage(
-    state.user ? state.user.profileImageId : null
-  );
+  const [isUploadImageOpen, setUploadImageOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState({ presignedUrl: '' });
   const [isUserDropdownMenuOpen, setUserDropdownMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -26,6 +32,16 @@ const Sidebar = ({ onCategoryReset }) => {
     root.classList.remove(darkMode ? 'light' : 'dark');
     root.classList.add(darkMode ? 'dark' : 'light');
   }, [darkMode]);
+
+  useEffect(() => {
+    if (state.user && state.user.profileImageId) {
+      getProfileImage(state.user.profileImageId)
+        .then((imageData) => setProfileImage(imageData))
+        .catch((error) => {
+          console.error('Failed to fetch profile image:', error);
+        });
+    }
+  }, [state.user]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -37,6 +53,10 @@ const Sidebar = ({ onCategoryReset }) => {
 
   const openSettingsModal = () => {
     setSettingsOpen(true);
+  };
+
+  const openUploadImageModal = () => {
+    setUploadImageOpen(true);
   };
 
   const handleCloseDropdownMenu = () => {
@@ -63,6 +83,16 @@ const Sidebar = ({ onCategoryReset }) => {
             <FaMoon className='inline mr-2' />
           )}
           {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+        <button
+          onClick={isUserLoggedIn ? openUploadImageModal : null}
+          className={`mb-4 w-full p-2 rounded transition duration-300
+                  'hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
+              ${!isUserLoggedIn ? 'opacity-50' : ''}
+              `}
+        >
+          <FaUpload className='inline mr-1' />
+          Upload an Image
         </button>
       </div>
       <div className='w-full flex flex-col items-center'>
@@ -119,6 +149,10 @@ const Sidebar = ({ onCategoryReset }) => {
       <SettingsModal
         isSettingsOpen={isSettingsOpen}
         onRequestClose={() => setSettingsOpen(false)}
+      />
+      <UploadImageModal
+        isOpen={isUploadImageOpen}
+        onRequestClose={() => setUploadImageOpen(false)}
       />
     </aside>
   );
