@@ -14,6 +14,7 @@ interface ImageRepositoryPort
 
     /**
      * @param int[] $imageIds
+     *
      * @return Image[]
      */
     public function findByIds(array $imageIds): array;

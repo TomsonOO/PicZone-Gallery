@@ -10,6 +10,7 @@ class SearchImagesResultDTO
     public array $images;
     public int $currentPage;
     public int $pageSize;
+
     public function __construct(array $images, int $currentPage, int $pageSize)
     {
         $this->images = $images;

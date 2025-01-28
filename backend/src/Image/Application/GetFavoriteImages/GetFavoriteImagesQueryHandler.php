@@ -22,13 +22,14 @@ class GetFavoriteImagesQueryHandler
         UserFavoriteImageRepositoryPort $favoriteImageRepository,
         ImageRepositoryPort $imageRepository,
         ImageStoragePort $imageStorage,
-        ImageLikeRepositoryPort $imageLikeRepository
+        ImageLikeRepositoryPort $imageLikeRepository,
     ) {
         $this->favoriteImageRepository = $favoriteImageRepository;
         $this->imageRepository = $imageRepository;
         $this->imageStorage = $imageStorage;
         $this->imageLikeRepository = $imageLikeRepository;
     }
+
     public function handle(GetFavoriteImagesQuery $query): SearchImagesResultDTO
     {
         $favoriteImageIds = $this->favoriteImageRepository->findFavoriteImageIdsForUser($query->getUserId());
@@ -50,6 +51,7 @@ class GetFavoriteImagesQueryHandler
                 true
             );
         }
+
         return new SearchImagesResultDTO(
             $imageDtoList,
             $query->getPageNumber(),

@@ -112,7 +112,6 @@ class WebImageAdapter extends AbstractController
         $query = new GetFavoriteImagesQuery($user->getId(), $pageNumber, $pageSize);
         $favoriteImagesDto = $this->getFavoriteImagesHandler->handle($query);
 
-
         return new JsonResponse($favoriteImagesDto, Response::HTTP_OK);
     }
 

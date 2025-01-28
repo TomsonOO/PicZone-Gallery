@@ -26,7 +26,7 @@ export default function SettingsModal({ isSettingsOpen, onRequestClose }) {
   const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
-    if (state.user && state.user.profileImageId) {
+    if (state.user) {
       setIsImageLoading(true);
       getProfileImage(state.user.profileImageId)
         .then((imageData) => {

@@ -45,7 +45,8 @@ PicZone Gallery is a full-stack web application that displays images, following 
 - **Image Management API**: Upload, list, update, and delete images. Images are stored on AWS S3
 - **Dark/Light Mode**
 - **Categories based on which application makes a request to the Elasticsearch**
-- **Liking images and adding them to favorites (personal gallery)**
+- **Uploading, liking and adding images to favorites (personal gallery)**
+- **One-click user register: creates user with random data and automatically logs him in**
 - **Integration and Unit tests (PHPUnit)**
 
 ---

@@ -5,6 +5,7 @@ import {
   FaSignInAlt,
   FaUserPlus,
   FaUpload,
+  FaRocket,
 } from 'react-icons/fa';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
@@ -12,14 +13,16 @@ import SettingsModal from './modals/SettingsModal';
 import { useUser } from '../context/UserContext';
 import UserDropdownMenu from './UserDropdownMenu';
 import { getProfileImage } from '../services/userProfileService';
+import { createRandomUser } from '../services/userService';
 import logo from '../assets/images/logo.png';
 import logoDarkMode from '../assets/images/logo_darkmode.png';
 import { Link } from 'react-router-dom';
 import UploadImageModal from './modals/UploadImageModal';
+import { toast } from 'react-toastify';
 
 const Sidebar = ({ onCategoryReset }) => {
   const [darkMode, setDarkMode] = useState(true);
-  const { isUserLoggedIn, state } = useUser();
+  const { isUserLoggedIn, state, login } = useUser();
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isRegisterOpen, setRegisterOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -34,7 +37,7 @@ const Sidebar = ({ onCategoryReset }) => {
   }, [darkMode]);
 
   useEffect(() => {
-    if (state.user && state.user.profileImageId) {
+    if (state.user) {
       getProfileImage(state.user.profileImageId)
         .then((imageData) => setProfileImage(imageData))
         .catch((error) => {
@@ -58,6 +61,25 @@ const Sidebar = ({ onCategoryReset }) => {
   const openUploadImageModal = () => {
     setUploadImageOpen(true);
   };
+
+  async function handleRandomUserRegistration() {
+    try {
+      const response = await createRandomUser();
+      const userData = {
+        username: response.username,
+        email: response.email,
+      };
+      login(userData, response.token);
+      toast.success('Random user created and logged in successfully', {
+        position: 'top-right',
+        autoClose: 5000,
+        className: 'custom-toast custom-toast-success',
+      });
+    } catch (error) {
+      console.error('Error creating random user:', error);
+      alert(error.message || 'Failed to create random user');
+    }
+  }
 
   const handleCloseDropdownMenu = () => {
     setUserDropdownMenuOpen(false);
@@ -143,6 +165,17 @@ const Sidebar = ({ onCategoryReset }) => {
                 onRequestClose={() => setRegisterOpen(false)}
               />
             </div>
+            <button
+              onClick={handleRandomUserRegistration}
+              className='w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 mt-5 flex items-center justify-center'
+            >
+              <FaRocket className='mr-2' />
+              <span className='text-center'>
+                One-Click
+                <br />
+                Register
+              </span>
+            </button>
           </div>
         )}
       </div>
