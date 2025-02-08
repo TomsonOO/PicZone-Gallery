@@ -49,6 +49,7 @@ export const UserProvider = ({ children }) => {
 
     if (token && user) {
       dispatch({ type: 'LOGIN', payload: { user, token } });
+      setIsUserLoggedIn(true);
     }
   }, []);
 

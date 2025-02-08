@@ -10,15 +10,19 @@ class GetFavoriteImagesQuery
 
     private int $pageNumber;
     private int $pageSize;
-    public function __construct(int $userId, int $pageNumber, int $pageSize){
+
+    public function __construct(int $userId, int $pageNumber, int $pageSize)
+    {
         $this->userId = $userId;
         $this->pageNumber = $pageNumber;
         $this->pageSize = $pageSize;
     }
+
     public function getUserId(): int
     {
         return $this->userId;
     }
+
     public function getPageSize(): int
     {
         return $this->pageSize;
@@ -28,5 +32,4 @@ class GetFavoriteImagesQuery
     {
         return $this->pageNumber;
     }
-
 }

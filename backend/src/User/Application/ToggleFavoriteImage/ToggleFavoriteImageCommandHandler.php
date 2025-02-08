@@ -18,8 +18,8 @@ class ToggleFavoriteImageCommandHandler
     private UserFavoriteImageRepositoryPort $favoriteImageRepository;
 
     public function __construct(
-        UserRepositoryPort              $userRepository,
-        ImageRepositoryPort             $imageRepository,
+        UserRepositoryPort $userRepository,
+        ImageRepositoryPort $imageRepository,
         UserFavoriteImageRepositoryPort $favoriteImageRepository,
     ) {
         $this->userRepository = $userRepository;
@@ -47,7 +47,6 @@ class ToggleFavoriteImageCommandHandler
         if (!$favoriteImage) {
             $favoriteImage = new FavoriteImage($user, $image);
             $this->favoriteImageRepository->save($favoriteImage);
-
         } else {
             $this->favoriteImageRepository->remove($favoriteImage);
         }

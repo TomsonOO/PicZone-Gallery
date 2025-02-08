@@ -112,7 +112,6 @@ class WebImageAdapter extends AbstractController
         $query = new GetFavoriteImagesQuery($user->getId(), $pageNumber, $pageSize);
         $favoriteImagesDto = $this->getFavoriteImagesHandler->handle($query);
 
-
         return new JsonResponse($favoriteImagesDto, Response::HTTP_OK);
     }
 
@@ -130,7 +129,7 @@ class WebImageAdapter extends AbstractController
         $imageFile = $request->files->get('image');
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $description = $request->request->get('description', $originalFilename);
-        $showOnHomepage = $request->request->get('showOnHomePage', 'true');
+        $showOnHomepage = $request->request->get('showOnHomePage', true);
         $imageType = $request->request->get('type', Image::TYPE_GALLERY);
 
         $command = new UploadImageCommand(

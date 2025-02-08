@@ -19,10 +19,10 @@ class SearchImagesQueryHandler
     private ImageStoragePort $imageStorage;
 
     public function __construct(
-        ImageSearchPort                 $imageSearch,
-        ImageLikeRepositoryPort         $imageLikeRepository,
+        ImageSearchPort $imageSearch,
+        ImageLikeRepositoryPort $imageLikeRepository,
         UserFavoriteImageRepositoryPort $favoriteImageRepository,
-        ImageStoragePort                $imageStorage,
+        ImageStoragePort $imageStorage,
     ) {
         $this->imageSearch = $imageSearch;
         $this->imageLikeRepository = $imageLikeRepository;

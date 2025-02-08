@@ -4,34 +4,36 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Web;
 
-use App\Image\Application\GetFavoriteImages\GetFavoriteImagesQuery;
-use App\User\Application\AddImageToFavorites\AddImageToFavoritesCommand;
-use App\User\Application\AddImageToFavorites\AddImageToFavoritesCommandHandler;
 use App\User\Application\CreateUser\CreateUserCommand;
 use App\User\Application\CreateUser\CreateUserCommandHandler;
 use App\User\Application\DeleteUser\DeleteUserCommand;
 use App\User\Application\DeleteUser\DeleteUserCommandHandler;
 use App\User\Application\GetUserInformation\GetUserInformationQuery;
 use App\User\Application\GetUserInformation\GetUserInformationQueryHandler;
-use App\User\Application\RemoveImageFromFavorites\RemoveImageFromFavoritesCommand;
-use App\User\Application\RemoveImageFromFavorites\RemoveImageFromFavoritesCommandHandler;
 use App\User\Application\ToggleFavoriteImage\ToggleFavoriteImageCommand;
 use App\User\Application\ToggleFavoriteImage\ToggleFavoriteImageCommandHandler;
 use App\User\Application\UpdateUser\UpdateUserCommand;
 use App\User\Application\UpdateUser\UpdateUserCommandHandler;
 use App\User\Application\UpdateUserProfileImage\UpdateUserProfileImageCommand;
 use App\User\Application\UpdateUserProfileImage\UpdateUserProfileImageCommandHandler;
+use App\User\Infrastructure\Auth\UserAuthenticatorAdapter;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 #[Route('/api/user')]
 class WebUserAdapter extends AbstractController
 {
     private CreateUserCommandHandler $createUserHandler;
+    private UserProviderInterface $userProvider;
+    private JWTTokenManagerInterface $jwtManager;
+    private UserAuthenticatorAdapter $userAuthenticator;
+
     private GetUserInformationQueryHandler $getUserInformationHandler;
     private DeleteUserCommandHandler $deleteUserHandler;
     private UpdateUserCommandHandler $updateUserHandler;
@@ -40,13 +42,19 @@ class WebUserAdapter extends AbstractController
 
     public function __construct(
         CreateUserCommandHandler $createUserHandler,
+        UserProviderInterface $userProvider,
+        JWTTokenManagerInterface $jwtManager,
+        UserAuthenticatorAdapter $userAuthenticator,
         GetUserInformationQueryHandler $getUserInformationHandler,
         DeleteUserCommandHandler $deleteUserHandler,
         UpdateUserCommandHandler $updateUserHandler,
         UpdateUserProfileImageCommandHandler $updateUserProfileImageHandler,
-        ToggleFavoriteImageCommandHandler $toggleFavoriteImageHandler
+        ToggleFavoriteImageCommandHandler $toggleFavoriteImageHandler,
     ) {
         $this->createUserHandler = $createUserHandler;
+        $this->userProvider = $userProvider;
+        $this->jwtManager = $jwtManager;
+        $this->userAuthenticator = $userAuthenticator;
         $this->getUserInformationHandler = $getUserInformationHandler;
         $this->deleteUserHandler = $deleteUserHandler;
         $this->updateUserHandler = $updateUserHandler;
@@ -68,6 +76,29 @@ class WebUserAdapter extends AbstractController
         $this->createUserHandler->handle($command);
 
         return new JsonResponse(['message' => 'User created successfully'], Response::HTTP_OK);
+    }
+
+    #[Route('/random', name: 'create_random_user', methods: ['POST'])]
+    public function createRandomUser(): JsonResponse
+    {
+        $randomSuffix = bin2hex(random_bytes(4));
+        $username = 'randomUser_'.$randomSuffix;
+        $email = 'random_'.$randomSuffix.'@gmail.com';
+        $rawPass = bin2hex(random_bytes(4));
+        $password = 'A'.$rawPass;
+
+        $createCmd = new CreateUserCommand($username, $email, $password);
+        $this->createUserHandler->handle($createCmd);
+
+        $user = $this->userProvider->loadUserByIdentifier($username);
+        $token = $this->jwtManager->create($user);
+
+        return new JsonResponse([
+            'username' => $username,
+            'email'    => $email,
+            'password' => $password,
+            'token'    => $token,
+        ]);
     }
 
     #[Route('/profile', name: 'get_user_profile', methods: ['GET'])]
