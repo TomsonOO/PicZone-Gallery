@@ -1,6 +1,6 @@
 <div align="center">
 
-# PicZone Gallery -  🚀 [**Live Demo**](https://piczone-frontend-1ae9d9713646.herokuapp.com/)
+# PicZone Gallery -  🚀 [**Live Demo**](https://www.piczone.site)
 
 ---
 
