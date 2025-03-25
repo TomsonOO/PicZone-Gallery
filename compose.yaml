@@ -69,8 +69,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     volumes:
-     - './frontend:/app'
-     - 'node_modules:/app/node_modules'
+     - "./frontend:/app"
+     - "node_modules:/app/node_modules"
     ports:
       - "3000:3000"
     environment:
@@ -89,8 +89,28 @@ services:
       - frontend
       - backend
 
+  bookzone:
+    container_name: bookzone
+    build:
+      context: bookzone-service/
+      dockerfile: Dockerfile.dev
+    volumes:
+    - "./bookzone-service:/app"
+    - "node_modules_bookzone:/app/node_modules"
+  
+  bookzone-nginx:
+    container_name: bookzone-nginx
+    build:
+      context: bookzone-service/
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "3001:80"
+    depends_on:
+      - bookzone
+
 volumes:
   postgres-data:
   node_modules:
+  node_modules_bookzone:
   certs:
     driver: local
