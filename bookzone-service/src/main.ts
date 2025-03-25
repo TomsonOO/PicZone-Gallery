@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { BookZoneModule } from './bookzone/book-zone.module'
+import { BookZoneModule } from './bookzone/book-zone.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(BookZoneModule);
