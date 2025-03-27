@@ -97,6 +97,10 @@ services:
     volumes:
     - "./bookzone-service:/app"
     - "node_modules_bookzone:/app/node_modules"
+    env_file:
+      - ./bookzone-service/.env
+    depends_on:
+      - db
   
   bookzone-nginx:
     container_name: bookzone-nginx
