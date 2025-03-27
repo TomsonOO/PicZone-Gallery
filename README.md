@@ -26,10 +26,11 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 - **Frontend**: React
 - **Backend**: Symfony
+- **BookZone-service**: NestJS
 - **Database**: PostgreSQL
 - **Cloud Storage**: AWS S3
 - **Containerization**: Docker
-- **Hosting & Deployment**: Heroku 
+- **Hosting**: Heroku, DigitalOcean
 
 ---
 
@@ -52,7 +53,7 @@ PicZone Gallery is a full-stack web application that displays images, following 
 ---
 
 ## 🛠️ Ongoing Work
-- **Tagging & Advanced Search**: Images will have tags, based on which they can be searched for
+- **BookZone Page**: Developing a new page to manage and display books, integrating with OpenLibrary and OpenAI APIs.
 
 ---
 
@@ -60,4 +61,5 @@ PicZone Gallery is a full-stack web application that displays images, following 
 
 - **Dashboard / Analytics**: Application stats
 - **Code optimization, error handling, validation improvements**
+- **Tagging & Advanced Search**: Images will have tags, based on which they can be searched for
 - **And more**
