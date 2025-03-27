@@ -1,0 +1,14 @@
+services:
+  bookzone:
+    image: tomsonoo/piczone-bookzone:latest
+    container_name: bookzone
+
+  bookzone-nginx:
+    container_name: bookzone-nginx
+    build:
+      context: nginx/
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - bookzone
