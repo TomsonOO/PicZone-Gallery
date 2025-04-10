@@ -20,5 +20,5 @@ export class BookCoverEntity {
   url: string;
 
   @Column()
-  object_key: string;
+  objectKey: string;
 }

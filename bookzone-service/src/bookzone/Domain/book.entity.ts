@@ -16,6 +16,6 @@ export class BookEntity {
   @Column()
   author: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 }
