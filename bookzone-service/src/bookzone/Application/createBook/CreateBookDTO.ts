@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateBookDTO {
-
   @IsString()
   @IsNotEmpty()
   @MinLength(1)

@@ -1,4 +1,4 @@
-import { CreateBookDTO } from "./CreateBookDTO";
+import { CreateBookDTO } from './CreateBookDTO';
 
 export class CreateBookCommand {
   public readonly title: string;

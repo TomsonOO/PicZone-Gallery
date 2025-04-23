@@ -7,7 +7,4 @@ export class BookCoverRepositoryPostgresAdapter {
     @InjectRepository(BookCoverEntity)
     private readonly bookCoverRepository: Repository<BookCoverEntity>,
   ) {}
-
-
-  
 }

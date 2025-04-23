@@ -7,28 +7,25 @@ import { BookRepositoryPort } from '../Port/BookRepositoryPort';
 @CommandHandler(CreateBookCommand)
 export class CreateBookCommandHandler
   implements ICommandHandler<CreateBookCommand> {
-
   private readonly logger = new Logger(CreateBookCommandHandler.name);
   constructor(
     @Inject('BookRepositoryPostgresAdapter')
     private readonly bookRepository: BookRepositoryPort,
   ) { }
 
-  async execute(command: CreateBookCommand): Promise<void> {
-
+  async execute(command: CreateBookCommand): Promise<string> {
     this.logger.log(`Creating book with title ${command.title}`);
 
     try {
       const book = await this.bookRepository.createBook({
         title: command.title,
-        author: command.author
+        author: command.author,
       });
-    this.logger.log(`Book created with ID: ${book.id}`);
-    }
-    catch (error) {
+      this.logger.log(`Book created with ID: ${book.id}`);
+      return book.id;
+    } catch (error) {
       this.logger.error(`Failed to create book: ${error.message}`, error.stack);
       throw error;
     }
   }
-
 }

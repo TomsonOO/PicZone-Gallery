@@ -9,20 +9,25 @@ import { BookCoverRepositoryPostgresAdapter } from './Infrastructure/Persistence
 import { BookEntity } from './Domain/book.entity';
 import { BookCoverEntity } from './Domain/book-cover.entity';
 import { CreateBookCommandHandler } from './Application/createBook/CreateBookCommandHandler';
+import { GetBooksQueryHandler } from './Application/getBooks/GetBooksQueryHandler';
 
-const CommandHandlers = [ 
-  CreateBookCommandHandler,
+const CommandHandlers = [
+  CreateBookCommandHandler
+];
+
+const QueryHandlers = [
+  GetBooksQueryHandler
 ];
 
 const RepositoryProviders = [
   {
-      provide: 'BookRepositoryPostgresAdapter',
-      useClass: BookRepositoryPostgresAdapter,
-    },
-    {
-      provide: 'BookCoverRepositoryPostgresAdapter',
-      useClass: BookCoverRepositoryPostgresAdapter,
-    },
+    provide: 'BookRepositoryPostgresAdapter',
+    useClass: BookRepositoryPostgresAdapter,
+  },
+  {
+    provide: 'BookCoverRepositoryPostgresAdapter',
+    useClass: BookCoverRepositoryPostgresAdapter,
+  },
 ];
 
 @Module({
@@ -31,15 +36,10 @@ const RepositoryProviders = [
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(databaseConfig),
-    TypeOrmModule.forFeature([
-      BookEntity,
-      BookCoverEntity,
-    ]),
-    CqrsModule],
-    providers: [
-    ...RepositoryProviders,
-    ...CommandHandlers,
+    TypeOrmModule.forFeature([BookEntity, BookCoverEntity]),
+    CqrsModule,
   ],
+  providers: [...RepositoryProviders, ...CommandHandlers, ...QueryHandlers],
   controllers: [WebBookZoneAdapter],
 })
 export class BookZoneModule { }
