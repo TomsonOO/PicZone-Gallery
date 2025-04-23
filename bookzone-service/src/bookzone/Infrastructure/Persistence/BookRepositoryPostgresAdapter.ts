@@ -1,26 +1,26 @@
 import { BookEntity } from './../../Domain/book.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BookRepositoryPort } from 'src/bookzone/Application/Port/BookRepositoryPort';
 
-export class BookRepositoryPostgresAdapter {
+export class BookRepositoryPostgresAdapter implements BookRepositoryPort {
   constructor(
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
-  ) {}
+  ) { }
 
   async createBook(params: {
     title: string,
     author: string,
   }
-  ): Promise<void> {
+  ): Promise<BookEntity> {
     const { title, author } = params;
 
     let book = this.bookRepository.create({
       title: title,
       author: author,
-      createdAt: new Date(),
     });
 
-    await this.bookRepository.save(book);
+    return await this.bookRepository.save(book);
   }
 }

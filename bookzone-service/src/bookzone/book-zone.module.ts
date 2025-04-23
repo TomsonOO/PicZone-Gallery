@@ -10,6 +10,21 @@ import { BookEntity } from './Domain/book.entity';
 import { BookCoverEntity } from './Domain/book-cover.entity';
 import { CreateBookCommandHandler } from './Application/createBook/CreateBookCommandHandler';
 
+const CommandHandlers = [ 
+  CreateBookCommandHandler,
+];
+
+const RepositoryProviders = [
+  {
+      provide: 'BookRepositoryPostgresAdapter',
+      useClass: BookRepositoryPostgresAdapter,
+    },
+    {
+      provide: 'BookCoverRepositoryPostgresAdapter',
+      useClass: BookCoverRepositoryPostgresAdapter,
+    },
+];
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,16 +36,9 @@ import { CreateBookCommandHandler } from './Application/createBook/CreateBookCom
       BookCoverEntity,
     ]),
     CqrsModule],
-  providers: [
-    CreateBookCommandHandler,
-    {
-      provide: 'BookRepositoryPostgresAdapter',
-      useClass: BookRepositoryPostgresAdapter,
-    },
-    {
-      provide: 'BookCoverRepositoryPostgresAdapter',
-      useClass: BookCoverRepositoryPostgresAdapter,
-    },
+    providers: [
+    ...RepositoryProviders,
+    ...CommandHandlers,
   ],
   controllers: [WebBookZoneAdapter],
 })
