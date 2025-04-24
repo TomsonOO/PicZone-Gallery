@@ -1,9 +1,11 @@
-import { Controller, Post, Body, HttpStatus, HttpCode, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode, Get, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBookCommand } from 'src/bookzone/Application/createBook/CreateBookCommand';
 import { CreateBookDTO } from 'src/bookzone/Application/createBook/CreateBookDTO';
 import { GetBooksQuery } from 'src/bookzone/Application/getBooks/GetBooksQuery';
 import { BookDto } from 'src/bookzone/Application/getBooks/BookDto';
+import { BookSearchResultDto } from 'src/bookzone/Application/searchBooks/BookSearchResultDto';
+import { SearchBooksQuery } from 'src/bookzone/Application/searchBooks/SearchBooksQuery';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
@@ -28,4 +30,8 @@ export class WebBookZoneAdapter {
     return await this.queryBus.execute(new GetBooksQuery());
   }
 
+  @Get('search')
+  async searchBooks(@Query('q') query: string): Promise<BookSearchResultDto[]> {
+    return await this.queryBus.execute(new SearchBooksQuery(query));
+  }
 }
