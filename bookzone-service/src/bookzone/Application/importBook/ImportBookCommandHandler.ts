@@ -57,6 +57,7 @@ export class ImportBookCommandHandler
           imageBuffer,
           filename,
           'image/jpeg',
+          'BookCovers',
         );
 
         const bookCover = new BookCoverEntity();

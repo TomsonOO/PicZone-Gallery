@@ -38,18 +38,20 @@ export class S3StorageService {
     fileBuffer: Buffer,
     fileName: string,
     contentType: string,
+    directory: string = '',
   ): Promise<string> {
     try {
+      const key = directory ? `${directory}/${fileName}` : fileName;
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
-        Key: fileName,
+        Key: key,
         Body: fileBuffer,
         ContentType: contentType,
       });
 
       await this.s3Client.send(command);
 
-      const fileUrl = `https://${this.bucketName}.s3.amazonaws.com/${fileName}`;
+      const fileUrl = `https://${this.bucketName}.s3.amazonaws.com/${key}`;
       return fileUrl;
     } catch (error) {
       this.logger.error(
