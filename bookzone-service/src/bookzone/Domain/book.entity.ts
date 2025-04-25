@@ -2,8 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BookCoverEntity } from './book-cover.entity';
 
 @Entity('book')
 export class BookEntity {
@@ -16,6 +18,12 @@ export class BookEntity {
   @Column()
   author: string;
 
+  @Column({ nullable: true })
+  openLibraryKey: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @OneToOne(() => BookCoverEntity, (bookCover) => bookCover.book)
+  cover: BookCoverEntity;
 }

@@ -13,15 +13,11 @@ import { GetBooksQueryHandler } from './Application/getBooks/GetBooksQueryHandle
 import { S3StorageService } from './Infrastructure/storage/S3StorageService';
 import { SearchBooksQueryHandler } from './Application/searchBooks/SearchBooksQueryHandler';
 import { OpenLibraryService } from './Infrastructure/OpenLibrary/OpenLibraryService';
+import { ImportBookCommandHandler } from './Application/importBook/ImportBookCommandHandler';
 
-const CommandHandlers = [
-  CreateBookCommandHandler
-];
+const CommandHandlers = [CreateBookCommandHandler, ImportBookCommandHandler];
 
-const QueryHandlers = [
-  GetBooksQueryHandler,
-  SearchBooksQueryHandler
-];
+const QueryHandlers = [GetBooksQueryHandler, SearchBooksQueryHandler];
 
 const RepositoryProviders = [
   {
@@ -34,10 +30,7 @@ const RepositoryProviders = [
   },
 ];
 
-const Services = [
-  S3StorageService,
-  OpenLibraryService
-];
+const Services = [S3StorageService, OpenLibraryService];
 
 @Module({
   imports: [
@@ -48,7 +41,12 @@ const Services = [
     TypeOrmModule.forFeature([BookEntity, BookCoverEntity]),
     CqrsModule,
   ],
-  providers: [...RepositoryProviders, ...CommandHandlers, ...QueryHandlers, ...Services],
+  providers: [
+    ...RepositoryProviders,
+    ...CommandHandlers,
+    ...QueryHandlers,
+    ...Services,
+  ],
   controllers: [WebBookZoneAdapter],
 })
-export class BookZoneModule { }
+export class BookZoneModule {}

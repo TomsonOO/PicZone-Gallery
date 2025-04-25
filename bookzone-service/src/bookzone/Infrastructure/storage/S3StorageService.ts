@@ -11,11 +11,15 @@ export class S3StorageService {
   constructor(private configService: ConfigService) {
     const region = this.configService.get<string>('AWS_S3_REGION');
     const accessKeyId = this.configService.get<string>('AWS_ACCESS_KEY_ID');
-    const secretAccessKey = this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
+    const secretAccessKey = this.configService.get<string>(
+      'AWS_SECRET_ACCESS_KEY',
+    );
     const bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME');
 
     if (!region || !accessKeyId || !secretAccessKey || !bucketName) {
-      this.logger.error('Missing AWS configuration. Please check environment variables.');
+      this.logger.error(
+        'Missing AWS configuration. Please check environment variables.',
+      );
       throw new Error('Missing AWS configuration');
     }
 
@@ -48,7 +52,10 @@ export class S3StorageService {
       const fileUrl = `https://${this.bucketName}.s3.amazonaws.com/${fileName}`;
       return fileUrl;
     } catch (error) {
-      this.logger.error(`Error uploading file to S3: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error uploading file to S3: ${error.message}`,
+        error.stack,
+      );
       throw new Error('Failed to upload file to S3');
     }
   }

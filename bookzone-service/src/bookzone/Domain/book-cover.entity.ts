@@ -12,7 +12,7 @@ export class BookCoverEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => BookEntity)
+  @OneToOne(() => BookEntity, (book) => book.cover)
   @JoinColumn()
   book: BookEntity;
 

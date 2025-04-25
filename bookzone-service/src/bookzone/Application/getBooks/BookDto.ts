@@ -1,4 +1,4 @@
-import { BookEntity } from "../../Domain/book.entity";
+import { BookEntity } from '../../Domain/book.entity';
 
 export class BookDto {
   id: string;
@@ -16,6 +16,6 @@ export class BookDto {
   }
 
   static fromEntities(entities: BookEntity[]): BookDto[] {
-    return entities.map(entity => this.fromEntity(entity));
+    return entities.map((entity) => this.fromEntity(entity));
   }
-} 
+}
