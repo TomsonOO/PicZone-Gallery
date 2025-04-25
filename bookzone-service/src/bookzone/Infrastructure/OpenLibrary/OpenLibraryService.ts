@@ -25,6 +25,7 @@ export class OpenLibraryService {
           coverUrl: book.cover_i
             ? `${this.coversBaseUrl}/b/id/${book.cover_i}-M.jpg`
             : null,
+          openLibraryKey: book.key || null,
         }));
       }
 

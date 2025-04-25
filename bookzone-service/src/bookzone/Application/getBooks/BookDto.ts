@@ -5,6 +5,7 @@ export class BookDto {
   title: string;
   author: string;
   createdAt: Date;
+  coverUrl?: string;
 
   static fromEntity(entity: BookEntity): BookDto {
     const dto = new BookDto();
@@ -12,6 +13,9 @@ export class BookDto {
     dto.title = entity.title;
     dto.author = entity.author;
     dto.createdAt = entity.createdAt;
+    if (entity.cover) {
+      dto.coverUrl = entity.cover.url;
+    }
     return dto;
   }
 

@@ -14,7 +14,7 @@ import { GetBooksQuery } from 'src/bookzone/Application/getBooks/GetBooksQuery';
 import { BookDto } from 'src/bookzone/Application/getBooks/BookDto';
 import { BookSearchResultDto } from 'src/bookzone/Application/searchBooks/BookSearchResultDto';
 import { SearchBooksQuery } from 'src/bookzone/Application/searchBooks/SearchBooksQuery';
-import { ImportBookCommandHandler } from 'src/bookzone/Application/importBook/ImportBookCommandHandler';
+import { ImportBookCommand } from 'src/bookzone/Application/importBook/ImportBookCommand';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
