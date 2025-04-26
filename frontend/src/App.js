@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WelcomePage from './pages/WelcomePage';
 import HomePage from './pages/HomePage';
+import BookZonePage from './pages/BookZonePage';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<WelcomePage />} />
           <Route path='/gallery' element={<HomePage />} />
+          <Route path='/bookzone' element={<BookZonePage />} />
         </Routes>
       </Router>
     </>
