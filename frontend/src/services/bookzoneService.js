@@ -13,8 +13,6 @@ export async function getCuratedBooks() {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || 'Failed to fetch books');
     }
-    console.log('Response:', response);
-    console.log('Response JSON:', await response.json());
     return await response.json();
   } catch (error) {
     console.error('Error fetching curated books:', error);
@@ -30,14 +28,12 @@ export async function searchOpenLibraryBooks(searchTerm) {
         'Content-Type': 'application/json',
       },
     });
-    console.log('Response:', response);
-
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || 'Failed to search books');
     }
 
-    return response;
+    return await response.json();
   } catch (error) {
     console.error('Error searching books:', error);
     throw error;

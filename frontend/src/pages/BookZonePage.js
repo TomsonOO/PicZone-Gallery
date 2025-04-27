@@ -19,7 +19,6 @@ const BookZonePage = () => {
     setIsLoadingCuratedBooks(true);
     try {
       const booksData = await getCuratedBooks();
-      console.log('Fetched curated books:', booksData);
       setCuratedBooks(booksData);
     } catch (error) {
       console.error('Error fetching curated books:', error);
