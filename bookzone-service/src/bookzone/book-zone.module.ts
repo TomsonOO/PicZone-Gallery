@@ -14,10 +14,15 @@ import { S3StorageService } from './Infrastructure/storage/S3StorageService';
 import { SearchBooksQueryHandler } from './Application/searchBooks/SearchBooksQueryHandler';
 import { OpenLibraryService } from './Infrastructure/OpenLibrary/OpenLibraryService';
 import { ImportBookCommandHandler } from './Application/importBook/ImportBookCommandHandler';
+import { GetBookCoverPresignedUrlQueryHandler } from './Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQueryHandler';
 
 const CommandHandlers = [CreateBookCommandHandler, ImportBookCommandHandler];
 
-const QueryHandlers = [GetBooksQueryHandler, SearchBooksQueryHandler];
+const QueryHandlers = [
+  GetBooksQueryHandler,
+  SearchBooksQueryHandler,
+  GetBookCoverPresignedUrlQueryHandler
+];
 
 const RepositoryProviders = [
   {
@@ -28,9 +33,13 @@ const RepositoryProviders = [
     provide: 'BookCoverRepositoryPostgresAdapter',
     useClass: BookCoverRepositoryPostgresAdapter,
   },
+  {
+    provide: 'S3StorageService',
+    useClass: S3StorageService,
+  },
 ];
 
-const Services = [S3StorageService, OpenLibraryService];
+const Services = [OpenLibraryService];
 
 @Module({
   imports: [
