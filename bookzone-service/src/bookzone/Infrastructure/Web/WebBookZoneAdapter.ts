@@ -6,6 +6,8 @@ import {
   HttpCode,
   Get,
   Query,
+  NotFoundException,
+  Param,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBookCommand } from 'src/bookzone/Application/createBook/CreateBookCommand';
@@ -15,13 +17,14 @@ import { BookDto } from 'src/bookzone/Application/getBooks/BookDto';
 import { BookSearchResultDto } from 'src/bookzone/Application/searchBooks/BookSearchResultDto';
 import { SearchBooksQuery } from 'src/bookzone/Application/searchBooks/SearchBooksQuery';
 import { ImportBookCommand } from 'src/bookzone/Application/importBook/ImportBookCommand';
+import { GetBookCoverPresignedUrlQuery } from 'src/bookzone/Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQuery';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -53,5 +56,16 @@ export class WebBookZoneAdapter {
     const bookId = await this.commandBus.execute(command);
 
     return { id: bookId };
+  }
+
+  @Get('covers/:objectKey/presigned-url')
+  async getBookCoverPresignedUrl(
+    @Param('objectKey') objectKey: string,
+  ): Promise<string> {
+    try {
+      return await this.queryBus.execute(new GetBookCoverPresignedUrlQuery(objectKey));
+    } catch (error) {
+      throw new NotFoundException(`Could not generate presigned URL for objectKey: ${objectKey}`);
+    }
   }
 }

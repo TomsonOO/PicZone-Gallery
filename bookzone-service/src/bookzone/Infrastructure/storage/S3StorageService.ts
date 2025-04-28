@@ -1,9 +1,11 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { BookStoragePort } from 'src/bookzone/Application/Port/BookStoragePort';
 
 @Injectable()
-export class S3StorageService {
+export class S3StorageService implements BookStoragePort {
   private s3Client: S3Client;
   private bucketName: string;
   private readonly logger = new Logger(S3StorageService.name);
@@ -59,6 +61,34 @@ export class S3StorageService {
         error.stack,
       );
       throw new Error('Failed to upload file to S3');
+    }
+  }
+
+  async getPresignedUrl(objectKey: string): Promise<string> {
+    try {
+      const headCommand = new HeadObjectCommand({
+        Bucket: this.bucketName,
+        Key: objectKey,
+      });
+
+      await this.s3Client.send(headCommand);
+
+      const command = new GetObjectCommand({
+        Bucket: this.bucketName,
+        Key: objectKey,
+      });
+
+      const presignedUrl = await getSignedUrl(this.s3Client, command, {
+        expiresIn: 1200
+      });
+
+      return presignedUrl;
+    } catch (error) {
+      this.logger.error(
+        `Error generating presigned URL: ${error.message}`,
+        error.stack,
+      );
+      throw new Error('Failed to generate presgined URL for book cover');
     }
   }
 }
