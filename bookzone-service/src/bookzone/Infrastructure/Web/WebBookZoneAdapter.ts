@@ -58,12 +58,15 @@ export class WebBookZoneAdapter {
     return { id: bookId };
   }
 
-  @Get('covers/:objectKey/presigned-url')
+  @Get('covers')
   async getBookCoverPresignedUrl(
-    @Param('objectKey') objectKey: string,
-  ): Promise<string> {
+    @Query('objectKey') objectKey: string
+  ): Promise<{ presignedUrl: string }> {
     try {
-      return await this.queryBus.execute(new GetBookCoverPresignedUrlQuery(objectKey));
+      const fullObjectKey = `BookCovers/${objectKey}`;
+      console.log(`Processing presigned URL request for object: ${fullObjectKey}`);
+      const presignedUrl = await this.queryBus.execute(new GetBookCoverPresignedUrlQuery(fullObjectKey));
+      return { presignedUrl };
     } catch (error) {
       throw new NotFoundException(`Could not generate presigned URL for objectKey: ${objectKey}`);
     }

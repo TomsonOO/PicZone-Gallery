@@ -70,7 +70,6 @@ export class S3StorageService implements BookStoragePort {
         Bucket: this.bucketName,
         Key: objectKey,
       });
-
       await this.s3Client.send(headCommand);
 
       const command = new GetObjectCommand({
@@ -81,7 +80,6 @@ export class S3StorageService implements BookStoragePort {
       const presignedUrl = await getSignedUrl(this.s3Client, command, {
         expiresIn: 1200
       });
-
       return presignedUrl;
     } catch (error) {
       this.logger.error(

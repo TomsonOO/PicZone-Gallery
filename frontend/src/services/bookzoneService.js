@@ -13,9 +13,37 @@ export async function getCuratedBooks() {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || 'Failed to fetch books');
     }
-    return await response.json();
+
+    const books = await response.json();
+
+    return books.map(book => {
+      if (book.coverUrl && book.coverUrl.includes('s3.amazonaws.com')) {
+        book.needsPresignedUrl = true;
+      }
+      return book;
+    });
   } catch (error) {
     console.error('Error fetching curated books:', error);
+    throw error;
+  }
+}
+
+export async function getBookCoverPresignedUrl(objectKey) {
+  try {
+    const response = await fetch(`${BOOKZONE_BASE_URL}/covers?objectKey=${objectKey}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to get presigned URL');
+    }
+    const data = await response.json();
+    return data.presignedUrl;
+  } catch (error) {
+    console.error('Error getting presigned URL:', error);
     throw error;
   }
 }
