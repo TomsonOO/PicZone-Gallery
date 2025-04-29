@@ -14,6 +14,7 @@ const BookZonePage = () => {
   const [isImportingBook, setIsImportingBook] = useState(false);
   const [importingBookKey, setImportingBookKey] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   const fetchCuratedBooks = async () => {
     setIsLoadingCuratedBooks(true);
@@ -32,38 +33,55 @@ const BookZonePage = () => {
     fetchCuratedBooks();
   }, []);
 
-  const handleSearch = async (searchTermValue) => {
-    setSearchTerm(searchTermValue);
-    if (!searchTermValue.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsLoadingSearchResults(true);
+  const handleSearch = async (searchTerm) => {
+    if (!searchTerm.trim()) return;
+    
+    setIsSearching(true);
+    setSearchResults([]);
+    
     try {
-      const results = await searchOpenLibraryBooks(searchTermValue);
-      setSearchResults(results);
+      const results = await searchOpenLibraryBooks(searchTerm);
+      
+      const existingBookKeys = curatedBooks.map(book => 
+        book.openLibraryKey || book.olKey || book.key
+      );
+      
+      const filteredResults = results.filter(searchResult => {
+        const searchBookKey = searchResult.key || searchResult.olKey || searchResult.openLibraryKey;
+        return !existingBookKeys.includes(searchBookKey);
+      });
+      
+      setSearchResults(filteredResults);
     } catch (error) {
-      console.error('Error searching books:', error);
-      toast.error('Failed to search books. Please try again.');
-      setSearchResults([]);
+      toast.error(`Search failed: ${error.message}`);
     } finally {
-      setIsLoadingSearchResults(false);
+      setIsSearching(false);
     }
   };
 
-  const handleImportBook = async (openLibraryKey) => {
-    setIsImportingBook(true);
-    setImportingBookKey(openLibraryKey);
+  const handleImportBook = async (book) => {
+    const bookKey = book.key || book.olKey || book.openLibraryKey;
+    
+    if (!bookKey) {
+      toast.error('Book identifier is missing');
+      return;
+    }
+
+    setImportingBookKey(bookKey);
+    
     try {
-      await importBook(openLibraryKey);
+      await importBook(bookKey);
       toast.success('Book imported successfully!');
-      await fetchCuratedBooks();
+      fetchCuratedBooks();
+      
+      setSearchResults(prevResults => 
+        prevResults.filter(result => 
+          (result.key || result.olKey || result.openLibraryKey) !== bookKey
+        )
+      );
     } catch (error) {
-      console.error('Error importing book:', error);
-      toast.error('Failed to import book. Please try again.');
+      toast.error(`Failed to import book: ${error.message}`);
     } finally {
-      setIsImportingBook(false);
       setImportingBookKey(null);
     }
   };
@@ -100,7 +118,7 @@ const BookZonePage = () => {
                     ))
                   ) : (
                     <p className="text-gray-600 dark:text-gray-400 col-span-full text-center">
-                      No books found matching your search.
+                      {searchTerm.trim() ? 'No new books found matching your search.' : 'Enter a search term to find books.'}
                     </p>
                   )}
                 </div>

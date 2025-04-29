@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FaBook } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { getBookCoverPresignedUrl } from '../services/bookzoneService';
 
 const BookCard = ({ book }) => {
+  const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [coverUrl, setCoverUrl] = useState(book.coverUrl || '');
@@ -20,7 +22,6 @@ const BookCard = ({ book }) => {
             const objectKeyMatch = book.coverUrl.match(/amazonaws\.com\/(.+)$/);
             if (objectKeyMatch && objectKeyMatch[1]) {
               const objectKey = objectKeyMatch[1];
-              console.log('Extracted objectKey:', objectKey);
               const presignedUrl = await getBookCoverPresignedUrl(objectKey);
               setCoverUrl(presignedUrl);
             }
@@ -45,6 +46,10 @@ const BookCard = ({ book }) => {
     setImageError(true);
   };
 
+  const handleCardClick = () => {
+    navigate(`/bookzone/book/${book.id}`);
+  };
+
   const renderPlaceholder = () => (
     <div className="bg-gray-700 flex items-center justify-center w-full h-full">
       <FaBook className="text-gray-500 text-4xl" />
@@ -52,7 +57,10 @@ const BookCard = ({ book }) => {
   );
 
   return (
-    <div className="overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
+    <div 
+      className="overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
+      onClick={handleCardClick}
+    >
       <div className="aspect-square bg-gray-700 relative">
         {coverUrl && !imageError ? (
           <>
