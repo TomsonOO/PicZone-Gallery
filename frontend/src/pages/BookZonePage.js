@@ -78,31 +78,8 @@ const BookZonePage = () => {
             <SearchBar onSearch={handleSearch} placeholder="Search for books by title or author..." />
           </div>
 
-          {isLoadingCuratedBooks ? (
-            <div className="text-center py-6">
-              <p className="text-gray-600 dark:text-gray-300">Loading books...</p>
-            </div>
-          ) : (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">
-                Your Books
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {curatedBooks.length > 0 ? (
-                  curatedBooks.map(book => (
-                    <BookCard key={book.id} book={book} />
-                  ))
-                ) : (
-                  <p className="text-gray-600 dark:text-gray-400 col-span-full text-center">
-                    No books yet. Search and import books to build your collection!
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {searchTerm && (
-            <div className="mt-6">
+          {searchTerm ? (
+            <div className="mt-2 mb-6">
               <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">
                 Search Results
               </h2>
@@ -111,7 +88,7 @@ const BookZonePage = () => {
                   <p className="text-gray-600 dark:text-gray-300">Searching books...</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {searchResults.length > 0 ? (
                     searchResults.map((book, index) => (
                       <BookSearchResultItem
@@ -129,6 +106,31 @@ const BookZonePage = () => {
                 </div>
               )}
             </div>
+          ) : (
+            <>
+              {isLoadingCuratedBooks ? (
+                <div className="text-center py-6">
+                  <p className="text-gray-600 dark:text-gray-300">Loading books...</p>
+                </div>
+              ) : (
+                <div className="mb-8">
+                  <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">
+                    Your Books
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {curatedBooks.length > 0 ? (
+                      curatedBooks.map(book => (
+                        <BookCard key={book.id} book={book} />
+                      ))
+                    ) : (
+                      <p className="text-gray-600 dark:text-gray-400 col-span-full text-center">
+                        No books yet. Search and import books to build your collection!
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>

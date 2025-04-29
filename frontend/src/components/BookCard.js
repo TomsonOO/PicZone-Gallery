@@ -46,38 +46,41 @@ const BookCard = ({ book }) => {
   };
 
   const renderPlaceholder = () => (
-    <div className="bg-gray-200 dark:bg-gray-700 flex items-center justify-center w-full h-48 rounded-t-lg">
-      <FaBook className="text-gray-400 dark:text-gray-500 text-4xl" />
+    <div className="bg-gray-700 flex items-center justify-center w-full h-full">
+      <FaBook className="text-gray-500 text-4xl" />
     </div>
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-[1.02]">
-      {coverUrl && !imageError ? (
-        <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
-          {isLoadingPresignedUrl ? (
-            renderPlaceholder()
-          ) : (
-            <img
-              src={coverUrl}
-              alt={`${book.title} cover`}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'
+    <div className="overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
+      <div className="aspect-square bg-gray-700 relative">
+        {coverUrl && !imageError ? (
+          <>
+            {isLoadingPresignedUrl ? (
+              renderPlaceholder()
+            ) : (
+              <img
+                src={coverUrl}
+                alt={`${book.title} cover`}
+                className={`w-full h-full object-cover transition-opacity duration-300 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
-          )}
-          {!imageLoaded && !isLoadingPresignedUrl && renderPlaceholder()}
-        </div>
-      ) : (
-        renderPlaceholder()
-      )}
-
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white truncate" title={book.title}>
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
+            )}
+            {!imageLoaded && !isLoadingPresignedUrl && renderPlaceholder()}
+          </>
+        ) : (
+          renderPlaceholder()
+        )}
+      </div>
+      
+      <div className="mt-2">
+        <h3 className="text-sm font-semibold text-gray-100 truncate" title={book.title}>
           {book.title}
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 truncate" title={`By ${book.author}`}>
+        <p className="text-xs text-gray-400 truncate" title={`By ${book.author}`}>
           By {book.author}
         </p>
       </div>
