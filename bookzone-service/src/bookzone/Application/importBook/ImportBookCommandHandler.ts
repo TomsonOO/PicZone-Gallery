@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ImportBookCommand } from './ImportBookCommand';
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { OpenLibraryService } from 'src/bookzone/Infrastructure/OpenLibrary/OpenLibraryService';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookEntity } from 'src/bookzone/Domain/book.entity';
 import { Repository } from 'typeorm';
 import { BookCoverEntity } from 'src/bookzone/Domain/book-cover.entity';
-import { S3StorageService } from 'src/bookzone/Infrastructure/storage/S3StorageService';
+import { BookStoragePort } from 'src/bookzone/Application/Port/BookStoragePort';
 import { v4 as uuidv4 } from 'uuid';
 
 @CommandHandler(ImportBookCommand)
@@ -17,7 +17,8 @@ export class ImportBookCommandHandler
 
   constructor(
     private readonly openLibraryService: OpenLibraryService,
-    private readonly s3StorageService: S3StorageService,
+    @Inject('S3StorageService')
+    private readonly storageService: BookStoragePort,
 
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
@@ -53,7 +54,7 @@ export class ImportBookCommandHandler
 
         const filename = `${uuidv4()}.jpg`;
 
-        const s3Url = await this.s3StorageService.uploadFile(
+        const s3Url = await this.storageService.uploadFile(
           imageBuffer,
           filename,
           'image/jpeg',

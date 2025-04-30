@@ -23,7 +23,7 @@ export class OpenLibraryService {
           title: book.title,
           author: book.author_name ? book.author_name[0] : 'Unknown',
           coverUrl: book.cover_i
-            ? `${this.coversBaseUrl}/b/id/${book.cover_i}-M.jpg`
+            ? `${this.coversBaseUrl}/b/id/${book.cover_i}-L.jpg`
             : null,
           openLibraryKey: book.key || null,
         }));

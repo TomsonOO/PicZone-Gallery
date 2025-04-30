@@ -6,6 +6,7 @@ import {
   FaUserPlus,
   FaUpload,
   FaRocket,
+  FaBook
 } from 'react-icons/fa';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
@@ -95,6 +96,15 @@ const Sidebar = ({ onCategoryReset }) => {
             className='h-24'
           />
         </Link>
+        
+        <Link 
+          to='/bookzone' 
+          className='mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
+        >
+          <FaBook className='inline mr-2' />
+          BookZone
+        </Link>
+        
         <button
           onClick={toggleDarkMode}
           className='mb-4 w-full p-2 rounded hover:bg-gray-300 dark:hover:bg-sky-900 dark:text-gray-300 flex items-center justify-center'
