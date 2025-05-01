@@ -8,6 +8,7 @@ import {
   Query,
   NotFoundException,
   Param,
+  BadRequestException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBookCommand } from 'src/bookzone/Application/createBook/CreateBookCommand';
@@ -18,6 +19,7 @@ import { BookSearchResultDto } from 'src/bookzone/Application/searchBooks/BookSe
 import { SearchBooksQuery } from 'src/bookzone/Application/searchBooks/SearchBooksQuery';
 import { ImportBookCommand } from 'src/bookzone/Application/importBook/ImportBookCommand';
 import { GetBookCoverPresignedUrlQuery } from 'src/bookzone/Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQuery';
+import { GenerateImageCommand } from 'src/bookzone/Application/generateImage/GenerateImageCommand';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
@@ -58,17 +60,28 @@ export class WebBookZoneAdapter {
     return { id: bookId };
   }
 
-  @Get('covers')
+  @Get('covers/:objectKey/presigned-url')
   async getBookCoverPresignedUrl(
-    @Query('objectKey') objectKey: string
+    @Param('objectKey') objectKey: string,
   ): Promise<{ presignedUrl: string }> {
     try {
-      const fullObjectKey = `BookCovers/${objectKey}`;
-      console.log(`Processing presigned URL request for object: ${fullObjectKey}`);
-      const presignedUrl = await this.queryBus.execute(new GetBookCoverPresignedUrlQuery(fullObjectKey));
-      return { presignedUrl };
+      const fullObjectKey = objectKey.includes('/') ? objectKey : `BookCovers/${objectKey}`;
+      return await this.queryBus.execute(new GetBookCoverPresignedUrlQuery(fullObjectKey));
     } catch (error) {
       throw new NotFoundException(`Could not generate presigned URL for objectKey: ${objectKey}`);
     }
+  }
+
+  @Post('ai/generate-image')
+  @HttpCode(HttpStatus.OK)
+  async generateImage(@Body() body: { prompt: string }): Promise<{ imageUrl: string }> {
+    if (!body.prompt || body.prompt.trim() === '') {
+      throw new BadRequestException('Prompt is required for image generation');
+    }
+
+    const command = new GenerateImageCommand(body.prompt);
+    const imageUrl = await this.queryBus.execute<GenerateImageCommand, string>(command);
+
+    return { imageUrl };
   }
 }
