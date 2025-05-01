@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WebBookZoneAdapter } from './Infrastructure/Web/WebBookZoneAdapter';
 import { CqrsModule } from '@nestjs/cqrs';
+import { HttpModule } from '@nestjs/axios';
 import { databaseConfig } from './../../config/database.config';
 import { BookRepositoryPostgresAdapter } from './Infrastructure/Persistence/BookRepositoryPostgresAdapter';
 import { BookCoverRepositoryPostgresAdapter } from './Infrastructure/Persistence/BookCoverRepositoryPostgresAdapter';
@@ -15,13 +16,21 @@ import { SearchBooksQueryHandler } from './Application/searchBooks/SearchBooksQu
 import { OpenLibraryService } from './Infrastructure/OpenLibrary/OpenLibraryService';
 import { ImportBookCommandHandler } from './Application/importBook/ImportBookCommandHandler';
 import { GetBookCoverPresignedUrlQueryHandler } from './Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQueryHandler';
+import { IdeogramImageGeneratorAdapter } from './Infrastructure/ImageGeneration/IdeogramImageGeneratorAdapter';
+import { GenerateImageCommandHandler } from './Application/generateImage/GenerateImageCommandHandler';
+import { GetBookInfoQueryHandler } from './Application/getBookInfo/GetBookInfoQueryHandler';
+import { GeminiBookAnalyzerAdapter } from './Infrastructure/BookAnalyzer/GeminiBookAnalyzerAdapter';
+import { GenerateVisualPromptQueryHandler } from './Application/generateVisualPrompt/GenerateVisualPromptQueryHandler';
 
 const CommandHandlers = [CreateBookCommandHandler, ImportBookCommandHandler];
 
 const QueryHandlers = [
   GetBooksQueryHandler,
   SearchBooksQueryHandler,
-  GetBookCoverPresignedUrlQueryHandler
+  GetBookCoverPresignedUrlQueryHandler,
+  GenerateImageCommandHandler,
+  GetBookInfoQueryHandler,
+  GenerateVisualPromptQueryHandler,
 ];
 
 const RepositoryProviders = [
@@ -41,6 +50,16 @@ const RepositoryProviders = [
 
 const Services = [OpenLibraryService];
 
+const ImageGenerationProvider = {
+  provide: 'ImageGenerationPort',
+  useClass: IdeogramImageGeneratorAdapter,
+};
+
+const BookAnalysisProvider = {
+  provide: 'BookAnalysisPort',
+  useClass: GeminiBookAnalyzerAdapter,
+};
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -49,12 +68,15 @@ const Services = [OpenLibraryService];
     TypeOrmModule.forRoot(databaseConfig),
     TypeOrmModule.forFeature([BookEntity, BookCoverEntity]),
     CqrsModule,
+    HttpModule,
   ],
   providers: [
     ...RepositoryProviders,
     ...CommandHandlers,
     ...QueryHandlers,
     ...Services,
+    ImageGenerationProvider,
+    BookAnalysisProvider,
   ],
   controllers: [WebBookZoneAdapter],
 })
