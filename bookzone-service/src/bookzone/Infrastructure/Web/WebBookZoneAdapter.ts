@@ -20,6 +20,7 @@ import { SearchBooksQuery } from 'src/bookzone/Application/searchBooks/SearchBoo
 import { ImportBookCommand } from 'src/bookzone/Application/importBook/ImportBookCommand';
 import { GetBookCoverPresignedUrlQuery } from 'src/bookzone/Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQuery';
 import { GenerateImageCommand } from 'src/bookzone/Application/generateImage/GenerateImageCommand';
+import { GetBookInfoQuery } from 'src/bookzone/Application/getBookInfo/GetBookInfoQuery';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
@@ -83,5 +84,18 @@ export class WebBookZoneAdapter {
     const imageUrl = await this.queryBus.execute<GenerateImageCommand, string>(command);
 
     return { imageUrl };
+  }
+
+  @Post('ai/query-book')
+  @HttpCode(HttpStatus.OK)
+  async queryBook(@Body() body: { title: string; author: string; query: string }): Promise<{ answer: string }> {
+    if (!body.title || !body.author || !body.query) {
+      throw new BadRequestException('Title, author, and query are required fields');
+    }
+
+    const bookInfoQuery = new GetBookInfoQuery(body.title, body.author, body.query);
+    const answer = await this.queryBus.execute<GetBookInfoQuery, string>(bookInfoQuery);
+
+    return { answer }
   }
 }

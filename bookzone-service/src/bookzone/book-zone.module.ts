@@ -18,6 +18,8 @@ import { ImportBookCommandHandler } from './Application/importBook/ImportBookCom
 import { GetBookCoverPresignedUrlQueryHandler } from './Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQueryHandler';
 import { IdeogramImageGeneratorAdapter } from './Infrastructure/ImageGeneration/IdeogramImageGeneratorAdapter';
 import { GenerateImageHandler } from './Application/generateImage/GenerateImageCommandHandler';
+import { GetBookInfoQueryHandler } from './Application/getBookInfo/GetBookInfoQueryHandler';
+import { GeminiBookAnalyzerAdapter } from './Infrastructure/BookAnalyzer/GeminiBookAnalyzerAdapter';
 
 const CommandHandlers = [CreateBookCommandHandler, ImportBookCommandHandler];
 
@@ -26,6 +28,7 @@ const QueryHandlers = [
   SearchBooksQueryHandler,
   GetBookCoverPresignedUrlQueryHandler,
   GenerateImageHandler,
+  GetBookInfoQueryHandler,
 ];
 
 const RepositoryProviders = [
@@ -50,6 +53,11 @@ const ImageGenerationProvider = {
   useClass: IdeogramImageGeneratorAdapter,
 };
 
+const BookAnalysisProvider = {
+  provide: 'BookAnalysisPort',
+  useClass: GeminiBookAnalyzerAdapter,
+};
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -66,6 +74,7 @@ const ImageGenerationProvider = {
     ...QueryHandlers,
     ...Services,
     ImageGenerationProvider,
+    BookAnalysisProvider,
   ],
   controllers: [WebBookZoneAdapter],
 })
