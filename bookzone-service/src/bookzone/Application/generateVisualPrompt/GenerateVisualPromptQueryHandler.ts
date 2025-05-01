@@ -29,6 +29,3 @@ export class GenerateVisualPromptQueryHandler implements IQueryHandler<GenerateV
     }
   }
 }
-
-
-

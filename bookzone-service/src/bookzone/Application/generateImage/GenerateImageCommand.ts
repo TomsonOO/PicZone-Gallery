@@ -1,3 +1,3 @@
 export class GenerateImageCommand {
-  constructor(public readonly prompt: string) {}
+  constructor(public readonly imagePrompt: string) {}
 }

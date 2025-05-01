@@ -14,12 +14,12 @@ export class GenerateImageCommandHandler implements IQueryHandler<GenerateImageC
 
   async execute(query: GenerateImageCommand): Promise<string> {
     this.logger.log(
-      `Executing GenerateImageCommand for prompt: ${query.prompt.substring(0, 50)}...`,
+      `Executing GenerateImageCommand for prompt: ${query.imagePrompt.substring(0, 50)}...`,
     );
 
     try {
       const imageUrl = await this.imageGenerationPort.generateImage(
-        query.prompt,
+        query.imagePrompt,
       );
       this.logger.log(`Image generation successful. URL: ${imageUrl}`);
       return imageUrl;
@@ -32,5 +32,3 @@ export class GenerateImageCommandHandler implements IQueryHandler<GenerateImageC
     }
   }
 }
-
-export { GenerateImageCommandHandler as GenerateImageHandler };

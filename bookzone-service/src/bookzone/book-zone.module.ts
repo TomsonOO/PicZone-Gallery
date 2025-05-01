@@ -17,7 +17,7 @@ import { OpenLibraryService } from './Infrastructure/OpenLibrary/OpenLibraryServ
 import { ImportBookCommandHandler } from './Application/importBook/ImportBookCommandHandler';
 import { GetBookCoverPresignedUrlQueryHandler } from './Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQueryHandler';
 import { IdeogramImageGeneratorAdapter } from './Infrastructure/ImageGeneration/IdeogramImageGeneratorAdapter';
-import { GenerateImageHandler } from './Application/generateImage/GenerateImageCommandHandler';
+import { GenerateImageCommandHandler } from './Application/generateImage/GenerateImageCommandHandler';
 import { GetBookInfoQueryHandler } from './Application/getBookInfo/GetBookInfoQueryHandler';
 import { GeminiBookAnalyzerAdapter } from './Infrastructure/BookAnalyzer/GeminiBookAnalyzerAdapter';
 import { GenerateVisualPromptQueryHandler } from './Application/generateVisualPrompt/GenerateVisualPromptQueryHandler';
@@ -28,7 +28,7 @@ const QueryHandlers = [
   GetBooksQueryHandler,
   SearchBooksQueryHandler,
   GetBookCoverPresignedUrlQueryHandler,
-  GenerateImageHandler,
+  GenerateImageCommandHandler,
   GetBookInfoQueryHandler,
   GenerateVisualPromptQueryHandler,
 ];

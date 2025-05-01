@@ -76,12 +76,12 @@ export class WebBookZoneAdapter {
 
   @Post('ai/generate-image')
   @HttpCode(HttpStatus.OK)
-  async generateImage(@Body() body: { prompt: string }): Promise<{ imageUrl: string }> {
-    if (!body.prompt || body.prompt.trim() === '') {
+  async generateImage(@Body() body: { imagePrompt: string }): Promise<{ imageUrl: string }> {
+    if (!body.imagePrompt || body.imagePrompt.trim() === '') {
       throw new BadRequestException('Prompt is required for image generation');
     }
 
-    const command = new GenerateImageCommand(body.prompt);
+    const command = new GenerateImageCommand(body.imagePrompt);
     const imageUrl = await this.queryBus.execute<GenerateImageCommand, string>(command);
 
     return { imageUrl };
@@ -102,14 +102,14 @@ export class WebBookZoneAdapter {
 
   @Post('ai/generate-visual-prompt')
   @HttpCode(HttpStatus.OK)
-  async generateVisualPrompt(@Body() body: { title: string; author: string; subject: string }): Promise<{ visualPrompt: string }> {
+  async generateVisualPrompt(@Body() body: { title: string; author: string; subject: string }): Promise<{ imagePrompt: string }> {
     if (!body.title || !body.author || !body.subject) {
       throw new BadRequestException('Title, author, and subject are required fields');
     }
 
     const query = new GenerateVisualPromptQuery(body.title, body.author, body.subject);
-    const visualPrompt = await this.queryBus.execute<GenerateVisualPromptQuery, string>(query);
+    const imagePrompt = await this.queryBus.execute<GenerateVisualPromptQuery, string>(query);
 
-    return { visualPrompt };
+    return { imagePrompt };
   }
 }
