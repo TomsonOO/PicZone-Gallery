@@ -21,6 +21,7 @@ import { ImportBookCommand } from 'src/bookzone/Application/importBook/ImportBoo
 import { GetBookCoverPresignedUrlQuery } from 'src/bookzone/Application/getBookCoverPresignedUrl/GetBookCoverPresignedUrlQuery';
 import { GenerateImageCommand } from 'src/bookzone/Application/generateImage/GenerateImageCommand';
 import { GetBookInfoQuery } from 'src/bookzone/Application/getBookInfo/GetBookInfoQuery';
+import { GenerateVisualPromptQuery } from 'src/bookzone/Application/generateVisualPrompt/GenerateVisualPromptQuery';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
@@ -97,5 +98,18 @@ export class WebBookZoneAdapter {
     const answer = await this.queryBus.execute<GetBookInfoQuery, string>(bookInfoQuery);
 
     return { answer }
+  }
+
+  @Post('ai/generate-visual-prompt')
+  @HttpCode(HttpStatus.OK)
+  async generateVisualPrompt(@Body() body: { title: string; author: string; subject: string }): Promise<{ visualPrompt: string }> {
+    if (!body.title || !body.author || !body.subject) {
+      throw new BadRequestException('Title, author, and subject are required fields');
+    }
+
+    const query = new GenerateVisualPromptQuery(body.title, body.author, body.subject);
+    const visualPrompt = await this.queryBus.execute<GenerateVisualPromptQuery, string>(query);
+
+    return { visualPrompt };
   }
 }

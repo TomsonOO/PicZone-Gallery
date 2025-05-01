@@ -20,6 +20,7 @@ import { IdeogramImageGeneratorAdapter } from './Infrastructure/ImageGeneration/
 import { GenerateImageHandler } from './Application/generateImage/GenerateImageCommandHandler';
 import { GetBookInfoQueryHandler } from './Application/getBookInfo/GetBookInfoQueryHandler';
 import { GeminiBookAnalyzerAdapter } from './Infrastructure/BookAnalyzer/GeminiBookAnalyzerAdapter';
+import { GenerateVisualPromptQueryHandler } from './Application/generateVisualPrompt/GenerateVisualPromptQueryHandler';
 
 const CommandHandlers = [CreateBookCommandHandler, ImportBookCommandHandler];
 
@@ -29,6 +30,7 @@ const QueryHandlers = [
   GetBookCoverPresignedUrlQueryHandler,
   GenerateImageHandler,
   GetBookInfoQueryHandler,
+  GenerateVisualPromptQueryHandler,
 ];
 
 const RepositoryProviders = [

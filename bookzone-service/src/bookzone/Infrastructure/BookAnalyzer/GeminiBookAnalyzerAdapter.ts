@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { BookAnalysisPort } from "src/bookzone/Application/Port/BookAnalysisPort";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+
 
 @Injectable()
 export class GeminiBookAnalyzerAdapter implements BookAnalysisPort {
@@ -15,12 +15,12 @@ export class GeminiBookAnalyzerAdapter implements BookAnalysisPort {
       throw new Error('GEMINI_API_KEY not configured');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.configService.get<string>('GEMINI_MODEL') || 'gemini-1.5-pro';
+    this.model = this.configService.get<string>('GEMINI_MODEL');
   }
 
   async getBookInformation(context: { title: string; author: string; }, userQuery: string): Promise<string> {
     try {
-      const model = this.genAI.getGenerativeModel({ model: this.model });
+      const model = this.genAI.genGenerativeModel({ model: this.model });
 
       const prompt = `Book: "${context.title}" by ${context.author}
       User query: ${userQuery}
