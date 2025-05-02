@@ -1,5 +1,4 @@
 export interface BookStoragePort {
-
   uploadFile(
     fileBuffer: Buffer,
     fileName: string,

@@ -4,13 +4,15 @@ import { GenerateImageCommand } from './GenerateImageCommand';
 import { ImageGenerationPort } from '../Port/ImageGenerationPort';
 
 @QueryHandler(GenerateImageCommand)
-export class GenerateImageCommandHandler implements IQueryHandler<GenerateImageCommand, string> {
+export class GenerateImageCommandHandler
+  implements IQueryHandler<GenerateImageCommand, string>
+{
   private readonly logger = new Logger(GenerateImageCommandHandler.name);
 
   constructor(
     @Inject('ImageGenerationPort')
     private readonly imageGenerationPort: ImageGenerationPort,
-  ) { }
+  ) {}
 
   async execute(query: GenerateImageCommand): Promise<string> {
     this.logger.log(
