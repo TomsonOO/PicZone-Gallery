@@ -1,3 +1,3 @@
 export interface ImageGenerationPort {
-  generateImage(prompt: string): Promise<string>
+  generateImage(prompt: string): Promise<string>;
 }

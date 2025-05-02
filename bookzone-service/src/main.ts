@@ -9,8 +9,8 @@ async function bootstrap() {
       allowedHeaders: ['Content-Type', 'Authorization'],
       exposedHeaders: ['Authorization'],
       credentials: true,
-      maxAge: 3600
-    }
+      maxAge: 3600,
+    },
   });
   await app.listen(process.env.PORT ?? 3001);
 }

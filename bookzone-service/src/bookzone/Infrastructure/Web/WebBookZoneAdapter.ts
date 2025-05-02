@@ -22,13 +22,14 @@ import { GetBookCoverPresignedUrlQuery } from 'src/bookzone/Application/getBookC
 import { GenerateImageCommand } from 'src/bookzone/Application/generateImage/GenerateImageCommand';
 import { GetBookInfoQuery } from 'src/bookzone/Application/getBookInfo/GetBookInfoQuery';
 import { GenerateVisualPromptQuery } from 'src/bookzone/Application/generateVisualPrompt/GenerateVisualPromptQuery';
+import { getBookDetailsQuery } from 'src/bookzone/Application/getBookDetails/GetBookDetailsQuery';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -67,48 +68,88 @@ export class WebBookZoneAdapter {
     @Param('objectKey') objectKey: string,
   ): Promise<{ presignedUrl: string }> {
     try {
-      const fullObjectKey = objectKey.includes('/') ? objectKey : `BookCovers/${objectKey}`;
-      return await this.queryBus.execute(new GetBookCoverPresignedUrlQuery(fullObjectKey));
+      const fullObjectKey = objectKey.includes('/')
+        ? objectKey
+        : `BookCovers/${objectKey}`;
+      return await this.queryBus.execute(
+        new GetBookCoverPresignedUrlQuery(fullObjectKey),
+      );
     } catch (error) {
-      throw new NotFoundException(`Could not generate presigned URL for objectKey: ${objectKey}`);
+      throw new NotFoundException(
+        `Could not generate presigned URL for objectKey: ${objectKey}`,
+      );
+    }
+  }
+
+  @Get('details/:bookId')
+  async getBookDetails(@Param('bookId') bookId: string): Promise<BookDto> {
+    try {
+      return await this.queryBus.execute(new getBookDetailsQuery(bookId));
+    } catch (error) {
+      throw new NotFoundException(`Could not find the book with id: ${bookId}`);
     }
   }
 
   @Post('ai/generate-image')
   @HttpCode(HttpStatus.OK)
-  async generateImage(@Body() body: { imagePrompt: string }): Promise<{ imageUrl: string }> {
+  async generateImage(
+    @Body() body: { imagePrompt: string },
+  ): Promise<{ imageUrl: string }> {
     if (!body.imagePrompt || body.imagePrompt.trim() === '') {
       throw new BadRequestException('Prompt is required for image generation');
     }
 
     const command = new GenerateImageCommand(body.imagePrompt);
-    const imageUrl = await this.queryBus.execute<GenerateImageCommand, string>(command);
+    const imageUrl = await this.queryBus.execute<GenerateImageCommand, string>(
+      command,
+    );
 
     return { imageUrl };
   }
 
   @Post('ai/query-book')
   @HttpCode(HttpStatus.OK)
-  async queryBook(@Body() body: { title: string; author: string; query: string }): Promise<{ answer: string }> {
+  async queryBook(
+    @Body() body: { title: string; author: string; query: string },
+  ): Promise<{ answer: string }> {
     if (!body.title || !body.author || !body.query) {
-      throw new BadRequestException('Title, author, and query are required fields');
+      throw new BadRequestException(
+        'Title, author, and query are required fields',
+      );
     }
 
-    const bookInfoQuery = new GetBookInfoQuery(body.title, body.author, body.query);
-    const answer = await this.queryBus.execute<GetBookInfoQuery, string>(bookInfoQuery);
+    const bookInfoQuery = new GetBookInfoQuery(
+      body.title,
+      body.author,
+      body.query,
+    );
+    const answer = await this.queryBus.execute<GetBookInfoQuery, string>(
+      bookInfoQuery,
+    );
 
-    return { answer }
+    return { answer };
   }
 
   @Post('ai/generate-visual-prompt')
   @HttpCode(HttpStatus.OK)
-  async generateVisualPrompt(@Body() body: { title: string; author: string; subject: string }): Promise<{ imagePrompt: string }> {
+  async generateVisualPrompt(
+    @Body() body: { title: string; author: string; subject: string },
+  ): Promise<{ imagePrompt: string }> {
     if (!body.title || !body.author || !body.subject) {
-      throw new BadRequestException('Title, author, and subject are required fields');
+      throw new BadRequestException(
+        'Title, author, and subject are required fields',
+      );
     }
 
-    const query = new GenerateVisualPromptQuery(body.title, body.author, body.subject);
-    const imagePrompt = await this.queryBus.execute<GenerateVisualPromptQuery, string>(query);
+    const query = new GenerateVisualPromptQuery(
+      body.title,
+      body.author,
+      body.subject,
+    );
+    const imagePrompt = await this.queryBus.execute<
+      GenerateVisualPromptQuery,
+      string
+    >(query);
 
     return { imagePrompt };
   }
