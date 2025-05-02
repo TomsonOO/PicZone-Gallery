@@ -1,4 +1,9 @@
-import { GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -78,7 +83,7 @@ export class S3StorageService implements BookStoragePort {
       });
 
       const presignedUrl = await getSignedUrl(this.s3Client, command, {
-        expiresIn: 1200
+        expiresIn: 1200,
       });
       return presignedUrl;
     } catch (error) {

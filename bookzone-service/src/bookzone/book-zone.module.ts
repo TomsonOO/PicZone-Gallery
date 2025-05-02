@@ -21,11 +21,13 @@ import { GenerateImageCommandHandler } from './Application/generateImage/Generat
 import { GetBookInfoQueryHandler } from './Application/getBookInfo/GetBookInfoQueryHandler';
 import { GeminiBookAnalyzerAdapter } from './Infrastructure/BookAnalyzer/GeminiBookAnalyzerAdapter';
 import { GenerateVisualPromptQueryHandler } from './Application/generateVisualPrompt/GenerateVisualPromptQueryHandler';
+import { GetBookDetailsQueryHandler } from './Application/getBookDetails/GetBookDetailsQueryHandler';
 
 const CommandHandlers = [CreateBookCommandHandler, ImportBookCommandHandler];
 
 const QueryHandlers = [
   GetBooksQueryHandler,
+  GetBookDetailsQueryHandler,
   SearchBooksQueryHandler,
   GetBookCoverPresignedUrlQueryHandler,
   GenerateImageCommandHandler,

@@ -3,5 +3,5 @@ export class GenerateVisualPromptQuery {
     public readonly title: string,
     public readonly author: string,
     public readonly subject: string,
-  ) { }
+  ) {}
 }

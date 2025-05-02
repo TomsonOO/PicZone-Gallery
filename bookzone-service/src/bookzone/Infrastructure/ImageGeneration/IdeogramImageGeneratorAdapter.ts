@@ -9,9 +9,7 @@ export class IdeogramImageGeneratorAdapter implements ImageGenerationPort {
   private readonly apiKey: string;
   private readonly apiUrl: string;
 
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
+  constructor(private readonly configService: ConfigService) {
     this.apiKey = this.configService.get<string>('IDEOGRAM_API_KEY', '');
     this.apiUrl = this.configService.get<string>('IDEOGRAM_API_URL', '');
 
@@ -23,24 +21,26 @@ export class IdeogramImageGeneratorAdapter implements ImageGenerationPort {
 
   async generateImage(prompt: string): Promise<string> {
     try {
-      this.logger.log(`Generating image for prompt: ${prompt.substring(0, 30)}...`);
+      this.logger.log(
+        `Generating image for prompt: ${prompt.substring(0, 30)}...`,
+      );
 
       const response = await axios.post(
         this.apiUrl,
         {
           image_request: {
             prompt: prompt,
-            aspect_ratio: "ASPECT_1_1",
-            model: "V_2",
-            magic_prompt_option: "AUTO"
-          }
+            aspect_ratio: 'ASPECT_1_1',
+            model: 'V_2',
+            magic_prompt_option: 'AUTO',
+          },
         },
         {
           headers: {
             'Api-Key': this.apiKey,
             'Content-Type': 'application/json',
-          }
-        }
+          },
+        },
       );
 
       if (response?.data?.data?.[0]?.url) {

@@ -25,7 +25,14 @@ export class BookRepositoryPostgresAdapter implements BookRepositoryPort {
 
   async findAll(): Promise<BookEntity[]> {
     return await this.bookRepository.find({
-      relations: ['cover']
+      relations: ['cover'],
+    });
+  }
+
+  async findById(id: string): Promise<BookEntity | null> {
+    return await this.bookRepository.findOne({
+      where: { id },
+      relations: ['cover'],
     });
   }
 }
