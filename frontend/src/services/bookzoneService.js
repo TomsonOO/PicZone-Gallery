@@ -94,7 +94,13 @@ export async function importBook(bookOrKey) {
       throw new Error(errorData.message || 'Failed to import book');
     }
 
-    return await response.json();
+    const importedBook = await response.json();
+    
+    if (importedBook.coverUrl && importedBook.coverUrl.includes('s3.amazonaws.com')) {
+      importedBook.needsPresignedUrl = true;
+    }
+    
+    return importedBook;
   } catch (error) {
     console.error('Error importing book:', error);
     throw error;
@@ -103,7 +109,7 @@ export async function importBook(bookOrKey) {
 
 export const getBookById = async (bookId) => {
   try {
-    const response = await fetch(`${BOOKZONE_BASE_URL}/${bookId}`, {
+    const response = await fetch(`${BOOKZONE_BASE_URL}/details/${bookId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
