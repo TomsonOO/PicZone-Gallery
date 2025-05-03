@@ -180,6 +180,78 @@ export const generateVisualPrompt = async (title, author, subject) => {
   }
 };
 
+export const getBookScenes = async (title, author) => {
+  try {
+    const query = `List 5 iconic or memorable scenes from the book "${title}" by ${author}. Format the response as JSON with this structure: [{"title": "Brief scene title", "description": "Short description of the scene (2-3 sentences)"}]. Return just the JSON.`;
+    
+    const scenesData = await queryBookInfo(title, author, query);
+    
+    try {
+      let parsedScenes = [];
+      
+      try {
+        parsedScenes = JSON.parse(scenesData);
+      } catch (jsonError) {
+        const jsonMatch = scenesData.match(/\[\s*\{.*\}\s*\]/s);
+        if (jsonMatch) {
+          parsedScenes = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("Could not extract JSON");
+        }
+      }
+      
+      if (Array.isArray(parsedScenes) && parsedScenes.length > 0) {
+        return parsedScenes.map((scene, index) => ({
+          id: index + 1,
+          title: scene.title,
+          description: scene.description
+        }));
+      } else {
+        throw new Error("No valid scenes returned");
+      }
+    } catch (parseError) {
+      console.error('Error parsing scenes data:', parseError);
+      throw parseError;
+    }
+  } catch (error) {
+    console.error('Error fetching book scenes:', error);
+    throw error;
+  }
+};
+
+export const getCharacterAnalysis = async (title, author, character) => {
+  try {
+    const personalityQuery = `Analyze the character ${character} from the book "${title}" by ${author}. Provide insights about their personality, role in the story, key traits, and development. Keep the analysis concise but insightful.`;
+    
+    const personalityAnalysis = await queryBookInfo(title, author, personalityQuery);
+    
+    const motivationsQuery = `Analyze the motivations and philosophy of the character ${character} from the book "${title}" by ${author}. What drives them? What beliefs guide their actions? What internal conflicts do they face? Keep the analysis concise but meaningful.`;
+    
+    const motivationsAnalysis = await queryBookInfo(title, author, motivationsQuery);
+    
+    return {
+      personality: personalityAnalysis,
+      motivations: motivationsAnalysis
+    };
+  } catch (error) {
+    console.error('Error fetching character analysis:', error);
+    throw error;
+  }
+};
+
+export const getThematicAnalysis = async (title, author) => {
+  try {
+    const query = `Analyze the key themes in the book "${title}" by ${author}. Identify 3-5 major themes and provide a brief explanation of how each theme is developed throughout the narrative. Focus on the most significant and profound themes.`;
+    
+    const thematicAnalysis = await queryBookInfo(title, author, query);
+    
+    return thematicAnalysis;
+  } catch (error) {
+    console.error('Error fetching thematic analysis:', error);
+    throw error;
+  }
+};
+
 export const generateImage = async (prompt) => {
   try {
     const response = await fetch(`${BOOKZONE_BASE_URL}/ai/generate-image`, {
