@@ -369,13 +369,7 @@ const BookDetailPage = () => {
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-1">{bookData.title}</h2>
                 <h3 className="text-xl text-gray-300 mb-5">by {bookData.author}</h3>
-                
-                <div className="my-4 py-2 border-t border-b border-gray-700 text-sm text-gray-400">
-                  <p className="my-1">Added on: {new Date(bookData.createdAt).toLocaleDateString()}</p>
-                  {bookData.olKey && <p className="my-1">Open Library Key: {bookData.olKey}</p>}
-                </div>
-                
-                <p className="leading-relaxed mb-8 text-gray-300">{bookData.description || "No description available for this book."}</p>
+
               </div>
               
               <div className="md:w-2/3">

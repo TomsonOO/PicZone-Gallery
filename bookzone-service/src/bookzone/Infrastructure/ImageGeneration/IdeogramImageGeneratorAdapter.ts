@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import * as FormData from 'form-data';
 import { ImageGenerationPort } from '../../Application/Port/ImageGenerationPort';
 
 @Injectable()
@@ -25,20 +26,19 @@ export class IdeogramImageGeneratorAdapter implements ImageGenerationPort {
         `Generating image for prompt: ${prompt.substring(0, 30)}...`,
       );
 
+      const formData = new FormData();
+      formData.append('prompt', prompt);
+      formData.append('rendering_speed', 'DEFAULT');
+      formData.append('style_type', 'GENERAL');
+      formData.append('magic_prompt', 'ON');
+
       const response = await axios.post(
         this.apiUrl,
-        {
-          image_request: {
-            prompt: prompt,
-            aspect_ratio: 'ASPECT_1_1',
-            model: 'V_2',
-            magic_prompt_option: 'AUTO',
-          },
-        },
+        formData,
         {
           headers: {
             'Api-Key': this.apiKey,
-            'Content-Type': 'application/json',
+            ...formData.getHeaders(),
           },
         },
       );
