@@ -39,12 +39,13 @@ export class IdeogramImageGeneratorAdapter implements ImageGenerationPort {
           headers: {
             'Api-Key': this.apiKey,
             ...formData.getHeaders(),
+
           },
         },
       );
 
-      if (response?.data?.data?.[0]?.url) {
-        const imageUrl = response.data.data[0].url;
+      if (response?.data?.image?.url) {
+        const imageUrl = response.data.image.url;
         this.logger.log(`Image generated successfully: ${imageUrl}`);
         return imageUrl;
       }

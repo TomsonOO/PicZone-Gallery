@@ -6,8 +6,7 @@ import { BookCoverRepositoryPort } from '../Port/BookCoverRepositoryPort';
 
 @CommandHandler(CreateBookCommand)
 export class CreateBookCommandHandler
-  implements ICommandHandler<CreateBookCommand>
-{
+  implements ICommandHandler<CreateBookCommand> {
   private readonly logger = new Logger(CreateBookCommandHandler.name);
   constructor(
     @Inject('BookCoverRepositoryPostgresAdapter')
@@ -15,7 +14,7 @@ export class CreateBookCommandHandler
 
     @Inject('BookRepositoryPostgresAdapter')
     private readonly bookRepository: BookRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(command: CreateBookCommand): Promise<string> {
     this.logger.log(`Creating book with title ${command.title}`);
