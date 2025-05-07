@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Param,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBookCommand } from 'src/bookzone/Application/createBook/CreateBookCommand';
@@ -23,13 +24,15 @@ import { GenerateImageCommand } from 'src/bookzone/Application/generateImage/Gen
 import { GetBookInfoQuery } from 'src/bookzone/Application/getBookInfo/GetBookInfoQuery';
 import { GenerateVisualPromptQuery } from 'src/bookzone/Application/generateVisualPrompt/GenerateVisualPromptQuery';
 import { getBookDetailsQuery } from 'src/bookzone/Application/getBookDetails/GetBookDetailsQuery';
+import { SaveGeneratedImageCommand } from 'src/bookzone/Application/saveGeneratedImage/SaveGeneratedImageCommand';
+import { VisualizationType } from 'src/bookzone/Domain/VisualizationType';
 
 @Controller('/books')
 export class WebBookZoneAdapter {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -152,5 +155,34 @@ export class WebBookZoneAdapter {
     >(query);
 
     return { imagePrompt };
+  }
+
+  @Post(':id/visualizations')
+  async saveGeneratedImage(
+    @Param('id') bookId: string,
+    @Body() body: {
+      type: string;
+      description: string;
+      imageUrl: string;
+    },
+  ) {
+    try {
+      if (!['character', 'scene'].includes(body.type)) {
+        throw new BadRequestException('Invalid visualization type');
+      }
+
+      const command = new SaveGeneratedImageCommand(
+        bookId,
+        body.type as VisualizationType,
+        body.description,
+        body.imageUrl,
+      );
+
+      const visualizationId = await this.commandBus.execute(command);
+
+      return { id: visualizationId };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to save generated image');
+    }
   }
 }

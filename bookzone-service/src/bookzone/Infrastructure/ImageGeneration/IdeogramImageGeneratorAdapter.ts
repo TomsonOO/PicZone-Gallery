@@ -28,23 +28,20 @@ export class IdeogramImageGeneratorAdapter implements ImageGenerationPort {
       const response = await axios.post(
         this.apiUrl,
         {
-          image_request: {
-            prompt: prompt,
-            aspect_ratio: 'ASPECT_1_1',
-            model: 'V_2',
-            magic_prompt_option: 'AUTO',
-          },
+          prompt: prompt,
+          style: "steampunk",
+          aspect_ratio: "1:1"
         },
         {
           headers: {
-            'Api-Key': this.apiKey,
+            'Authorization': `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json',
           },
         },
       );
 
-      if (response?.data?.data?.[0]?.url) {
-        const imageUrl = response.data.data[0].url;
+      if (response?.data?.image?.url) {
+        const imageUrl = response.data.image.url;
         this.logger.log(`Image generated successfully: ${imageUrl}`);
         return imageUrl;
       }
