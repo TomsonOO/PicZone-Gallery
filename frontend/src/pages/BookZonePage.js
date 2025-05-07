@@ -14,7 +14,6 @@ const BookZonePage = () => {
   const [isImportingBook, setIsImportingBook] = useState(false);
   const [importingBookKey, setImportingBookKey] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
 
   const fetchCuratedBooks = async () => {
     setIsLoadingCuratedBooks(true);
@@ -36,8 +35,9 @@ const BookZonePage = () => {
   const handleSearch = async (searchTerm) => {
     if (!searchTerm.trim()) return;
     
-    setIsSearching(true);
+    setIsLoadingSearchResults(true);
     setSearchResults([]);
+    setSearchTerm(searchTerm);
     
     try {
       const results = await searchOpenLibraryBooks(searchTerm);
@@ -55,7 +55,7 @@ const BookZonePage = () => {
     } catch (error) {
       toast.error(`Search failed: ${error.message}`);
     } finally {
-      setIsSearching(false);
+      setIsLoadingSearchResults(false);
     }
   };
 
@@ -68,10 +68,13 @@ const BookZonePage = () => {
     }
 
     setImportingBookKey(bookKey);
+    setIsImportingBook(true);
     
     try {
-      await importBook(bookKey);
-      toast.success('Book imported successfully!');
+      const importedBook = await importBook(bookKey);
+      
+      toast.success(`"${book.title}" by ${book.author} has been imported successfully!`);
+      
       fetchCuratedBooks();
       
       setSearchResults(prevResults => 
@@ -83,6 +86,7 @@ const BookZonePage = () => {
       toast.error(`Failed to import book: ${error.message}`);
     } finally {
       setImportingBookKey(null);
+      setIsImportingBook(false);
     }
   };
 

@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import WelcomePage from './pages/WelcomePage';
 import HomePage from './pages/HomePage';
 import BookZonePage from './pages/BookZonePage';
-import BookDetailPage from './pages/BookDetailPage/BookDetailPage';
+import BookDetailPage from './pages/BookDetailPage';
 
 const App = () => {
   return (

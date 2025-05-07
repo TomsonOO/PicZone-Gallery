@@ -12,12 +12,12 @@ export class GetBookCoverPresignedUrlQueryHandler
     private readonly storageService: BookStoragePort,
   ) {}
 
-  async execute(query: GetBookCoverPresignedUrlQuery): Promise<string> {
+  async execute(query: GetBookCoverPresignedUrlQuery): Promise<{ presignedUrl: string }> {
     try {
       const presignedUrl = await this.storageService.getPresignedUrl(
         query.objectKey,
       );
-      return presignedUrl;
+      return { presignedUrl };
     } catch (error) {
       throw new Error(`Failed to generate presigned URL: ${error.message}`);
     }
