@@ -21,7 +21,6 @@ PicZone Gallery is a full-stack web application that displays images, following 
 </div>
 
 
-
 ## 🔧 Technology Stack
 
 - **Frontend**: React
@@ -32,15 +31,7 @@ PicZone Gallery is a full-stack web application that displays images, following 
 - **Containerization**: Docker
 - **Hosting**: Heroku, DigitalOcean
 
----
-
-## 🚧 Please Note
-
-- **Application is being developed**
-
----
-
-## ✨ Implemented Features
+## Implemented Features
 
 - **User Account & Profile Management**: Users can register, log in, manage profiles, and upload personal avatars
 - **Image Management API**: Upload, list, update, and delete images. Images are stored on AWS S3
@@ -49,17 +40,3 @@ PicZone Gallery is a full-stack web application that displays images, following 
 - **Uploading, liking and adding images to favorites (personal gallery)**
 - **One-click user register: creates user with random data and automatically logs him in**
 - **Integration and Unit tests (PHPUnit)**
-
----
-
-## 🛠️ Ongoing Work
-- **BookZone Page**: Developing a new page to manage and display books, integrating with OpenLibrary and OpenAI APIs.
-
----
-
-## 🚀 Features to Be Implemented
-
-- **Dashboard / Analytics**: Application stats
-- **Code optimization, error handling, validation improvements**
-- **Tagging & Advanced Search**: Images will have tags, based on which they can be searched for
-- **And more**
